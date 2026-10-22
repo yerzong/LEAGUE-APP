@@ -10,7 +10,7 @@
 
 La Production API Key de Riot puede **tardar semanas o ser rechazada.** Por eso:
 
-> Toda funcionalidad que use Riot vive detrás de un **puerto** (`packages/riot`).
+> Toda funcionalidad que use Riot vive detrás de un **puerto** (`packages/integrations/riot`).
 > Si Riot no está disponible, un **adaptador manual** cubre lo mismo (resultados
 > registrados a mano) y la liga opera igual.
 
@@ -65,7 +65,7 @@ construir y probar todo el flujo sin bloquearse.
 
 ---
 
-## 5. Capa de abstracción (puerto `packages/riot`)
+## 5. Capa de abstracción (puerto `packages/integrations/riot`)
 
 Interfaz conceptual que el core y la API consumen (los nombres finales se definen
 al construir):

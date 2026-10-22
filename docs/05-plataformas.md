@@ -144,7 +144,7 @@ Documentada para completar la visión; NO se construye al inicio.
   experiencia que la PWA no cubre bien (ej. espectador en vivo con notificaciones
   ricas, segunda pantalla durante transmisiones).
 - **Enfoque probable:** React Native / Expo para reutilizar lógica y tipos del
-  monorepo (`packages/types`, `packages/core`).
+  monorepo (`packages/contracts`, `packages/core`).
 - **Alcance mínimo:** seguimiento de equipos favoritos, notificaciones de partido,
   resultados y perfiles. No duplicar el dashboard de admin.
 

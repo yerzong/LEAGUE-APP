@@ -99,6 +99,8 @@ league-app/
 │   ├── contracts/         Esquemas Zod + tipos de API (front, back, bot, móvil)
 │   ├── db/                Tipos generados, query layer, helpers RLS
 │   ├── ui/                Design system (tokens + componentes React)
+│   ├── graphics/          Plantillas gráficas + render a imagen (worker y
+│   │                        vista previa en admin)
 │   ├── integrations/      Puertos y adaptadores: riot, discord, social,
 │   │                        email, push, llm, storage, payments
 │   ├── i18n/              Textos (español primero)

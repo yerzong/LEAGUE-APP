@@ -57,7 +57,7 @@ EVENTO: termina la partida (callback de Riot o registro manual)
   → recalcular Standing (packages/core)
   → derivar stats de jugadores y agregados
   → generar gráfico de resultado/MVP (packages/graphics)
-  → generar narrativa (packages/ai)
+  → generar narrativa (packages/integrations/llm, módulo content)
   → publicar en web, overlays y Discord
 ```
 
@@ -112,7 +112,7 @@ Pipeline:
 5. Estado draft → revisión opcional → published
 ```
 
-- **Adaptador LLM intercambiable** (`packages/ai`): el proveedor es
+- **Adaptador LLM intercambiable** (`packages/integrations/llm`): el proveedor es
   configuración, no dependencia rígida.
 - **Control de alucinaciones:** la IA solo describe hechos extraídos de los datos;
   no inventa resultados ni estadísticas.
