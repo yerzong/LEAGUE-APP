@@ -48,12 +48,15 @@ Bloque B — Técnico:
 | `docs/06-riot-integracion.md` | Tournament-V5, Match-V5, abstracción | ✅ |
 | `docs/07-automatizacion-ia.md` | Flujos automáticos, agentes IA, narrativa | ✅ |
 
-Bloque C — Experiencia y operación (después):
+Bloque C — Experiencia y operación:
 
 | Documento | Propósito | Estado |
 |-----------|-----------|--------|
-| `docs/08-design-system.md` | Branding, tokens, componentes, estética LCK | ⏳ |
-| `docs/11-operaciones.md` | Flujo de un torneo end-to-end, roles, soporte | ⏳ |
+| `docs/08-design-system.md` | Branding, tokens, componentes, estética LCK | ✅ |
+| `docs/11-operaciones.md` | Flujo de un torneo end-to-end, roles, soporte | ✅ |
+
+> **Planeación completa.** Siguiente paso: definir el nombre de marca y arrancar
+> la construcción con Claude Code, usando estos documentos como contrato.
 
 ## Herramientas de trabajo
 
