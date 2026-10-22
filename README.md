@@ -28,11 +28,32 @@ league-app/
 
 ## Documentos de planeación
 
-| Documento | Propósito |
-|-----------|-----------|
-| `docs/01-roadmap.md` | Hoja de ruta por fases: qué construir y qué NO todavía |
-| `docs/02-formatos-competencia.md` | Formatos, reglas, sistema de puntos (pendiente) |
-| `docs/03-modelo-datos.md` | Modelo de datos multi-torneo (pendiente) |
+Bloque A — Negocio y producto:
+
+| Documento | Propósito | Estado |
+|-----------|-----------|--------|
+| `docs/00-vision.md` | Visión, propuesta de valor, público, principios | ✅ |
+| `docs/01-roadmap.md` | Hoja de ruta por fases: qué construir y qué NO todavía | ✅ |
+| `docs/02-formatos-competencia.md` | Formatos, reglas, sistema de puntos | ✅ |
+| `docs/09-monetizacion.md` | Vías de ingreso, patrocinios, SaaS futuro | ✅ |
+| `docs/10-legal-cumplimiento.md` | Licencia Riot, disclaimers, privacidad | ✅ |
+
+Bloque B — Técnico:
+
+| Documento | Propósito | Estado |
+|-----------|-----------|--------|
+| `docs/03-modelo-datos.md` | Entidades multi-torneo y relaciones | ✅ |
+| `docs/04-arquitectura.md` | Stack, monorepo, apps/packages, capa anti-Riot | ✅ |
+| `docs/05-plataformas.md` | Web, PWA, mobile, bot Discord, overlays | ✅ |
+| `docs/06-riot-integracion.md` | Tournament-V5, Match-V5, abstracción | ✅ |
+| `docs/07-automatizacion-ia.md` | Flujos automáticos, agentes IA, narrativa | ✅ |
+
+Bloque C — Experiencia y operación (después):
+
+| Documento | Propósito | Estado |
+|-----------|-----------|--------|
+| `docs/08-design-system.md` | Branding, tokens, componentes, estética LCK | ⏳ |
+| `docs/11-operaciones.md` | Flujo de un torneo end-to-end, roles, soporte | ⏳ |
 
 ## Herramientas de trabajo
 
