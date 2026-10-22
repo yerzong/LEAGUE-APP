@@ -102,7 +102,7 @@ Adaptadores:
 - Endpoint dedicado en `apps/api` para recibir callbacks de Riot.
 - **Verificar autenticidad** del callback antes de procesar.
 - Idempotencia: un mismo resultado puede llegar más de una vez; no duplicar Games.
-- Encolar el procesamiento (BullMQ) y responder rápido a Riot.
+- Encolar el procesamiento (outbox + pg-boss) y responder rápido a Riot.
 - Reintentos y dead-letter para callbacks que fallan.
 
 ---
@@ -110,7 +110,13 @@ Adaptadores:
 ## 7. Rate limits y buenas prácticas
 
 - Respetar los **rate limits** de Riot (por app y por método); usar cola y backoff.
-- Cachear datos poco cambiantes (rango, nombre de invocador) en Redis.
+- Cachear datos poco cambiantes (rango, Riot ID) en Postgres con `last_synced_at`
+  (Redis solo si el volumen lo pide).
+- Los códigos de torneo se generan con `allowedParticipants` (PUUIDs del roster
+  congelado) y `teamSize` 1–5 según el modo (1v1, 2v2, 5v5). Ver
+  `13-reglas-integridad.md`.
+- Verificación de cuentas: la API de "código de terceros" fue retirada en 2022;
+  se usa RSO o verificación por ícono (ver `12-auth-roles-perfiles.md`).
 - Guardar siempre el **JSON crudo** (`raw_payload`) como fuente de verdad: si se
   cambia el cálculo de una stat, se recalcula desde el crudo sin volver a pedir a
   Riot.

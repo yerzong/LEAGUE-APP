@@ -1,196 +1,232 @@
-# Arquitectura Técnica — League App
+# Arquitectura Técnica
 
-> Documento vivo. El "cómo" técnico, justificado por la planeación previa. Define
-> stack, estructura de monorepo, límites entre dominios y las capas de abstracción
-> que protegen al sistema de dependencias externas (Riot, pagos).
-
----
-
-## 1. Principios de arquitectura
-
-1. **Dominio aislado del detalle.** El core de torneos (reglas, formatos, cálculo
-   de standings) no depende de frameworks, base de datos concreta ni APIs externas.
-   Arquitectura hexagonal / puertos y adaptadores.
-2. **Todo lo externo va detrás de un puerto.** Riot, Stripe, Discord, el motor de
-   renderizado y el LLM son adaptadores intercambiables. Si Riot tarda o se cae, el
-   resto opera.
-3. **Multi-tenant por diseño.** La organización es la frontera de datos y permisos.
-4. **Monorepo con paquetes compartidos** para no duplicar tipos ni lógica entre
-   web, API, bot y overlays.
-5. **Tipado de punta a punta.** TypeScript en todo; los tipos del dominio son la
-   fuente de verdad compartida.
-6. **Observabilidad y auditoría** como ciudadanos de primera clase (logs, trazas,
-   AuditLog del modelo de datos).
+> Documento vivo. Stack elegido según el producto y tus habilidades, estructura
+> del monorepo, límites entre módulos y capas de abstracción. Estándares de
+> código en `17-estandares-ingenieria.md`.
 
 ---
 
-## 2. Stack recomendado (justificado)
+## 1. Decisión de stack (y por qué no usar todo lo que sabes)
 
-| Capa | Elección | Por qué |
-|------|----------|---------|
-| Lenguaje | **TypeScript** | Full-stack, tipos compartidos entre front y back |
-| Runtime | **Node.js (LTS)** | Ecosistema, compatibilidad con libs de Riot/Discord |
-| Gestor monorepo | **pnpm workspaces + Turborepo** | Instala rápido, cachea builds, orquesta tareas entre apps |
-| Web | **Next.js (App Router)** | SSR/ISR para páginas públicas SEO + PWA + dashboard |
-| UI | **React + Tailwind + design system propio** | Estética LCK, componentes reutilizables |
-| API | **NestJS** o **tRPC + Fastify** | NestJS si se quiere estructura modular fuerte; tRPC si se prioriza tipado extremo front-back |
-| Base de datos | **PostgreSQL** | Relacional, JSONB para configs flexibles, robusto |
-| ORM | **Prisma** o **Drizzle** | Tipado, migraciones versionadas |
-| Cache / colas | **Redis** | Cache de stats, colas de jobs de automatización |
-| Jobs / eventos | **BullMQ (sobre Redis)** | Procesar webhooks, recalcular standings, generar gráficos |
-| Bot | **discord.js** | Estándar maduro para bots de Discord |
-| Realtime | **WebSockets (Socket.IO)** o **SSE** | Overlays en vivo, actualizaciones de marcador |
-| Render gráficos | **Satori / Puppeteer / node-canvas** | HTML/componente → imagen para piezas estilo LCK |
-| IA / narrativa | **Adaptador LLM** (proveedor intercambiable) | Resúmenes y notas de prensa |
-| Pagos | **Stripe** (detrás de puerto) | Suscripciones y pagos maduros |
-| Auth | **Auth propio + OAuth (Discord) + RSO (Riot)** | RSO para verificación de cuenta |
+Sabes muchas tecnologías. La pregunta no es cuáles conoces, sino **cuáles
+reducen el costo de este producto**. El criterio dominante: **un solo lenguaje
+(TypeScript) en web, API, bot, overlays, agente y móvil**, para compartir tipos,
+validaciones y lógica del dominio. Cada lenguaje extra duplica contratos.
 
-> Estas son recomendaciones fundamentadas, no dogma. La decisión final de
-> NestJS vs tRPC y Prisma vs Drizzle se toma al iniciar el Bloque de construcción.
+| Pieza | Elección | Por qué |
+|-------|----------|---------|
+| Web (sitio + portal + admin) | **Next.js (App Router) + React** | SSR para SEO del sitio público, PWA para el portal, una sola app |
+| API / dominio | **NestJS** | Módulos, inyección de dependencias y guards: encaja con hexagonal y SOLID |
+| Base de datos | **PostgreSQL en Supabase** | Relacional (el dominio lo es), RLS, ya tienes suscripción |
+| Auth | **Supabase Auth** | Correo, magic link, Google, Discord, Apple, Twitch, MFA listos |
+| Archivos | **Supabase Storage** | Fotos, logos, evidencias, gráficos |
+| Tiempo real | **Supabase Realtime** | Marcadores en vivo, overlays, standings |
+| Migraciones y entorno local | **Supabase CLI** | Postgres local, migraciones SQL versionadas, tipos generados |
+| Colas / jobs | **pg-boss** (sobre Postgres) + patrón outbox | Sin infraestructura extra al inicio; Redis/BullMQ solo si el volumen lo pide |
+| Bot | **discord.js** | Estándar |
+| Overlays | **React + Vite** | Páginas ligeras para OBS, reusan `packages/ui` |
+| Agente de observador | **Electron + Node** | Lee el cliente de LoL en la PC del observador (ver `16`) |
+| Móvil (futuro) | **Expo / React Native** | Reutiliza contratos, lógica y hooks |
+| Media / IA de imagen | **Python + FastAPI** (microservicio) | Quitar fondo (rembg) y, después, modelos anti-smurf. Python es lo mejor para eso |
+| Automatizaciones no críticas | **n8n** | Publicación en redes, reportes, flujos de marketing. Nunca lógica de competencia |
+| Diseño | **Figma** (UI, tokens), **Adobe/Blender** (assets de marca, 3D, intros de stream) | |
+
+### Lo que conscientemente NO se usa (y por qué)
+| Tecnología | Motivo |
+|------------|--------|
+| Angular, Vue | Ya hay React en web, overlays y móvil; dos frameworks = dos design systems |
+| Spring Boot, Java, .NET, Laravel | Rompen el monorepo de tipos compartidos; NestJS cubre lo mismo en TS |
+| Flutter, Android nativo | Expo comparte código con la web; Flutter no |
+| MySQL, MongoDB | El dominio es muy relacional (torneos, fases, partidas, rosters); Postgres + jsonb cubre lo flexible |
+| Firebase | Supabase cumple ese rol y ya lo pagas |
+| **Kafka** | Exceso para este volumen: miles de eventos al día, no millones por segundo. El outbox + pg-boss da garantías suficientes. Se reconsidera si algún día es SaaS a gran escala |
+
+---
+
+## 2. Arquitectura general
+
+```
+            ┌──────────── Clientes ────────────────────────────────────┐
+            │ Web Next.js (/, /app PWA, /admin) · Móvil Expo (futuro)  │
+            │ Overlays OBS · Bot Discord · Agente de observador         │
+            └───────┬───────────────────────────────┬──────────────────┘
+                    │ HTTPS (REST + contratos Zod)   │ Realtime (suscripción)
+                    ▼                                ▼
+            ┌───────────────────────┐        ┌───────────────────┐
+            │   API NestJS          │        │ Supabase Realtime │
+            │   (módulos de negocio)│        └─────────▲─────────┘
+            │   ┌───────────────┐   │                  │
+            │   │ packages/core │   │   escribe estado │
+            │   └───────────────┘   │   en vivo        │
+            └──┬────────┬───────────┘──────────────────┘
+               │        │ outbox → pg-boss
+               │        ▼
+               │   ┌───────────────┐      ┌──────────────────────┐
+               │   │ Worker (jobs) │─────►│ Media service Python │
+               │   └──────┬────────┘      └──────────────────────┘
+               │          │ adaptadores
+               ▼          ▼
+   Supabase Postgres · Storage · Auth      Riot API · Discord · Redes
+                                           (unificada / directas) · Correo
+                                           · Twitch/YouTube · LLM · n8n
+```
+
+Reglas:
+- **Toda escritura de negocio pasa por la API** (casos de uso + permisos +
+  auditoría). Los clientes no escriben directo a tablas.
+- Lecturas públicas y en vivo pueden ir por Supabase con **RLS** (rápido y
+  seguro), o por la API cuando haya lógica.
+- La API usa la clave de servicio solo del lado servidor; nunca en clientes.
 
 ---
 
 ## 3. Estructura del monorepo
 
-> El monorepo nace cuando empieza la construcción (Fase 1–2), no ahora. Esta es la
-> estructura objetivo que la planeación justifica.
-
 ```
 league-app/
 ├── apps/
-│   ├── web/              Next.js — sitio público + dashboard de admin + PWA
-│   ├── api/              Backend — API, webhooks, auth, orquestación
-│   ├── bot/              Bot de Discord (check-in, avisos, códigos)
-│   ├── overlays/         Fuentes de navegador para OBS (picks&bans, lower-thirds)
-│   └── worker/           Procesador de jobs (BullMQ): stats, gráficos, narrativa
-│
+│   ├── web/               Next.js — sitio público, portal (PWA), admin
+│   ├── api/               NestJS — módulos de negocio, webhooks
+│   ├── worker/            Procesador de jobs (puede iniciar dentro de api)
+│   ├── bot/               Bot de Discord
+│   ├── overlays/          Overlays para OBS
+│   ├── observer-agent/    App de escritorio del observador (Electron)
+│   ├── media-service/     Python FastAPI: quitar fondo, procesamiento
+│   └── mobile/            Expo (futuro)
 ├── packages/
-│   ├── core/             ★ Motor de torneos AISLADO (dominio puro, sin frameworks)
-│   │                       reglas, formatos, cálculo de standings, Fearless
-│   ├── db/               Esquema, migraciones, cliente (Prisma/Drizzle)
-│   ├── types/            Tipos/contratos compartidos (DTOs, enums del dominio)
-│   ├── ui/               Design system: componentes React + tokens
-│   ├── config/           ESLint, TS, Tailwind, tsconfig compartidos
-│   ├── riot/             Adaptador Riot (Tournament-V5, Match-V5) tras puerto
-│   ├── payments/         Adaptador de pagos (Stripe) tras puerto
-│   ├── ai/               Adaptador LLM (narrativa) tras puerto
-│   └── graphics/         Motor de render de plantillas → imagen
-│
-├── docs/                 ◄ Planeación (lo que estamos haciendo ahora)
-├── pnpm-workspace.yaml
-├── turbo.json
-├── package.json
-└── .gitignore
+│   ├── core/              ★ Dominio puro: formatos, standings, desempates,
+│   │                        Fearless, elegibilidad, máquinas de estado
+│   ├── contracts/         Esquemas Zod + tipos de API (front, back, bot, móvil)
+│   ├── db/                Tipos generados, query layer, helpers RLS
+│   ├── ui/                Design system (tokens + componentes React)
+│   ├── integrations/      Puertos y adaptadores: riot, discord, social,
+│   │                        email, push, llm, storage, payments
+│   ├── i18n/              Textos (español primero)
+│   └── config/            ESLint, TS, Tailwind, Vitest compartidos
+├── supabase/              Migraciones SQL, seeds, políticas RLS, config CLI
+├── n8n/                   Flujos exportados (versionados)
+├── docs/
+├── pnpm-workspace.yaml · turbo.json · package.json
 ```
 
-### La pieza clave: `packages/core`
-Es el corazón del negocio y del SaaS futuro. Contiene las reglas de competencia
-como **lógica pura**: dado un torneo, sus fases y resultados, calcula standings,
-valida Fearless, determina avances y desempates. **No importa Prisma, ni Express,
-ni la API de Riot.** Recibe datos, devuelve decisiones. Por eso es testeable al
-100% y empaquetable como producto.
+- `pnpm` workspaces + **Turborepo** (cache y tareas solo de lo afectado).
+- `apps/media-service` (Python) vive en el monorepo con su propio
+  `pyproject.toml`; Turbo lo orquesta igual.
 
 ---
 
-## 4. Arquitectura hexagonal (puertos y adaptadores)
+## 4. Módulos del backend (NestJS)
+
+Cada módulo sigue la estructura de `17-estandares-ingenieria.md`
+(domain / application / infrastructure / presentation).
+
+| Módulo | Responsabilidad |
+|--------|-----------------|
+| `identity` | Usuarios, perfil, datos privados, consentimientos |
+| `riot-accounts` | Vinculación, verificación, snapshots de rango |
+| `organizations` | Tenants, miembros, roles, permisos, marca |
+| `teams` | Equipos, miembros, invitaciones, agentes libres |
+| `seasons-circuits` | Temporadas, circuitos, rankings |
+| `tournaments` | Wizard, plantillas, configuración, estados, reglamentos |
+| `registrations` | Entrants, rosters, elegibilidad, exclusividad, lista de espera |
+| `scheduling` | Fixtures, calendario, reprogramaciones |
+| `matches` | Series, partidas, check-in, códigos, resultados, Fearless |
+| `standings` | Recalcular tablas y avance de fase (usa `core`) |
+| `disputes-integrity` | Disputas, alertas, sanciones, moderación |
+| `stats` | Derivar y agregar estadísticas, logros, MVP |
+| `notifications` | Motor de notificaciones |
+| `media` | Subidas, variantes, quitar fondo, moderación |
+| `content` | Noticias, narrativa IA, plantillas gráficas |
+| `social` | Cuentas, composer, publicaciones automáticas |
+| `broadcast` | Sesiones de producción, overlays, agente, streams |
+| `discord` | Vinculación y orquestación del bot |
+| `audit` | Registro de auditoría |
+| `platform` | Super admin, feature flags, salud del sistema |
+| `billing` | Pagos, patrocinios, premios (fase 4) |
+
+---
+
+## 5. Puertos y adaptadores (lo externo nunca toca el dominio)
+
+| Puerto | Adaptadores |
+|--------|-------------|
+| `TournamentProviderPort` | Riot Tournament-V5 · Riot Stub · Manual |
+| `MatchDataPort` | Riot Match-V5 · Manual |
+| `RiotAccountPort` | RSO · Verificación por ícono |
+| `NotificationChannelPort` | In-app · Correo · Discord · Web Push · Expo Push · (SMS) |
+| `SocialPublisherPort` | API unificada · Meta · X · TikTok · YouTube · Discord |
+| `StreamStatusPort` | Twitch EventSub · YouTube · Kick |
+| `ImageProcessingPort` | Media service (rembg) · API comercial |
+| `ContentModerationPort` | Proveedor de visión IA |
+| `LlmPort` | Proveedor intercambiable |
+| `StoragePort` | Supabase Storage |
+| `PaymentPort` | Stripe (fase 4) |
+
+---
+
+## 6. Flujo de eventos (ejemplo: termina una partida)
 
 ```
-                    ┌─────────────────────────────┐
-                    │      packages/core          │
-   Puertos  ◄──────►│   (dominio de torneos puro) │◄──────►  Puertos
-   (entrada)        │   reglas · standings · draft│       (salida)
-                    └─────────────────────────────┘
-        ▲                                                   │
-        │                                                   ▼
-┌───────────────┐                              ┌────────────────────────┐
-│  Adaptadores  │                              │     Adaptadores de      │
-│  de entrada   │                              │        salida           │
-│ ------------- │                              │ ----------------------- │
-│ API REST/tRPC │                              │ RiotAdapter (V5)        │
-│ Bot Discord   │                              │ PaymentAdapter (Stripe) │
-│ Jobs/webhooks │                              │ Repo DB (Prisma)        │
-└───────────────┘                              │ LLMAdapter / Graphics   │
-                                               │ DiscordAdapter          │
-                                               └────────────────────────┘
+Riot callback → inbound_webhooks (idempotente) → caso de uso FinalizeGame
+  en una transacción: games + matches + outbox_events('game.finished')
+→ worker:
+   ├─ standings.recalculate (core)        ├─ stats.derive / aggregate
+   ├─ integrity.verify_participants       ├─ notifications.dispatch
+   ├─ graphics.render(result, mvp)        ├─ content.generate_recap (IA, draft)
+   └─ social.auto_publish (si está activo y aprobado)
+→ Realtime emite cambios → web, overlays y app se actualizan
 ```
 
-Beneficio concreto: cuando la Production API Key de Riot tarde, el `RiotAdapter`
-se reemplaza por un `ManualAdapter` (registro de resultados a mano) **sin tocar el
-core ni la web.** La liga opera igual.
+---
+
+## 7. Entornos y despliegue
+
+| Entorno | Base | Uso |
+|---------|------|-----|
+| `local` | Supabase CLI (Docker) | Desarrollo y tests de integración |
+| `staging` | Proyecto Supabase separado | Validación por módulo antes de producción |
+| `production` | Proyecto Supabase de producción | Operación real |
+
+- `apps/web` → Vercel.
+- `api`, `worker`, `bot`, `media-service` → Railway / Fly.io / Render (contenedores).
+- `observer-agent` → instalador para Windows con auto-actualización.
+- `n8n` → self-hosted o n8n cloud.
+- Secretos en el gestor de cada plataforma; `.env.example` versionado.
 
 ---
 
-## 5. Flujo de datos (ejemplo: cierre de una partida)
+## 8. Seguridad transversal
 
-```
-1. Partida termina
-   ├─ Con Riot (Fase 2): webhook Match-V5 → apps/api recibe JSON
-   └─ Sin Riot (piloto): admin registra resultado en apps/web
-2. apps/api valida y persiste Game + raw_payload (packages/db)
-3. Encola jobs (BullMQ) en apps/worker:
-   ├─ Recalcular Standing (packages/core)
-   ├─ Derivar PlayerMatchStats y agregados
-   ├─ Generar GraphicRender (packages/graphics) → MediaAsset
-   └─ Generar MatchNarrative (packages/ai)
-4. apps/worker publica:
-   ├─ Actualiza web (standings, perfiles)
-   ├─ Empuja a overlays vía WebSocket
-   └─ Notifica en Discord (apps/bot)
-```
-
-Todo disparado por eventos, sin intervención humana una vez configurado.
+- Supabase Auth + MFA para staff; guards de permisos en NestJS; RLS en Postgres.
+- Validación con Zod en todos los bordes (API, webhooks, agente, bot).
+- Webhooks firmados/verificados e idempotentes.
+- Tokens de redes y proveedores en vault, nunca en tablas en claro.
+- Rate limiting por usuario e IP; respeto de rate limits de Riot, Discord y redes.
+- Datos privados en tabla separada con RLS estricta; nada de PII en logs.
+- Auditoría append-only.
 
 ---
 
-## 6. Entornos y despliegue
+## 9. Orden de construcción (módulo por módulo, cada uno probado y validado)
 
-| Entorno | Propósito |
-|---------|-----------|
-| `local` | Desarrollo (Docker Compose: Postgres + Redis) |
-| `staging` | Pruebas de integración, pre-torneo |
-| `production` | Operación real |
-
-Opciones de hosting (decidir al construir):
-- **Vercel** para `apps/web` (Next.js nativo).
-- **Railway / Render / Fly.io** para `api`, `bot`, `worker`.
-- **Postgres gestionado** (Supabase, Neon, Railway) + **Redis gestionado**.
-- Contenedores Docker para portabilidad.
-
-Secretos en gestor dedicado (no en el repo); `.env.example` versionado como guía.
-
----
-
-## 7. Seguridad transversal
-
-- Autenticación con sesiones/JWT; RSO para verificar cuentas Riot.
-- Autorización **por organización y rol** (multi-tenant).
-- Validación de entrada en los bordes (schemas: Zod).
-- Rate limiting en la API y respeto a los rate limits de Riot.
-- Secretos cifrados; nunca PII ni tokens en logs.
-- AuditLog para acciones sensibles (disputas, overrides de resultado).
-
----
-
-## 8. Estrategia de pruebas
-
-- **`packages/core`: cobertura alta con tests unitarios.** Es lógica pura, es
-  barato y crítico testearla (standings, Fearless, desempates).
-- Tests de integración para adaptadores (Riot, pagos) con mocks/stubs (Riot
-  ofrece Tournament-Stub para probar sin partidas reales).
-- Tests e2e de los flujos críticos (inscripción, reporte de resultado).
-- CI en cada push (lint + typecheck + test + build) vía Turborepo.
-
----
-
-## 9. Qué se construye primero (orden técnico, sin recortar la visión)
-
-El producto es completo; el orden de construcción respeta dependencias:
-
-1. `packages/db` + `packages/core` + `packages/types` — el cimiento del dominio.
-2. `apps/api` + `apps/web` (dashboard de admin + páginas públicas) — operar torneos.
-3. `apps/bot` — reducir trabajo de coordinación.
-4. `packages/riot` + `apps/worker` — automatización con Riot (tras Production Key).
-5. `apps/overlays` + `packages/graphics` + `packages/ai` — el efecto LCK.
-
-Cada pieza se entrega **terminada**, no a medias. El torneo piloto corre sobre
-(1)+(2) ya completos y alimenta con datos reales el diseño fino de (4) y (5).
+| # | Módulo / entrega | Depende de |
+|---|------------------|------------|
+| 0 | Monorepo, CI, Supabase local, design tokens base, auth | — |
+| 1 | `core` (formatos, standings, elegibilidad) con TDD | 0 |
+| 2 | Identidad, perfil, organizaciones, roles y permisos | 0 |
+| 3 | Vinculación Riot (verificación por ícono) | 2 |
+| 4 | Equipos, invitaciones, agentes libres | 2, 3 |
+| 5 | Torneos: wizard, plantillas, reglamentos | 1, 2 |
+| 6 | Inscripciones, elegibilidad, exclusividad | 4, 5 |
+| 7 | Calendario, fixtures, partidas, check-in, reporte manual, disputas | 6 |
+| 8 | Standings, avance de fase, sitio público | 7 |
+| 9 | Notificaciones (in-app + correo) | 2 |
+| 10 | Bot de Discord | 7, 9 |
+| 11 | Riot Tournament API (códigos, callbacks, Match-V5) + integridad | 7 |
+| 12 | Estadísticas y perfiles con pro-stats | 11 |
+| 13 | Media (quitar fondo) y plantillas gráficas | 2 |
+| 14 | Redes sociales y seguimiento de stream | 13 |
+| 15 | Transmisión: agente de observador + overlays | 11 |
+| 16 | Narrativa IA y noticias | 12 |
+| 17 | App móvil | 9, 12 |
+| 18 | Monetización: pagos, patrocinios, premios | todo |

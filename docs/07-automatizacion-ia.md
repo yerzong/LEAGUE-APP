@@ -31,7 +31,8 @@ repetitivo (anotar, copiar, perseguir, exportar).
 
 ## 3. Orquestación por eventos
 
-Arquitectura basada en jobs y colas (BullMQ sobre Redis, en `apps/worker`),
+Arquitectura basada en jobs y colas (outbox transaccional + pg-boss sobre
+Postgres, en `apps/worker`; Redis/BullMQ solo si el volumen lo exige),
 opcionalmente con un orquestador visual (**n8n**) para flujos que convenga
 mantener fuera de código.
 
@@ -134,12 +135,12 @@ Pipeline:
 
 | Herramienta | Uso |
 |-------------|-----|
-| **BullMQ + Redis** | Colas de jobs en código (fiable, tipado, en el monorepo) |
+| **Outbox + pg-boss** | Colas de jobs en código sobre Postgres (fiable, tipado, sin infraestructura extra) |
 | **n8n** (opcional) | Flujos visuales que conviene editar sin desplegar código |
 | **Webhooks** | Entrada de eventos de Riot y Discord |
 | **Cron / schedulers** | Recordatorios, aperturas/cierres de ventanas |
 
-Criterio: lógica crítica y tipada → BullMQ en código. Flujos de integración que
+Criterio: lógica crítica y tipada → jobs en código (pg-boss). Flujos de integración que
 cambian seguido o que opera alguien no-dev → n8n.
 
 ---

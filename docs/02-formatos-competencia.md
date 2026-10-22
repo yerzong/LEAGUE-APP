@@ -160,7 +160,22 @@ para cuando la liga esté en marcha. Aquí queda documentado como visión.
 
 ---
 
+## 9.1 Modos 1v1, 2v2 y restricciones entre torneos
+
+- Los torneos compiten entre **entrants** (equipo o jugador), así que el mismo
+  motor soporta 5v5, 2v2 y 1v1, en Grieta o ARAM.
+- Exclusividad de jugadores (anti-chapulineo), restricción por tier, peak rank,
+  ventanas de transferencia y validación de resultados: ver
+  `13-reglas-integridad.md`.
+
+---
+
 ## 10. Parámetros configurables (resumen para el modelo de datos)
+
+- Modo de juego: tamaño de equipo (1–5), mapa, tipo de pick.
+- Origen de equipos: solo permanentes, ad-hoc permitidos, solo ad-hoc.
+- Ámbito de exclusividad y tier máximo permitido.
+- Nivel de supervisión de resultados.
 
 Cada torneo debe poder definir:
 

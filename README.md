@@ -14,52 +14,62 @@ motor de torneos como un **producto SaaS** vendible a otros organizadores.
 
 ## Estado actual
 
-**Fase: Planeación.** Todavía NO hay arquitectura técnica decidida ni código.
-La estructura técnica (monorepo, apps, paquetes) nacerá cuando la planeación lo
-justifique, no antes.
+**Fase 0: Planeación y diseño.** Arquitectura y stack definidos en `docs/`.
+Todavía no hay código. El monorepo se crea en el módulo 0 de construcción.
 
-## Estructura
+## Stack (resumen)
 
-```
-league-app/
-├── docs/        Documentos de planeación (el trabajo actual)
-└── README.md    Este archivo
-```
+TypeScript en todo · Next.js (sitio + portal PWA + admin) · NestJS (API,
+arquitectura hexagonal) · Supabase (Postgres, Auth, Storage, Realtime, CLI) ·
+pg-boss (jobs) · discord.js · Electron (agente de observador) · Expo (móvil,
+futuro) · Python/FastAPI (procesamiento de imágenes) · n8n (automatizaciones no
+críticas) · pnpm + Turborepo. Detalle en `docs/04-arquitectura.md`.
 
-## Documentos de planeación
+## Documentos
 
-Bloque A — Negocio y producto:
+Negocio y producto:
 
-| Documento | Propósito | Estado |
-|-----------|-----------|--------|
-| `docs/00-vision.md` | Visión, propuesta de valor, público, principios | ✅ |
-| `docs/01-roadmap.md` | Hoja de ruta por fases: qué construir y qué NO todavía | ✅ |
-| `docs/02-formatos-competencia.md` | Formatos, reglas, sistema de puntos | ✅ |
-| `docs/09-monetizacion.md` | Vías de ingreso, patrocinios, SaaS futuro | ✅ |
-| `docs/10-legal-cumplimiento.md` | Licencia Riot, disclaimers, privacidad | ✅ |
+| Documento | Propósito |
+|-----------|-----------|
+| `docs/00-vision.md` | Visión, propuesta de valor, público, principios, riesgos |
+| `docs/01-roadmap.md` | Fases y orden de construcción módulo por módulo |
+| `docs/02-formatos-competencia.md` | Formatos, reglas, puntos, Fearless, circuitos |
+| `docs/13-reglas-integridad.md` | Elegibilidad, anti-chapulineo, tiers, 1v1/2v2, anti-trampas, validación de resultados |
+| `docs/09-monetizacion.md` | Vías de ingreso (siempre al final) |
+| `docs/10-legal-cumplimiento.md` | Licencia Riot, disclaimers, privacidad, menores |
 
-Bloque B — Técnico:
+Producto y experiencia:
 
-| Documento | Propósito | Estado |
-|-----------|-----------|--------|
-| `docs/03-modelo-datos.md` | Entidades multi-torneo y relaciones | ✅ |
-| `docs/04-arquitectura.md` | Stack, monorepo, apps/packages, capa anti-Riot | ✅ |
-| `docs/05-plataformas.md` | Web, PWA, mobile, bot Discord, overlays | ✅ |
-| `docs/06-riot-integracion.md` | Tournament-V5, Match-V5, abstracción | ✅ |
-| `docs/07-automatizacion-ia.md` | Flujos automáticos, agentes IA, narrativa | ✅ |
+| Documento | Propósito |
+|-----------|-----------|
+| `docs/14-modulos-funcionales.md` | Inventario completo de módulos: admin, super admin, portal, sitio, evento |
+| `docs/12-auth-roles-perfiles.md` | Login, vinculación Riot, perfil, roles y permisos |
+| `docs/15-notificaciones.md` | Motor de notificaciones multicanal y configurable |
+| `docs/16-media-social-broadcast.md` | Quitar fondo, redes sociales, stream, overlays en vivo |
+| `docs/05-plataformas.md` | Superficies: web, PWA, bot, overlays, agente, móvil |
+| `docs/08-design-system.md` | Branding, tokens, componentes, estética LCK |
+| `docs/11-operaciones.md` | Ciclo de un torneo, roles del staff, disputas |
 
-Bloque C — Experiencia y operación:
+Técnico:
 
-| Documento | Propósito | Estado |
-|-----------|-----------|--------|
-| `docs/08-design-system.md` | Branding, tokens, componentes, estética LCK | ✅ |
-| `docs/11-operaciones.md` | Flujo de un torneo end-to-end, roles, soporte | ✅ |
+| Documento | Propósito |
+|-----------|-----------|
+| `docs/03-modelo-datos.md` | Modelo de datos completo (PostgreSQL) |
+| `docs/04-arquitectura.md` | Stack, monorepo, módulos, puertos, orden de construcción |
+| `docs/06-riot-integracion.md` | Tournament-V5, Match-V5, verificación, contingencia |
+| `docs/07-automatizacion-ia.md` | Flujos por evento, IA (narra y asiste, no decide) |
+| `docs/17-estandares-ingenieria.md` | Clean Code, SOLID, patrones, pruebas, definición de terminado |
 
-> **Planeación completa.** Siguiente paso: definir el nombre de marca y arrancar
-> la construcción con Claude Code, usando estos documentos como contrato.
+## Decisiones abiertas
+
+- Nombre de marca, logo, paleta y tipografías.
+- Query layer sobre Supabase (Drizzle o Kysely); migraciones siempre con Supabase CLI.
+- Proveedor de API unificada para redes sociales.
+- Proveedor de LLM y de moderación de imágenes.
+- Edad mínima para registrarse y competir.
 
 ## Herramientas de trabajo
 
-- **Kiro** — planeación, arquitectura y decisiones de diseño de sistema.
-- **Claude Code** — implementación pesada (código, integraciones, tests).
-- **Git / GitKraken** — control de versiones e historial visual.
+- **Kiro**: planeación, arquitectura y decisiones de diseño de sistema.
+- **Claude Code**: implementación (código, integraciones, tests).
+- **Git / GitKraken**: control de versiones e historial visual.

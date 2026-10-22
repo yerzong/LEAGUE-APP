@@ -4,6 +4,14 @@
 > construyen. Decisión central: **web responsive + PWA + bot de Discord** cubren
 > el "mobile" real al inicio; la app nativa es visión futura, no arranque.
 
+> **Inventario completo de módulos por pantalla:** `14-modulos-funcionales.md`.
+> Este documento queda como resumen de alto nivel.
+>
+> **Aclaración:** la web es **sitio + app web** en un solo proyecto Next.js:
+> sitio público (`/`, indexable), portal del jugador (`/app`, PWA instalable) y
+> consola de administración (`/admin`). Todas las superficies (web, overlays,
+> bot, agente, móvil) reutilizan la misma API, contratos y lógica.
+
 ---
 
 ## 1. Las superficies del producto
@@ -15,6 +23,7 @@
 | **Portal del jugador/capitán (web+PWA)** | Jugadores, capitanes | Inscribirse, ver calendario, check-in, perfil |
 | **Bot de Discord** | Jugadores, capitanes | Avisos, check-in, códigos de partida, resultados |
 | **Overlays (OBS)** | Producción / casters | Gráficos en vivo: picks&bans, lower-thirds, marcador |
+| **Agente de observador** | Observador de la partida transmitida | App de escritorio que lee el cliente de LoL y envía datos en vivo (ver `16`) |
 | **App móvil nativa** | Jugadores, fans | (Futuro) experiencia móvil dedicada |
 
 ---
