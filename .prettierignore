@@ -5,3 +5,8 @@ coverage
 docs
 brand
 **/*.md
+storybook-static
+.next
+next-env.d.ts
+playwright-report
+test-results

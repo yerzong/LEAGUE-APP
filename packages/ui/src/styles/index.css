@@ -1,0 +1,35 @@
+/*
+ * Tailwind preset for every app: `@import 'tailwindcss'; @import '@league/ui/styles.css';`
+ */
+@import './fonts.css';
+@import './tokens.css';
+
+/* Let Tailwind see the classes used by the components in this package. */
+@source '../';
+
+@layer base {
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-bright);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility tabular {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums;
+}

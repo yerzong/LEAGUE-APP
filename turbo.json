@@ -1,9 +1,10 @@
 {
   "$schema": "https://turborepo.com/schema.json",
+  "globalPassThroughEnv": ["CI"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "typecheck": {
       "dependsOn": ["^build"]
@@ -15,9 +16,21 @@
       "dependsOn": ["^build"],
       "outputs": []
     },
+    "test:e2e": {
+      "dependsOn": ["build"],
+      "passThroughEnv": ["API_URL", "PORT", "WEB_ORIGIN", "APP_VERSION"],
+      "outputs": ["playwright-report/**", "test-results/**"]
+    },
+    "@league/web#test:e2e": {
+      "dependsOn": ["build", "@league/api#build"],
+      "passThroughEnv": ["API_URL", "PORT", "WEB_ORIGIN", "APP_VERSION"],
+      "outputs": ["playwright-report/**", "test-results/**"]
+    },
     "dev": {
+      "dependsOn": ["^build"],
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "passThroughEnv": ["API_URL", "PORT", "WEB_ORIGIN", "APP_VERSION", "NODE_ENV"]
     }
   }
 }
