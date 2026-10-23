@@ -4,7 +4,8 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
+      "env": ["NEXT_PUBLIC_*"]
     },
     "typecheck": {
       "dependsOn": ["^build"]
@@ -24,7 +25,8 @@
         "WEB_ORIGIN",
         "APP_VERSION",
         "SUPABASE_URL",
-        "SUPABASE_PUBLISHABLE_KEY"
+        "SUPABASE_PUBLISHABLE_KEY",
+        "NEXT_PUBLIC_*"
       ],
       "outputs": ["playwright-report/**", "test-results/**"]
     },
@@ -36,7 +38,8 @@
         "WEB_ORIGIN",
         "APP_VERSION",
         "SUPABASE_URL",
-        "SUPABASE_PUBLISHABLE_KEY"
+        "SUPABASE_PUBLISHABLE_KEY",
+        "NEXT_PUBLIC_*"
       ],
       "outputs": ["playwright-report/**", "test-results/**"]
     },
@@ -51,7 +54,8 @@
         "APP_VERSION",
         "NODE_ENV",
         "SUPABASE_URL",
-        "SUPABASE_PUBLISHABLE_KEY"
+        "SUPABASE_PUBLISHABLE_KEY",
+        "NEXT_PUBLIC_*"
       ]
     }
   }

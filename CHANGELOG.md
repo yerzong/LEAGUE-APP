@@ -23,6 +23,10 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 - `packages/contracts`: esquemas de credenciales (`SignUpSchema`, etc.).
 - `packages/ui`: componente `FormField` con Storybook.
 - `packages/i18n`: textos de login, registro y errores de auth.
+- `apps/web`: sesión de Supabase con cookies (`@supabase/ssr`); `proxy.ts`
+  refresca la sesión y protege las zonas: `/app` exige sesión y `/admin` exige
+  `platform_role = super_admin` (verificado también en los layouts). Cierre de sesión.
+- `supabase/config.toml` alineado con `penta-dev` (MFA TOTP activo, pooler, OTP).
 
 ### Changed
 - Node fijado en 22 LTS (`.nvmrc` 22.22.3, `engines` `>=22.22.3 <23`).

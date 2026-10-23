@@ -17,6 +17,10 @@ jobs:
     name: Lint, typecheck, test, build, E2E
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      # Placeholders: builds and E2E never sign in, so no Supabase project is contacted.
+      NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ci
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
