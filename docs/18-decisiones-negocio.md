@@ -25,12 +25,13 @@
 | 2026-10-22 | **Transmisión**: partidas importantes en el canal oficial; el resto disponible para co-stream de creadores registrados. Parametrizable por torneo y por partida |
 | 2026-10-22 | **Calendario parametrizable**: ventanas de juego por día y horario, por torneo o fase (ej. viernes en la noche, fines de semana todo el día) |
 | 2026-10-22 | **Estadísticas públicas** para cualquiera, incluso sin cuenta; datos personales nunca públicos |
+| 2026-10-22 | **Género se pide en el registro**, privado y bloqueado tras declararlo (cambio con revisión). Eventos femeniles: regla `declared_before` + voz en Discord + cámara en finales + revisión por reporte, todo parametrizable |
 
 ## Pendientes
 
 | # | Tema | Propuesta |
 |---|------|-----------|
-| 1 | Criterio del circuito/eventos femeniles | Abierto a mujeres y personas de género marginado; autodeclaración + revisión de staff ante reportes. El parámetro de elegibilidad ya existe; falta definir el texto de la política |
+| 1 | Quién entra a eventos femeniles (solo "mujer" o también "no binario") | El sistema soporta ambos por parámetro; falta elegir el default de la liga |
 
 ## Pospuestas
 

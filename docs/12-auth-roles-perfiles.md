@@ -68,6 +68,18 @@ Reglas:
 - Fecha de nacimiento (para restricciones de edad y menores).
 - Aceptación de términos y privacidad (con versión aceptada).
 
+### Género (se pide en el registro)
+- Opciones: mujer, hombre, no binario, prefiero no decir.
+- Propósito declarado en el aviso de privacidad de forma general: "eventos de
+  la comunidad y estadísticas demográficas" (la ley obliga a decir para qué se
+  usa un dato, pero no a anunciar eventos futuros).
+- Se guarda como **dato privado**, nunca público.
+- **Se bloquea tras la primera declaración**: cambiarlo requiere solicitud con
+  revisión de staff y queda en auditoría.
+- La fecha de declaración (`gender_declared_at`) permite que un evento femenil
+  acepte solo cuentas que declararon **antes del anuncio del evento**.
+- Útil también para el media kit (demografía de la comunidad).
+
 ### Datos obligatorios para competir
 - Cuenta Riot vinculada y verificada.
 - Rol principal y secundario (top, jungle, mid, adc, support).

@@ -68,7 +68,13 @@ users                      (1:1 con auth.users de Supabase)
 user_private_data          (separada, RLS estricta: solo dueño y staff autorizado)
   user_id, legal_first_name, legal_last_name, phone_e164, phone_verified_at,
   institutional_email, institutional_email_verified_at,
-  guardian_name, guardian_contact, guardian_consent_at
+  guardian_name, guardian_contact, guardian_consent_at,
+  gender (woman|man|non_binary|prefer_not_to_say), gender_declared_at,
+  gender_locked (bool: true tras la primera declaración)
+
+gender_change_requests     (cambiar el género declarado requiere revisión)
+  id, user_id, from_value, to_value, reason, status (pending|approved|
+  rejected), reviewed_by, reviewed_at
 
 user_social_links
   user_id, platform (twitch|youtube|tiktok|x|instagram|kick|other),
