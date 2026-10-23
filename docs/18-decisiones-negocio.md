@@ -20,6 +20,7 @@
 | 2026-10-22 | Modalidad online/presencial/híbrida parametrizable por torneo (default online) |
 | 2026-10-22 | Idioma: solo español latinoamericano (`es-419`) por ahora |
 | 2026-10-22 | Nombre tentativo **PENTA League** (pendiente dominio, redes, IMPI) |
+| 2026-10-23 | **Identidad visual: plata monocromo** (`#C9CED6`) como marca madre, acentos por circuito. Logo en `brand/logo/` |
 | 2026-10-22 | **Modelo de liga: pirámide abierta** (PENTA League D1 → Ascenso D2 → Relámpagos), temporadas Apertura y Clausura |
 | 2026-10-22 | **Eventos independientes** de cualquier duración y formato (relámpago, copa de 1 mes, temporada corta de 2–3 meses, suizo, exhibición), combinables con cualquier elegibilidad (ej. relámpago femenil) |
 | 2026-10-22 | **Transmisión**: partidas importantes en el canal oficial; el resto disponible para co-stream de creadores registrados. Parametrizable por torneo y por partida |

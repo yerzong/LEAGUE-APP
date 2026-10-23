@@ -21,17 +21,27 @@ color se propaga a todo sin rediseñar nada a mano.
 
 ---
 
-## 2. La marca (pendiente de nombrar)
+## 2. La marca: PENTA League (nombre tentativo)
 
-> **Decisión abierta:** el nombre de la marca aún no está definido. Hasta
-> definirlo se usa el placeholder `League App`. Esta sección se completará al
-> elegir el nombre.
+- **Logo principal:** escudo con alas, corona y cinco estrellas (las cinco
+  estrellas = "penta"), monocromo plata `#C9CED6`. Archivos en `brand/logo/`
+  (SVG vectorial, PDF, AI, PNG 1x y 4x).
+- **Dirección de color:** marca madre **plata monocromo**; cada circuito tiene su
+  propio acento (ver sección 3).
 
-Elementos a definir:
-- **Nombre** de la liga/marca (ver criterios abajo).
-- **Logo** (versión completa, isotipo, monocromo, favicon).
-- **Tagline** / lema.
-- **Voz y tono** de la marca (para copys, narrativa IA, redes).
+### Versiones del logo que faltan
+| Versión | Uso | Por qué |
+|---------|-----|---------|
+| **Isotipo** (escudo + 5 estrellas, sin texto) | Favicon, avatar de redes, ícono de app, marca de agua en overlays | El logo completo no se lee a menos de ~64 px: "ESPORTS" y los detalles de las alas desaparecen |
+| **Horizontal** (isotipo + "PENTA LEAGUE" en línea) | Header web, barra de overlays, firmas de correo | El escudo es casi cuadrado y ocupa mucha altura en barras |
+| **Negro / oscuro** | Fondos claros, merch, documentos | Hoy solo existe la versión plata |
+| **Por circuito** (mismo escudo, acento del circuito) | PENTA Femenil, Relámpago, Ascenso | Familia de marca conectada |
+
+### Pendiente
+- Tagline / lema.
+- Voz y tono (copys, narrativa IA, redes): directo, competitivo, cercano.
+- Nota: si el concepto del logo se generó con IA (Firefly), el trazado final
+  vectorial propio es lo que conviene registrar en el IMPI.
 
 ### Criterios para elegir el nombre
 - Memorable y pronunciable en español e inglés (pensando en el SaaS global futuro).
@@ -48,28 +58,51 @@ Elementos a definir:
 Los tokens son la fuente única de verdad visual. Se definen una vez y se consumen
 en todas las superficies (`packages/ui` y `packages/graphics`).
 
-### Color (dirección: alto contraste estilo LCK)
-```
---color-bg            Fondo principal (oscuro, dramático)
---color-surface       Superficies/cards
---color-primary       Color de marca (acento principal)
---color-secondary     Acento secundario
---color-accent        Resaltado (MVP, destacados)
---color-text          Texto principal
---color-text-muted    Texto secundario
---color-success/warn/danger   Estados
---color-team-a / team-b       Colores de lado (azul/rojo del juego)
-```
-> Valores concretos se fijan con la paleta de marca. Mantener **ratios de
-> contraste accesibles** (WCAG AA) para legibilidad en pantalla y stream.
+### Color — Plata monocromo (propuesta v1)
 
-### Tipografía
-```
---font-display   Titulares audaces (impacto, estilo broadcast)
---font-body       Texto de lectura (limpio, neutro)
---font-mono       Datos/estadísticas (tabular, alineado)
-```
-Escala tipográfica modular (ej. 1.25). Números **tabulares** para stats y marcadores.
+Contraste calculado contra el fondo `#0B0B10` (WCAG: ≥ 4.5 texto normal,
+≥ 3 texto grande).
+
+| Token | Hex | Contraste | Uso |
+|-------|-----|-----------|-----|
+| `--color-bg` | `#0B0B10` | — | Fondo principal |
+| `--color-surface` | `#16161F` | — | Cards, paneles |
+| `--color-surface-2` | `#1F1F2A` | — | Hover, inputs |
+| `--color-border` | `#2A2A36` | — | Bordes, divisores |
+| `--color-brand` | `#C9CED6` | 12.4 | Plata del logo: títulos, marca, acentos |
+| `--color-brand-bright` | `#E6E9EE` | 16.1 | Destacados, hover de marca |
+| `--color-brand-dim` | `#8A909A` | 6.1 | Plata apagada, íconos secundarios |
+| `--color-text` | `#F4F5F7` | 18.0 | Texto principal |
+| `--color-text-muted` | `#9AA0AA` | 7.5 | Texto secundario |
+| `--color-team-blue` | `#4C8DFF` | 6.1 | Lado azul |
+| `--color-team-red` | `#F0525C` | 5.7 | Lado rojo |
+| `--color-success` | `#3DD68C` | 10.5 | Éxito, victoria |
+| `--color-warning` | `#F5B841` | 11.1 | Avisos, check-in por cerrar |
+| `--color-danger` | `#F0525C` | 5.7 | Errores (siempre con ícono + texto para no confundir con lado rojo) |
+
+### Acentos por circuito
+| Circuito | Token | Hex | Contraste | Nota |
+|----------|-------|-----|-----------|------|
+| PENTA League (D1) | `--accent-league` | `#C9CED6` | 12.4 | La propia plata |
+| Ascenso (D2) | `--accent-ascenso` | `#00C389` | 8.6 | Jade |
+| Relámpago | `--accent-flash` | `#FFD400` | 13.7 | Amarillo eléctrico |
+| Femenil | `--accent-femenil` | `#E4007C` | 4.3 | Rosa mexicano: **solo texto grande, logos y bloques**; para texto pequeño usar `#FF4DA6` (6.4) |
+| Universitario | `--accent-uni` | `#9B7BFF` | 6.2 | Violeta |
+
+> El acento cambia según el torneo que se está viendo (página, overlay,
+> gráfico). La plata se mantiene como marca madre en todo.
+
+### Tipografía (propuesta v1, todas con licencia libre OFL)
+| Token | Fuente | Por qué |
+|-------|--------|---------|
+| `--font-display` | **Saira Condensed** (Bold / ExtraBold) | Letras cuadradas con esquinas suavizadas, como las del logo; condensada para broadcast |
+| `--font-body` | **Inter** | Lectura clara en web y móvil |
+| `--font-numeric` | **Inter** con `font-variant-numeric: tabular-nums` (o **JetBrains Mono** en tablas densas) | Números del mismo ancho para marcadores, KDA y standings |
+
+- Fuentes libres (Google Fonts / OFL) y **auto-alojadas** en la web: no dependen
+  de la suscripción de Adobe ni de servicios externos.
+- Adobe Fonts queda para piezas de diseño (posters, videos), no para la web.
+- Escala tipográfica modular 1.25. Títulos de overlay en mayúsculas.
 
 ### Espaciado, radios, sombras, motion
 ```
