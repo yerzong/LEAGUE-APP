@@ -1,0 +1,24 @@
+{
+  "name": "league-app",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.15.0",
+  "engines": {
+    "node": ">=24.22.1"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "prettier": "@league/config/prettier",
+  "devDependencies": {
+    "@league/config": "workspace:*",
+    "prettier": "3.9.10",
+    "turbo": "2.11.10"
+  }
+}
