@@ -87,6 +87,8 @@ Superficies adicionales fuera de la web:
 ```
 Paso 1  Básico: nombre, tipo (liga/relámpago/femenil/universitario/rangos),
         plantilla de partida, imagen, descripción, tier
+Paso 1b Participantes: independientes / solo clubes / mixto, máximo de rosters
+        por club; modalidad online / presencial / híbrida (+ sede)
 Paso 2  Modo de juego: 5v5 / 2v2 / 1v1, mapa (Grieta/ARAM), tipo de pick
 Paso 3  Elegibilidad: reglas del motor de elegibilidad (región, rangos, peak,
         edad, institución, exclusividad, tier máximo...)
@@ -100,8 +102,6 @@ Paso 8  Comunicación: notificaciones a activar, canales, plantillas
 Paso 9  Premios (opcional): sin premios / por lugar / MVP / especiales; tipo
         (efectivo, periférico, merch, prestigio, personalizado), monto o
         descripción, imagen, reparto (equipo/por jugador). Patrocinio (fase 4)
-Paso 1b Participantes: independientes / solo clubes / mixto, máximo de rosters
-        por club; modalidad online / presencial / híbrida (+ sede)
 Paso 10 Revisión: resumen + vista previa del bracket + publicar
 ```
 - Guardar como **borrador** en cualquier paso.
