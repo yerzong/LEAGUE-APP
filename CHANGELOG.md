@@ -27,6 +27,9 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
   refresca la sesión y protege las zonas: `/app` exige sesión y `/admin` exige
   `platform_role = super_admin` (verificado también en los layouts). Cierre de sesión.
 - `supabase/config.toml` alineado con `penta-dev` (MFA TOTP activo, pooler, OTP).
+- `apps/web`: login y registro con correo + contraseña, magic link y Discord
+  (Google preparado con `NEXT_PUBLIC_AUTH_GOOGLE_ENABLED`); `/auth/callback`
+  para OAuth, magic link y confirmación de correo.
 
 ### Changed
 - Node fijado en 22 LTS (`.nvmrc` 22.22.3, `engines` `>=22.22.3 <23`).

@@ -41,6 +41,11 @@ supabase db push                                   # aplica migraciones en penta
 pnpm db:types                                      # regenera packages/db/src/database.types.ts
 ```
 
+Auth en `penta-dev`: el SMTP por defecto de Supabase solo envía correos a
+miembros del equipo del proyecto; para registrar otros correos hay que
+configurar SMTP propio. Discord requiere `SUPABASE_AUTH_EXTERNAL_DISCORD_CLIENT_ID`
+y `..._SECRET` (ver `apps/web/.env.example`) y `supabase config push`.
+
 El seed (`supabase/seed.sql`) solo corre con `supabase db reset` en local/CI; los
 tests de RLS (`supabase/tests`) corren en CI con `supabase test db`.
 
