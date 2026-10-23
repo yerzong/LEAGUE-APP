@@ -64,6 +64,9 @@ Superficies adicionales fuera de la web:
 | **Contenido / Noticias** | Publicar noticias, crónicas IA (revisar y aprobar), destacados del home | 3 |
 | **Redes sociales** | Cuentas conectadas, composer multi-red, calendario de publicaciones, publicaciones automáticas | 3 |
 | **Plantillas gráficas** | Editor/selector de plantillas (resultado, MVP, standings), vista previa con datos reales | 3 |
+| **Solicitudes de contenido** | Tablero para pedir diseños, clips y ediciones: tipo, fecha límite, assignee (designer/editor), estados, entregables ligados a la biblioteca de media | 3 |
+| **Creadores y co-streaming** | Registrar streamers/creadores oficiales, darles links de overlays y assets, ver sus transmisiones activas, métricas por creador | 3 |
+| **Turnos de staff** | Asignar casters, observers, referees y producers por jornada; disponibilidad del staff | 2 |
 | **Media** | Biblioteca de imágenes, clips, logos; quitar fondo; etiquetas | 2 |
 | **Transmisión** | Panel de producción: escenas, overlays, control en vivo, agente de observador (ver sección 6) | 3 |
 | **Discord** | Configurar servidor, canales, roles, mensajes del bot | 2 |

@@ -92,9 +92,16 @@ Reglas:
 - Cada dato tiene **visibilidad**: público, solo equipo, solo staff, privado.
 - Nombre legal, teléfono, fecha de nacimiento: **nunca públicos**.
 - La edad pública se muestra como "+18" o nada; nunca la fecha.
-- **Menores de edad:** edad mínima configurable por organización (sugerido: 13
-  para registrarse, 16 para competir). Menores de 18 requieren consentimiento de
-  tutor para premios en efectivo o eventos presenciales.
+- **Menores de edad (decisión: sin edad mínima propia):** la plataforma no
+  impone una edad mínima adicional; aplica la que exige Riot para tener cuenta
+  (verificar en sus términos vigentes). Para menores de 18 (México):
+  - Consentimiento de padre/madre/tutor registrado para competir.
+  - Obligatorio también para premios en efectivo, eventos presenciales y para
+    **usar su foto en publicaciones, overlays y redes**.
+  - Sin consentimiento: puede competir con avatar genérico y sin aparecer en
+    posts con foto.
+  - El sistema marca al menor en el roster para que el staff lo vea.
+  - Validar con un abogado bajo la ley mexicana de datos personales vigente.
 - El usuario puede **descargar y borrar** sus datos (derechos ARCO / GDPR). Al
   borrar, el historial competitivo se anonimiza (no se pierden resultados).
 
@@ -126,6 +133,15 @@ Dos niveles: **roles de plataforma** (globales) y **roles de organización**
 | **Content / Social Manager** | Publicaciones, plantillas gráficas, redes, noticias |
 | **Producer / Caster** | Panel de transmisión, overlays, agente de observador |
 | **Analista** (opcional) | Ver estadísticas y reportes, sin editar |
+| **Designer** | Plantillas gráficas, biblioteca de media, tomar solicitudes de diseño |
+| **Video Editor** | Clips, highlights, VODs, tomar solicitudes de edición |
+| **Streamer / Creador oficial** | Co-streaming con overlays oficiales, acceso a assets y calendario de transmisiones |
+| **Observer** | Operar el agente de observador en partidas transmitidas |
+| **Community Manager** | Discord, anuncios, soporte a equipos |
+
+> El staff de la liga es amplio (streamers, creadores, casters, designers,
+> editores, jugadores casuales que ayudan). Por eso los roles son
+> **personalizables** y una persona puede tener varios (ej. caster + streamer).
 
 ### Roles de equipo
 | Rol | Puede |

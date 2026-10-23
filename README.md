@@ -60,13 +60,23 @@ Técnico:
 | `docs/07-automatizacion-ia.md` | Flujos por evento, IA (narra y asiste, no decide) |
 | `docs/17-estandares-ingenieria.md` | Clean Code, SOLID, patrones, pruebas, definición de terminado |
 
+## Decisiones tomadas
+
+- **Mercado:** México y Latinoamérica. Servidor principal LAN (`LA1`, routing
+  regional `americas`); LAS (`LA2`) soportado. Idioma español, moneda MXN,
+  zona horaria por defecto `America/Mexico_City`.
+- **Edad:** sin edad mínima propia (aplica la de Riot); menores de 18 con
+  consentimiento de tutor para competir y para usar su foto.
+- **Staff amplio:** streamers, creadores, casters, observers, designers,
+  editores, referees y community managers, con roles personalizables.
+- **Presupuesto:** sin restricción fuerte; se elige por calidad, no por precio.
+
 ## Decisiones abiertas
 
 - Nombre de marca, logo, paleta y tipografías.
 - Query layer sobre Supabase (Drizzle o Kysely); migraciones siempre con Supabase CLI.
 - Proveedor de API unificada para redes sociales.
-- Proveedor de LLM y de moderación de imágenes.
-- Edad mínima para registrarse y competir.
+- Proveedor de LLM (API) y de moderación de imágenes.
 
 ## Herramientas de trabajo
 
