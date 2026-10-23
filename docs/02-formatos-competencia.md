@@ -78,6 +78,24 @@ Cualquier torneo se arma combinando estos bloques:
 - Por qué no franquicias: en amateur nadie invierte por un lugar fijo, y cerrar
   la liga mata la motivación de los equipos nuevos.
 
+## 4.1 Eventos independientes de la pirámide (duración libre)
+
+Además de la pirámide anual, la organización puede crear eventos sueltos con
+cualquier duración y formato. No pertenecen a una temporada (o sí, si se quiere
+que den puntos de circuito). Plantillas sugeridas, todas editables:
+
+| Plantilla | Duración | Formato sugerido |
+|-----------|----------|------------------|
+| Relámpago | 1 día / fin de semana | Eliminación simple Bo1, final Bo3 |
+| Copa | 1 mes | Grupos Bo1 + playoffs Bo3 |
+| Torneo de temporada corta | 2–3 meses | Round robin Bo1/Bo3 + playoffs Bo3/Bo5 |
+| Suizo | 2–4 semanas | Suizo Bo1, top 8 a playoffs |
+| Exhibición / show match | 1 día | Bo1 o Bo3, sin standings |
+
+Cualquier plantilla se combina con cualquier elegibilidad: por ejemplo un
+**relámpago femenil**, una **copa universitaria** o un **suizo solo para Oro o
+menos**.
+
 ## 4. Liga Principal (formato insignia, estilo LCK)
 
 ### 4.1 Temporada Regular

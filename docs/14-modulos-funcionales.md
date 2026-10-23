@@ -95,8 +95,14 @@ Paso 3  Elegibilidad: reglas del motor de elegibilidad (región, rangos, peak,
 Paso 4  Roster: titulares, suplentes, coach, límite de cambios, roster lock
 Paso 5  Formato: fases (agregar/ordenar), formato por fase, Bo1/Bo3/Bo5,
         draft estándar/Fearless, puntos, desempates, clasificados por fase
-Paso 6  Calendario: fechas de inscripción, inicio, días/horarios de jornada,
-        ventanas de check-in, duración estimada de partida
+Paso 6  Calendario: fechas de inscripción e inicio; ventanas de juego por día
+        de la semana (ej. viernes 20:00–23:00, sábado y domingo 12:00–22:00),
+        por torneo o por fase; series en paralelo; fechas bloqueadas;
+        duración estimada por serie; ventanas de check-in; reglas de
+        reprogramación (solo dentro de ventanas permitidas)
+Paso 6b Transmisión: partidas destacadas en canal oficial; co-stream de
+        creadores (desactivado / creadores registrados / con aprobación),
+        delay del co-stream
 Paso 7  Supervisión: nivel (automático/doble reporte/árbitro/transmitido)
 Paso 8  Comunicación: notificaciones a activar, canales, plantillas
 Paso 9  Premios (opcional): sin premios / por lugar / MVP / especiales; tipo

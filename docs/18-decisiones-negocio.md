@@ -14,25 +14,26 @@
 | 2026-10-22 | Staff amplio con roles personalizables |
 | 2026-10-22 | Presupuesto sin restricción fuerte |
 | 2026-10-22 | Monetización al final |
-| 2026-10-22 | **Premios parametrizables por torneo** desde el piloto: sin premio, efectivo, periférico, merch, prestigio o personalizado; por lugar, MVP o especiales |
-| 2026-10-22 | **Pagos a staff**: módulo existe, solo visible para Owner/Super Admin; modelo por rol (voluntario, por evento, por partida, por entregable). Prioridad baja (fase 3) |
-| 2026-10-22 | **Equipos independientes y clubes**: parametrizable por torneo (solo independientes, solo clubes, mixto) |
-| 2026-10-22 | **Modalidad** parametrizable por torneo: online, presencial o híbrida. Por defecto online |
-| 2026-10-22 | **Idioma**: solo español latinoamericano (`es-419`) por ahora; i18n preparado |
-| 2026-10-22 | **Nombre tentativo: PENTA League**, pendiente de verificar dominio, redes e IMPI |
+| 2026-10-22 | Premios parametrizables por torneo desde el piloto (sin premio, efectivo, periférico, merch, prestigio, personalizado; por lugar, MVP o especiales) |
+| 2026-10-22 | Pagos a staff: módulo solo para Owner/Super Admin, prioridad baja |
+| 2026-10-22 | Equipos independientes y clubes, parametrizable por torneo |
+| 2026-10-22 | Modalidad online/presencial/híbrida parametrizable por torneo (default online) |
+| 2026-10-22 | Idioma: solo español latinoamericano (`es-419`) por ahora |
+| 2026-10-22 | Nombre tentativo **PENTA League** (pendiente dominio, redes, IMPI) |
+| 2026-10-22 | **Modelo de liga: pirámide abierta** (PENTA League D1 → Ascenso D2 → Relámpagos), temporadas Apertura y Clausura |
+| 2026-10-22 | **Eventos independientes** de cualquier duración y formato (relámpago, copa de 1 mes, temporada corta de 2–3 meses, suizo, exhibición), combinables con cualquier elegibilidad (ej. relámpago femenil) |
+| 2026-10-22 | **Transmisión**: partidas importantes en el canal oficial; el resto disponible para co-stream de creadores registrados. Parametrizable por torneo y por partida |
+| 2026-10-22 | **Calendario parametrizable**: ventanas de juego por día y horario, por torneo o fase (ej. viernes en la noche, fines de semana todo el día) |
+| 2026-10-22 | **Estadísticas públicas** para cualquiera, incluso sin cuenta; datos personales nunca públicos |
 
-## Propuestas (esperan confirmación)
+## Pendientes
 
 | # | Tema | Propuesta |
 |---|------|-----------|
-| 1 | Modelo de liga | **Pirámide abierta con ascenso y descenso**, temporadas Apertura/Clausura (ver `02-formatos-competencia.md`, sección 4.0) |
-| 2 | Derechos de contenido | Co-streaming abierto a creadores registrados en la plataforma, con overlays oficiales y delay; transmisión oficial solo del canal de la liga |
-| 3 | Circuito femenil | Abierto a mujeres y personas de género marginado (política común en esports); verificación por autodeclaración + revisión de staff ante reportes |
-| 4 | Calendario | 2 temporadas por año (Apertura y Clausura); jornadas de liga en noches entre semana o fines de semana; relámpagos en sábado/domingo |
-| 5 | Estadísticas | Públicas para cualquiera, incluso sin cuenta; los datos personales nunca son públicos |
+| 1 | Criterio del circuito/eventos femeniles | Abierto a mujeres y personas de género marginado; autodeclaración + revisión de staff ante reportes. El parámetro de elegibilidad ya existe; falta definir el texto de la política |
 
 ## Pospuestas
 
 | Tema | Por qué |
 |------|---------|
-| Figura legal (persona física o moral) | Solo hace falta al facturar a patrocinadores o pagar premios grandes; se decide con un contador antes de la fase de monetización |
+| Figura legal (persona física o moral) | Solo hace falta al facturar a patrocinadores o pagar premios grandes; se decide con un contador antes de monetizar |

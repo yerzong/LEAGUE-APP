@@ -223,6 +223,8 @@ tournaments
   has_prizes (bool), prize_pool_summary (texto público),
   exclusivity_scope (none|tournament|circuit|season),
   supervision_level (automatic|dual_report|referee|broadcast),
+  costream_policy (disabled|registered_creators|approval_required),
+  costream_delay_seconds,
   current_rulebook_version_id, settings (jsonb), schema_version,
   published_at, published_by, deleted_at
 
@@ -324,6 +326,24 @@ matches                    (serie)
   score_a, score_b, winner_entrant_id null, result_source
   (riot_callback|dual_report|referee|admin_override), finalized_at,
   is_broadcast, stream_session_id null, version (optimistic lock)
+
+schedule_windows           (horarios permitidos; parametrizables por torneo o fase)
+  id, tournament_id, phase_id null, weekday (0–6), start_time, end_time,
+  timezone, slot_minutes (duración estimada por serie), parallel_matches
+  (cuántas series a la vez), priority
+schedule_blackouts         (fechas sin partidos: festivos, eventos)
+  id, tournament_id, starts_at, ends_at, reason
+  → el generador de fixtures asigna series a estos slots; las
+    reprogramaciones solo pueden caer dentro de ventanas permitidas
+
+match_broadcast_settings
+  match_id, official_broadcast (bool), costream_allowed (bool),
+  costream_delay_seconds, assigned_casters (array), priority (featured|normal)
+
+costream_registrations     (creadores que transmiten una partida)
+  id, match_id, creator_user_id, stream_channel_id, status
+  (requested|approved|live|ended), overlay_token_hash, started_at, ended_at,
+  peak_viewers
 
 match_officials
   match_id, user_id, role (referee|observer|caster|producer)
