@@ -110,7 +110,7 @@ al modificar roster.
 | `account_age_min` | días | Cuenta con ≥ 60 días |
 | `ranked_games_min` | número | ≥ 50 ranked en la temporada |
 | `age_min` | años | ≥ 16 (premios en efectivo) |
-| `gender` | valores, `declared_before` (fecha, opcional) | Evento femenil: solo cuentas que declararon "mujer" antes del anuncio del evento |
+| `gender` | valores (default femenil: `woman`, `non_binary`), `declared_before` (fecha, opcional) | Evento femenil: solo cuentas que declararon su género antes del anuncio del evento |
 | `voice_comms_required` | — | Voz en Discord obligatoria durante las partidas; referee puede entrar sin aviso |
 | `camera_required` | fases | Cámara obligatoria en finales o con premio en efectivo |
 | `institution` | institución, dominio | Correo institucional verificado |
