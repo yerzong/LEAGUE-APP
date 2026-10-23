@@ -10,6 +10,10 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 - `lint` falla también con warnings (`--max-warnings=0`).
 
 ### Added
+- `apps/web` (Next.js App Router + Tailwind v4): zonas `/` (público), `/app`
+  (portal) y `/admin` (consola) con layout propio. La home muestra el logo y el
+  estado de la API. Nombre y logo desde `src/config/brand.ts`.
+- E2E con Playwright de la home (`pnpm test:e2e`), también en CI.
 - `apps/api` (NestJS): `GET /health` con el contrato `HealthResponse`, módulo
   hexagonal de ejemplo (`modules/health/{domain,application,infrastructure,presentation}`),
   variables de entorno validadas con Zod al arrancar y `.env.example`.

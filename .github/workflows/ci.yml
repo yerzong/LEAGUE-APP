@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   verify:
-    name: Lint, typecheck, test, build
+    name: Lint, typecheck, test, build, E2E
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -38,6 +38,17 @@ jobs:
         if: github.event_name == 'pull_request'
         run: pnpm turbo run lint typecheck test build --affected
 
+      - name: Install Playwright browser
+        run: pnpm --filter @league/web exec playwright install --with-deps chromium
+
+      - name: E2E affected packages
+        if: github.event_name == 'pull_request'
+        run: pnpm turbo run test:e2e --affected
+
       - name: Verify all packages
         if: github.event_name == 'push'
         run: pnpm turbo run lint typecheck test build
+
+      - name: E2E all packages
+        if: github.event_name == 'push'
+        run: pnpm turbo run test:e2e

@@ -14,7 +14,7 @@ motor de torneos como un **producto SaaS** vendible a otros organizadores.
 
 ## Estado actual
 
-**Módulo 0: Fundación.** Monorepo y CI listos (PR 00a). Arquitectura y stack
+**Módulo 0: Fundación.** Monorepo y CI (PR 00a); esqueletos de web y API, tokens de diseño (PR 00b). Arquitectura y stack
 definidos en `docs/`.
 
 ## Desarrollo
@@ -24,9 +24,16 @@ Requisitos: Node según `.nvmrc` (`nvm use`) y pnpm (la versión exacta se toma 
 
 ```sh
 pnpm install
+pnpm dev           # web en http://localhost:3000, API en http://localhost:4000
 pnpm lint && pnpm typecheck && pnpm test && pnpm build
+pnpm test:e2e      # Playwright (primera vez: pnpm --filter @league/web exec playwright install chromium)
+pnpm --filter @league/ui storybook   # Storybook en http://localhost:6006
 pnpm format        # aplica Prettier
 ```
+
+Variables de entorno: copia `apps/api/.env.example` a `apps/api/.env` y
+`apps/web/.env.example` a `apps/web/.env.local` (los valores por defecto sirven
+para desarrollo local).
 
 Las dependencias se fijan con versión exacta (`savePrefix: ''` en
 `pnpm-workspace.yaml`).
