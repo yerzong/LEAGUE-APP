@@ -110,6 +110,9 @@ apps/api/src/modules/registrations/
 - Errores tipados del dominio → respuestas HTTP consistentes (problem+json).
 - Sin lógica de negocio en controllers ni en componentes.
 - Feature flags para liberar módulos gradualmente.
+- **Nombre y marca nunca hardcodeados**: el nombre, logo, colores y textos de
+  marca salen de la configuración de la organización (`organizations`,
+  `brand_themes`, i18n). Cambiar de nombre debe ser configuración, no código.
 
 ## 8. Git
 
