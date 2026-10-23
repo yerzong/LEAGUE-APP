@@ -16,6 +16,10 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 - Seed de desarrollo: organización "PENTA League" y super admin local.
 - Tests pgTAP de RLS y del trigger (`supabase/tests`), en CI con `supabase start`.
 - `packages/db`: tipos generados con `supabase gen types` (`pnpm db:types`).
+- `apps/api`: `AccessTokenGuard` verifica el JWT de Supabase (firma contra el
+  JWKS del proyecto) y `GET /me` devuelve el usuario actual (`MeResponse`);
+  401 sin token o con token inválido. Nuevas variables `SUPABASE_URL` y
+  `SUPABASE_PUBLISHABLE_KEY`.
 
 ### Changed
 - Node fijado en 22 LTS (`.nvmrc` 22.22.3, `engines` `>=22.22.3 <23`).

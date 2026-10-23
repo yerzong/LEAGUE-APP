@@ -6,7 +6,7 @@ import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { AppModule } from '../../../app.module.js';
-import { loadEnv } from '../../../config/env.js';
+import { testEnv } from '../../../config/test-env.js';
 
 describe('GET /health', () => {
   let app: INestApplication;
@@ -14,7 +14,7 @@ describe('GET /health', () => {
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [AppModule.register(loadEnv({ APP_VERSION: '9.9.9' }))],
+      imports: [AppModule.register(testEnv({ APP_VERSION: '9.9.9' }))],
     }).compile();
     app = moduleRef.createNestApplication({ logger: false });
     await app.listen(0);

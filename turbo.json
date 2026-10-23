@@ -18,19 +18,41 @@
     },
     "test:e2e": {
       "dependsOn": ["build"],
-      "passThroughEnv": ["API_URL", "PORT", "WEB_ORIGIN", "APP_VERSION"],
+      "passThroughEnv": [
+        "API_URL",
+        "PORT",
+        "WEB_ORIGIN",
+        "APP_VERSION",
+        "SUPABASE_URL",
+        "SUPABASE_PUBLISHABLE_KEY"
+      ],
       "outputs": ["playwright-report/**", "test-results/**"]
     },
     "@league/web#test:e2e": {
       "dependsOn": ["build", "@league/api#build"],
-      "passThroughEnv": ["API_URL", "PORT", "WEB_ORIGIN", "APP_VERSION"],
+      "passThroughEnv": [
+        "API_URL",
+        "PORT",
+        "WEB_ORIGIN",
+        "APP_VERSION",
+        "SUPABASE_URL",
+        "SUPABASE_PUBLISHABLE_KEY"
+      ],
       "outputs": ["playwright-report/**", "test-results/**"]
     },
     "dev": {
       "dependsOn": ["^build"],
       "cache": false,
       "persistent": true,
-      "passThroughEnv": ["API_URL", "PORT", "WEB_ORIGIN", "APP_VERSION", "NODE_ENV"]
+      "passThroughEnv": [
+        "API_URL",
+        "PORT",
+        "WEB_ORIGIN",
+        "APP_VERSION",
+        "NODE_ENV",
+        "SUPABASE_URL",
+        "SUPABASE_PUBLISHABLE_KEY"
+      ]
     }
   }
 }

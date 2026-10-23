@@ -15,6 +15,11 @@ export default defineConfig({
       command: 'pnpm --filter @league/api start',
       url: 'http://localhost:4000/health',
       reuseExistingServer: !isCI,
+      // GET /health never contacts Supabase; placeholders satisfy env validation.
+      env: {
+        SUPABASE_URL: process.env.SUPABASE_URL ?? 'http://127.0.0.1:54321',
+        SUPABASE_PUBLISHABLE_KEY: process.env.SUPABASE_PUBLISHABLE_KEY ?? 'sb_publishable_e2e',
+      },
     },
     {
       command: 'pnpm start',
