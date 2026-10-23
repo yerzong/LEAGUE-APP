@@ -54,6 +54,14 @@ Criterios de aceptación:
 ## PR 00c — Supabase local y auth base (`feat/m00c-supabase-auth`)
 
 Alcance:
+- **Entornos de base de datos (sin Docker en la Mac):**
+  - Desarrollo contra un proyecto Supabase en la nube **dedicado a dev**
+    (`penta-dev`). Nunca contra producción.
+  - `supabase init` + `supabase link --project-ref <penta-dev>`. Migraciones con
+    `supabase migration new` y se aplican con `supabase db push`. Tipos con
+    `supabase gen types --linked`.
+  - CI (GitHub Actions sí tiene Docker) levanta Supabase local con
+    `supabase start` para correr tests de integración aislados en cada PR.
 - `supabase init` en `supabase/`. Primera migración: tabla `users` (perfil 1:1
   con `auth.users`), `organizations`, `organization_members` (columnas de
   `docs/03-modelo-datos.md`, solo las necesarias para este módulo) con RLS.
@@ -68,7 +76,8 @@ Alcance:
   `GET /me`.
 
 Criterios de aceptación:
-- [ ] `supabase start` + `supabase db reset` crea esquema y seed sin errores.
+- [ ] `supabase db push` aplica las migraciones en `penta-dev` sin errores, y en
+      CI `supabase start` + `supabase db reset` crea esquema y seed.
 - [ ] Registro por correo crea fila en `users` automáticamente.
 - [ ] Usuario sin sesión no entra a `/app` ni `/admin`; usuario normal no entra a
       `/admin`.
@@ -81,6 +90,7 @@ Criterios de aceptación:
 Perfil completo, vinculación Riot, equipos, torneos y cualquier otro módulo.
 
 ## Requisitos del entorno
-- Docker (o OrbStack) para `supabase start`.
+- Proyecto Supabase `penta-dev` creado en el dashboard (separado de producción).
+- `supabase login` hecho en la Mac. Docker no es necesario localmente.
 - App de Discord creada en el Discord Developer Portal para OAuth (client id y
   secret en `.env.local`, nunca en el repo).
