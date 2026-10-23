@@ -32,7 +32,8 @@ task conflicts with the docs, stop and ask.
   presentation).
 - Supabase: Postgres, Auth, Storage, Realtime. Migrations ONLY via Supabase CLI
   (`supabase/migrations`, SQL). RLS on every business table.
-- Development uses the cloud project `penta-dev` (no Docker on the dev machine).
+- Development uses the cloud project `penta-dev`, ref `tcxqywnpytfrytpsqiln`
+  (no Docker on the dev machine). It is the ONLY project you may link.
   **Never connect to, push to, or query the production project.** CI runs a
   local Supabase with `supabase start` for integration tests.
 - Projects are created with "automatically expose new tables" OFF and

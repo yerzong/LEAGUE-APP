@@ -56,7 +56,9 @@ Criterios de aceptación:
 Alcance:
 - **Entornos de base de datos (sin Docker en la Mac):**
   - Desarrollo contra un proyecto Supabase en la nube **dedicado a dev**
-    (`penta-dev`). Nunca contra producción.
+    (`penta-dev`, project ref `tcxqywnpytfrytpsqiln`, región West US / Oregon,
+    org "APPS LEAGUE"). Nunca contra producción ni contra otros proyectos de la
+    organización (ej. "Temp Platform").
   - `supabase init` + `supabase link --project-ref <penta-dev>`. Migraciones con
     `supabase migration new` y se aplican con `supabase db push`. Tipos con
     `supabase gen types --linked`.
