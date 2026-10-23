@@ -31,6 +31,19 @@ pnpm --filter @league/ui storybook   # Storybook en http://localhost:6006
 pnpm format        # aplica Prettier
 ```
 
+Base de datos (Supabase, sin Docker en la Mac; proyecto de desarrollo `penta-dev`):
+
+```sh
+supabase login
+supabase link --project-ref tcxqywnpytfrytpsqiln   # nunca otro proyecto
+supabase migration new <nombre>                    # crea supabase/migrations/<ts>_<nombre>.sql
+supabase db push                                   # aplica migraciones en penta-dev
+pnpm db:types                                      # regenera packages/db/src/database.types.ts
+```
+
+El seed (`supabase/seed.sql`) solo corre con `supabase db reset` en local/CI; los
+tests de RLS (`supabase/tests`) corren en CI con `supabase test db`.
+
 Variables de entorno: copia `apps/api/.env.example` a `apps/api/.env` y
 `apps/web/.env.example` a `apps/web/.env.local` (los valores por defecto sirven
 para desarrollo local).
