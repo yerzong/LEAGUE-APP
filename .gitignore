@@ -34,3 +34,5 @@ Thumbs.db
 coverage/
 tmp/
 *.tmp
+
+storybook-static/

@@ -1,0 +1,70 @@
+/*
+ * Design tokens (docs/08-design-system.md §3). The only place hex values live.
+ * Declared as a Tailwind v4 theme: every token becomes a CSS variable on :root
+ * (usable from plain CSS, overlays and graphics) and a utility (bg-surface,
+ * text-brand, font-display...). `static` emits all of them even when unused.
+ */
+@theme static {
+  /* Drop Tailwind's default palette: only brand tokens are allowed. */
+  --color-*: initial;
+
+  /* Silver monochrome */
+  --color-bg: #0b0b10;
+  --color-surface: #16161f;
+  --color-surface-2: #1f1f2a;
+  --color-border: #2a2a36;
+  --color-brand: #c9ced6;
+  --color-brand-bright: #e6e9ee;
+  --color-brand-dim: #8a909a;
+  --color-text: #f4f5f7;
+  --color-text-muted: #9aa0aa;
+  --color-team-blue: #4c8dff;
+  --color-team-red: #f0525c;
+  --color-success: #3dd68c;
+  --color-warning: #f5b841;
+  --color-danger: #f0525c;
+
+  /* Circuit accents */
+  --color-accent-league: #c9ced6;
+  --color-accent-ascenso: #00c389;
+  --color-accent-flash: #ffd400;
+  --color-accent-femenil: #e4007c; /* large text, logos and blocks only */
+  --color-accent-femenil-text: #ff4da6; /* small text */
+  --color-accent-uni: #9b7bff;
+
+  /* Typography */
+  --font-display: 'Saira Condensed', 'Arial Narrow', sans-serif;
+  --font-body: 'Inter Variable', system-ui, sans-serif;
+  --font-numeric: 'Inter Variable', system-ui, sans-serif;
+
+  /* Modular scale 1.25, base 1rem */
+  --text-xs: 0.64rem;
+  --text-sm: 0.8rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.563rem;
+  --text-2xl: 1.953rem;
+  --text-3xl: 2.441rem;
+  --text-4xl: 3.052rem;
+  --text-5xl: 3.815rem;
+
+  /* Spacing: 4px step (4/8/12/16/24/32... via p-1, p-2, p-3, p-4, p-6, p-8) */
+  --spacing: 0.25rem;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 4px 12px rgb(0 0 0 / 0.45);
+  --shadow-lg: 0 12px 32px rgb(0 0 0 / 0.5);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+:root {
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 400ms;
+}

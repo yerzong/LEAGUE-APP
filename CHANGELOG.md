@@ -5,7 +5,15 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+- Node fijado en 22 LTS (`.nvmrc` 22.22.3, `engines` `>=22.22.3 <23`).
+- `lint` falla también con warnings (`--max-warnings=0`).
+
 ### Added
+- `packages/ui`: tokens de diseño como variables CSS y preset de Tailwind v4
+  (`@league/ui/styles.css`), fuentes Saira Condensed e Inter auto-alojadas,
+  escala tipográfica 1.25, componente `Button` con Storybook.
+- `packages/config`: presets de ESLint y `tsconfig` para React.
 - Monorepo con pnpm workspaces y Turborepo; Node LTS fijado en `.nvmrc`.
 - `packages/config`: ESLint (flat config, type-aware), Prettier, `tsconfig` base
   estricto y configuración base de Vitest.
