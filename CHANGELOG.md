@@ -20,6 +20,9 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
   JWKS del proyecto) y `GET /me` devuelve el usuario actual (`MeResponse`);
   401 sin token o con token inválido. Nuevas variables `SUPABASE_URL` y
   `SUPABASE_PUBLISHABLE_KEY`.
+- `packages/contracts`: esquemas de credenciales (`SignUpSchema`, etc.).
+- `packages/ui`: componente `FormField` con Storybook.
+- `packages/i18n`: textos de login, registro y errores de auth.
 
 ### Changed
 - Node fijado en 22 LTS (`.nvmrc` 22.22.3, `engines` `>=22.22.3 <23`).
