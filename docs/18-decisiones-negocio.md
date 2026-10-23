@@ -1,27 +1,9 @@
-# Decisiones de Negocio Pendientes
+# Decisiones de Negocio
 
 > Documento vivo. Decisiones que solo el dueño del negocio puede tomar y que
-> cambian el diseño del producto. Se resuelven una por una; al decidir, se mueve
-> a "Decididas" con fecha y se actualizan los docs afectados.
+> cambian el diseño del producto.
 
 ---
-
-## Pendientes (por impacto)
-
-| # | Decisión | Opciones | Qué afecta |
-|---|----------|----------|------------|
-| 1 | **Nombre de marca** | En exploración | Todo: design system, dominio, redes, legal (IMPI) |
-| 2 | **Modelo de la Liga Principal** | Abierta con ascenso/descenso (como Europa) · Franquicias/slots fijos por invitación (como la LCK actual) · Híbrido (slots fijos + plazas de ascenso) | Formatos, circuito de puntos, patrocinios, valor de los equipos |
-| 3 | **Premios del piloto y primeras temporadas** | Efectivo · En especie (periféricos, merch) · Solo prestigio | Legal (pagos a menores, impuestos), datos que se piden |
-| 4 | **Pago al staff** | Voluntario · Pagado por evento · Mixto | Módulo de pagos a staff (no existe aún en el modelo de datos) |
-| 5 | **Equipos vs. organizaciones de esports** | Solo equipos de jugadores · También clubes/orgs con marca propia y varios rosters (ej. roster principal y femenil) | Modelo de datos (`teams` bajo un "club"), permisos |
-| 6 | **Derechos de contenido** | Co-streaming libre · Solo creadores autorizados · Exclusivo | Módulo de creadores, overlays, acuerdos |
-| 7 | **Política de elegibilidad del circuito femenil** | Definir criterio de inclusión y forma de verificación | Reglas de elegibilidad, moderación, comunicación |
-| 8 | **Calendario de la temporada** | Splits por año, días y horarios de jornada | Scheduling, disponibilidad de staff |
-| 9 | **Online vs. presencial** | Todo online · Finales presenciales | Logística, teléfono/nombre legal, venta de boletos |
-| 10 | **Figura legal** | Persona física con actividad empresarial · Persona moral | Facturación (CFDI) a patrocinadores, pago de premios |
-| 11 | **Idiomas** | Solo español · Español + inglés | i18n, narrativa IA, redes |
-| 12 | **Visibilidad de estadísticas** | Públicas siempre · Jugador puede ocultarlas | Privacidad, perfiles |
 
 ## Decididas
 
@@ -32,3 +14,25 @@
 | 2026-10-22 | Staff amplio con roles personalizables |
 | 2026-10-22 | Presupuesto sin restricción fuerte |
 | 2026-10-22 | Monetización al final |
+| 2026-10-22 | **Premios parametrizables por torneo** desde el piloto: sin premio, efectivo, periférico, merch, prestigio o personalizado; por lugar, MVP o especiales |
+| 2026-10-22 | **Pagos a staff**: módulo existe, solo visible para Owner/Super Admin; modelo por rol (voluntario, por evento, por partida, por entregable). Prioridad baja (fase 3) |
+| 2026-10-22 | **Equipos independientes y clubes**: parametrizable por torneo (solo independientes, solo clubes, mixto) |
+| 2026-10-22 | **Modalidad** parametrizable por torneo: online, presencial o híbrida. Por defecto online |
+| 2026-10-22 | **Idioma**: solo español latinoamericano (`es-419`) por ahora; i18n preparado |
+| 2026-10-22 | **Nombre tentativo: PENTA League**, pendiente de verificar dominio, redes e IMPI |
+
+## Propuestas (esperan confirmación)
+
+| # | Tema | Propuesta |
+|---|------|-----------|
+| 1 | Modelo de liga | **Pirámide abierta con ascenso y descenso**, temporadas Apertura/Clausura (ver `02-formatos-competencia.md`, sección 4.0) |
+| 2 | Derechos de contenido | Co-streaming abierto a creadores registrados en la plataforma, con overlays oficiales y delay; transmisión oficial solo del canal de la liga |
+| 3 | Circuito femenil | Abierto a mujeres y personas de género marginado (política común en esports); verificación por autodeclaración + revisión de staff ante reportes |
+| 4 | Calendario | 2 temporadas por año (Apertura y Clausura); jornadas de liga en noches entre semana o fines de semana; relámpagos en sábado/domingo |
+| 5 | Estadísticas | Públicas para cualquiera, incluso sin cuenta; los datos personales nunca son públicos |
+
+## Pospuestas
+
+| Tema | Por qué |
+|------|---------|
+| Figura legal (persona física o moral) | Solo hace falta al facturar a patrocinadores o pagar premios grandes; se decide con un contador antes de la fase de monetización |

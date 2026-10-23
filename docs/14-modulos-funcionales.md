@@ -73,7 +73,10 @@ Superficies adicionales fuera de la web:
 | **Marca / Apariencia** | Logo, colores, tipografías (tokens del design system), dominio | 1 |
 | **Estadísticas y reportes** | Reportes por torneo, audiencia, retención, exportar CSV | 3 |
 | **Patrocinadores** | Patrocinadores, activaciones, secciones patrocinadas, entregables | 4 |
-| **Pagos e inscripciones** | Cuotas, pagos, reembolsos, premios | 4 |
+| **Premios** | Premios por torneo (efectivo, periférico, merch, prestigio, personalizado), entrega y seguimiento, consentimiento de tutor si es menor | 1 |
+| **Clubes** | Organizaciones de esports con varios rosters; verificación de clubes | 1 |
+| **Pagos a staff** (solo Owner/Super Admin) | Modelo por rol (voluntario, por evento, por partida, por entregable), registro automático de trabajos, aprobación y pago | 3 |
+| **Pagos e inscripciones** | Cuotas, pagos, reembolsos | 4 |
 | **Configuración** | Límites (equipos por usuario, etc.), defaults por tipo de torneo, integraciones | 1 |
 
 ---
@@ -94,7 +97,11 @@ Paso 6  Calendario: fechas de inscripción, inicio, días/horarios de jornada,
         ventanas de check-in, duración estimada de partida
 Paso 7  Supervisión: nivel (automático/doble reporte/árbitro/transmitido)
 Paso 8  Comunicación: notificaciones a activar, canales, plantillas
-Paso 9  Premios y patrocinio (opcional, fase 4)
+Paso 9  Premios (opcional): sin premios / por lugar / MVP / especiales; tipo
+        (efectivo, periférico, merch, prestigio, personalizado), monto o
+        descripción, imagen, reparto (equipo/por jugador). Patrocinio (fase 4)
+Paso 1b Participantes: independientes / solo clubes / mixto, máximo de rosters
+        por club; modalidad online / presencial / híbrida (+ sede)
 Paso 10 Revisión: resumen + vista previa del bracket + publicar
 ```
 - Guardar como **borrador** en cualquier paso.

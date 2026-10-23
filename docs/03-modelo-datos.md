@@ -136,11 +136,25 @@ feature_flags
 
 ---
 
-## 4. Equipos
+## 4. Clubes y equipos
+
+> **Vocabulario:** `organizations` = tenant de la plataforma (tu liga; en el
+> SaaS, cada organizador). `clubs` = organización de esports que compite (ej.
+> un club con roster principal, femenil y academia). Se llaman distinto a
+> propósito para no confundirlos.
 
 ```
-teams
+clubs
   id, organization_id, name, tag, slug, logo_media_id, banner_media_id,
+  owner_user_id, description, social_links (jsonb), website,
+  status (pending|active|inactive|banned), verified_at, deleted_at
+club_members               (staff del club: dueño, manager, coach)
+  id, club_id, user_id, club_role (owner|manager|coach|analyst), joined_at,
+  left_at
+
+teams
+  id, organization_id, club_id null (null = equipo independiente),
+  name, tag, slug, logo_media_id, banner_media_id,
   kind (permanent|ad_hoc), owner_user_id, region, description,
   status (active|inactive|disbanded|banned), social_links (jsonb),
   approved_at (moderación), deleted_at
@@ -202,6 +216,11 @@ tournaments
   registration_opens_at, registration_closes_at, starts_at, ends_at,
   capacity, waitlist_enabled,
   entrant_kind (team|solo), team_source (permanent_only|ad_hoc_allowed|ad_hoc_only),
+  participant_policy (independent_only|clubs_only|mixed),
+  max_rosters_per_club (n, default 1),
+  modality (online|onsite|hybrid), venue (jsonb null: nombre, dirección,
+  ciudad, mapa, capacidad — solo si onsite/hybrid),
+  has_prizes (bool), prize_pool_summary (texto público),
   exclusivity_scope (none|tournament|circuit|season),
   supervision_level (automatic|dual_report|referee|broadcast),
   current_rulebook_version_id, settings (jsonb), schema_version,
@@ -230,8 +249,20 @@ rulebook_versions
 tournament_staff           (asignaciones; también expresable con member_role_assignments)
   tournament_id, user_id, staff_role (manager|referee|producer|caster)
 
-tournament_prizes          (fase 4)
-  tournament_id, placement_from, placement_to, description, amount, currency
+tournament_prizes          (opcional por torneo; disponible desde el piloto)
+  id, tournament_id, placement_from, placement_to (ej. 1–1, 3–4),
+  award_type (placement|mvp|special),  label (ej. "MVP de la final"),
+  prize_type (cash|peripheral|merch|in_game|voucher|prestige|custom),
+  description, amount null, currency (MXN) null, quantity,
+  sponsor_id null, image_media_id null,
+  distribution (team|per_player|captain), position
+  → el entregable real se registra en prize_payouts (efectivo) o
+    prize_deliveries (físico/digital)
+
+prize_deliveries           (premios en especie)
+  id, tournament_prize_id, entrant_id, recipient_user_id,
+  status (pending|shipped|delivered|claimed), shipping_info_ref,
+  tracking, delivered_at
 ```
 
 ### 6.2 Inscripciones (entrants) y rosters
@@ -583,9 +614,20 @@ payments
   related_type, related_id
 refunds
   payment_id, amount, reason, status, provider_ref
-prize_payouts
-  id, tournament_id, entrant_id, recipient_user_id, amount, currency,
-  status, method, provider_ref, paid_at, tax_info_ref
+prize_payouts              (premios en efectivo; disponible desde el piloto)
+  id, tournament_prize_id, entrant_id, recipient_user_id, amount, currency,
+  status, method, provider_ref, paid_at, tax_info_ref, guardian_consent_ref
+
+staff_compensation_rules   (solo owner/super admin)
+  id, organization_id, staff_role, model (volunteer|per_event|per_match|
+  per_deliverable|fixed), amount null, currency, notes
+staff_assignments_payable
+  id, user_id, organization_id, source_type (match|tournament|
+  content_request|stream), source_id, staff_role, amount, currency,
+  status (pending|approved|paid|canceled), approved_by
+staff_payouts
+  id, user_id, period, total_amount, currency, method, status, paid_at,
+  provider_ref, items (array de staff_assignments_payable)
 saas_subscriptions
   organization_id, plan, status, provider_ref, current_period_end
 ```

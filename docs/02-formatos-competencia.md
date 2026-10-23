@@ -53,6 +53,31 @@ Cualquier torneo se arma combinando estos bloques:
 
 ---
 
+## 4.0 Modelo propuesto: Pirámide abierta (pendiente de confirmar)
+
+```
+            ┌──────────────────────┐
+            │  PENTA League (D1)   │  8 equipos · Bo3 · playoffs Fearless
+            └─────────▲────────────┘
+     descienden 2     │  serie de ascenso (D1 últimos 2 vs D2 primeros 2)
+            ┌─────────┴────────────┐
+            │  PENTA Ascenso (D2)  │  8–12 equipos · Bo1/Bo3
+            └─────────▲────────────┘
+                      │  clasificatorio por puntos de circuito
+            ┌─────────┴────────────┐
+            │  Relámpagos (Open)   │  cualquiera, cada fin de semana
+            └──────────────────────┘
+```
+
+- Dos temporadas por año: **Apertura** y **Clausura** (como el fútbol mexicano,
+  intuitivo para el público).
+- Regla simple para el jugador: **gana y sube**. Cualquier equipo puede llegar a
+  la D1 empezando por los relámpagos.
+- Femenil y universitario corren en paralelo con su propia pirámide o como
+  liga única, según el tamaño de la comunidad.
+- Por qué no franquicias: en amateur nadie invierte por un lugar fijo, y cerrar
+  la liga mata la motivación de los equipos nuevos.
+
 ## 4. Liga Principal (formato insignia, estilo LCK)
 
 ### 4.1 Temporada Regular
