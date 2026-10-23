@@ -29,13 +29,16 @@ color se propaga a todo sin rediseñar nada a mano.
 - **Dirección de color:** marca madre **plata monocromo**; cada circuito tiene su
   propio acento (ver sección 3).
 
-### Versiones del logo que faltan
-| Versión | Uso | Por qué |
-|---------|-----|---------|
-| **Isotipo** (escudo + 5 estrellas, sin texto) | Favicon, avatar de redes, ícono de app, marca de agua en overlays | El logo completo no se lee a menos de ~64 px: "ESPORTS" y los detalles de las alas desaparecen |
-| **Horizontal** (isotipo + "PENTA LEAGUE" en línea) | Header web, barra de overlays, firmas de correo | El escudo es casi cuadrado y ocupa mucha altura en barras |
-| **Negro / oscuro** | Fondos claros, merch, documentos | Hoy solo existe la versión plata |
-| **Por circuito** (mismo escudo, acento del circuito) | PENTA Femenil, Relámpago, Ascenso | Familia de marca conectada |
+### Versiones del logo (decisión: una sola forma de logo)
+| Versión | Archivo | Uso |
+|---------|---------|-----|
+| **Plata** (principal) | `brand/logo/PentaLeague_Plata.*` | Fondos oscuros: web, overlays, redes |
+| **Oscura** | `brand/logo/PentaLeague_Oscuro.svg` (`#0B0B10`) | Fondos claros, merch, documentos |
+| **Por circuito** (opcional) | Mismo logo recoloreado con el acento del circuito | Femenil, Relámpago, Ascenso |
+
+No hay versión horizontal ni isotipo. En tamaños muy pequeños (favicon,
+ícono de app) se usa el mismo logo; si no se lee, se prueba un recorte del
+escudo del mismo SVG sin rediseñar.
 
 ### Pendiente
 - Tagline / lema.
