@@ -35,6 +35,10 @@ task conflicts with the docs, stop and ask.
 - Development uses the cloud project `penta-dev` (no Docker on the dev machine).
   **Never connect to, push to, or query the production project.** CI runs a
   local Supabase with `supabase start` for integration tests.
+- Projects are created with "automatically expose new tables" OFF and
+  "automatic RLS" ON. Every migration that creates a table must include its RLS
+  policies AND explicit `GRANT`s to `anon`/`authenticated` only where the table
+  must be reachable through the Data API. No grant = not exposed.
 - Jobs: transactional outbox + pg-boss. No Redis, no Kafka.
 - Validation: Zod schemas in `packages/contracts`, shared by web, api, bot, mobile.
 - Tests: Vitest (unit/integration), Playwright (E2E), Storybook (UI).
