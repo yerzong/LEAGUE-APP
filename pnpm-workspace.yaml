@@ -1,0 +1,6 @@
+packages:
+  - apps/*
+  - packages/*
+
+# Exact versions only: `pnpm add` must never write ^ or ~.
+savePrefix: ''

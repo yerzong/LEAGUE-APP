@@ -14,8 +14,22 @@ motor de torneos como un **producto SaaS** vendible a otros organizadores.
 
 ## Estado actual
 
-**Fase 0: Planeación y diseño.** Arquitectura y stack definidos en `docs/`.
-Todavía no hay código. El monorepo se crea en el módulo 0 de construcción.
+**Módulo 0: Fundación.** Monorepo y CI listos (PR 00a). Arquitectura y stack
+definidos en `docs/`.
+
+## Desarrollo
+
+Requisitos: Node según `.nvmrc` (`nvm use`) y pnpm (la versión exacta se toma de
+`packageManager` en `package.json`).
+
+```sh
+pnpm install
+pnpm lint && pnpm typecheck && pnpm test && pnpm build
+pnpm format        # aplica Prettier
+```
+
+Las dependencias se fijan con versión exacta (`savePrefix: ''` en
+`pnpm-workspace.yaml`).
 
 ## Stack (resumen)
 
