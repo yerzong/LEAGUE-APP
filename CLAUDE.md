@@ -63,7 +63,11 @@ task conflicts with the docs, stop and ask.
 8. Generic components already defined (DataTable, ConfirmDialog, Toast, Wizard,
    FormField, Uploader, EmptyState, ErrorState, Skeleton): reuse, do not duplicate.
 
-## Git workflow
+## Git workflow (Git Flow)
+- `main` = stable only. `develop` = integration branch. Feature work happens on
+  `feat/mXX-short-name` branches **created from `develop`**.
+- Always branch from `develop` and open the PR **against `develop`**, never
+  against `main`. Run `git checkout develop && git pull` before creating a branch.
 - One branch per module slice: `feat/mXX-short-name`.
 - Conventional commits (`feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`).
   No AI attribution / Co-Authored-By lines.
