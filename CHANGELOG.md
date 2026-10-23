@@ -10,6 +10,9 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 - `lint` falla también con warnings (`--max-warnings=0`).
 
 ### Added
+- `apps/api` (NestJS): `GET /health` con el contrato `HealthResponse`, módulo
+  hexagonal de ejemplo (`modules/health/{domain,application,infrastructure,presentation}`),
+  variables de entorno validadas con Zod al arrancar y `.env.example`.
 - `packages/ui`: tokens de diseño como variables CSS y preset de Tailwind v4
   (`@league/ui/styles.css`), fuentes Saira Condensed e Inter auto-alojadas,
   escala tipográfica 1.25, componente `Button` con Storybook.
