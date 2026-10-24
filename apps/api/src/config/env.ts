@@ -5,6 +5,9 @@ export const EnvSchema = z.object({
   PORT: z.coerce.number().int().min(1).max(65535).default(4000),
   WEB_ORIGIN: z.url().default('http://localhost:3000'),
   APP_VERSION: z.string().min(1).default('0.0.0'),
+  // Supabase project used to verify access tokens (publishable key: safe outside the browser too).
+  SUPABASE_URL: z.url(),
+  SUPABASE_PUBLISHABLE_KEY: z.string().min(1),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

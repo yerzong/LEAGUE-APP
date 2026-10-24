@@ -10,3 +10,4 @@ storybook-static
 next-env.d.ts
 playwright-report
 test-results
+packages/db/src/database.types.ts

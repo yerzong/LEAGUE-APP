@@ -1,0 +1,10 @@
+import { type Env, loadEnv } from './env.js';
+
+/** Valid environment for tests; Supabase is never contacted with these values. */
+export function testEnv(overrides: NodeJS.ProcessEnv = {}): Env {
+  return loadEnv({
+    SUPABASE_URL: 'http://127.0.0.1:54321',
+    SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_test',
+    ...overrides,
+  });
+}

@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, develop]
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -17,6 +17,10 @@ jobs:
     name: Lint, typecheck, test, build, E2E
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      # Placeholders: builds and E2E never sign in, so no Supabase project is contacted.
+      NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ci
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -52,3 +56,30 @@ jobs:
       - name: E2E all packages
         if: github.event_name == 'push'
         run: pnpm turbo run test:e2e
+
+  database:
+    name: Supabase migrations, seed and RLS tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # config.toml enables Discord; real credentials are only needed to log in.
+      SUPABASE_AUTH_EXTERNAL_DISCORD_CLIENT_ID: ci-placeholder
+      SUPABASE_AUTH_EXTERNAL_DISCORD_SECRET: ci-placeholder
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: supabase/setup-cli@45a513f8c64c0bc8e0e3dfe572b5c95be85f6359 # v3.0.1
+        with:
+          version: 2.120.0
+
+      # Only Postgres and Auth are needed: Auth owns the auth schema the trigger hooks into.
+      - name: Start local Supabase
+        run: >-
+          supabase start
+          -x realtime,storage-api,imgproxy,kong,mailpit,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+
+      - name: Recreate schema and seed from scratch
+        run: supabase db reset
+
+      - name: RLS and trigger tests (pgTAP)
+        run: supabase test db

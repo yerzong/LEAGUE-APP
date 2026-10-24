@@ -5,6 +5,32 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 ## [Unreleased]
 
+### Added (00c)
+- Supabase: `supabase/config.toml` vinculado a `penta-dev`, sin exposición
+  automática de tablas, confirmación de correo obligatoria, Discord activo y
+  Google preparado (credenciales por variables de entorno).
+- Migración `identity_and_organizations`: `users` (1:1 con `auth.users`),
+  `organizations` y `organization_members` con RLS de solo lectura y `GRANT`
+  explícitos a `authenticated`; trigger que crea el perfil al registrarse;
+  helpers en el esquema `private` (UUID v7, `updated_at`, chequeos de RLS).
+- Seed de desarrollo: organización "PENTA League" y super admin local.
+- Tests pgTAP de RLS y del trigger (`supabase/tests`), en CI con `supabase start`.
+- `packages/db`: tipos generados con `supabase gen types` (`pnpm db:types`).
+- `apps/api`: `AccessTokenGuard` verifica el JWT de Supabase (firma contra el
+  JWKS del proyecto) y `GET /me` devuelve el usuario actual (`MeResponse`);
+  401 sin token o con token inválido. Nuevas variables `SUPABASE_URL` y
+  `SUPABASE_PUBLISHABLE_KEY`.
+- `packages/contracts`: esquemas de credenciales (`SignUpSchema`, etc.).
+- `packages/ui`: componente `FormField` con Storybook.
+- `packages/i18n`: textos de login, registro y errores de auth.
+- `apps/web`: sesión de Supabase con cookies (`@supabase/ssr`); `proxy.ts`
+  refresca la sesión y protege las zonas: `/app` exige sesión y `/admin` exige
+  `platform_role = super_admin` (verificado también en los layouts). Cierre de sesión.
+- `supabase/config.toml` alineado con `penta-dev` (MFA TOTP activo, pooler, OTP).
+- `apps/web`: login y registro con correo + contraseña, magic link y Discord
+  (Google preparado con `NEXT_PUBLIC_AUTH_GOOGLE_ENABLED`); `/auth/callback`
+  para OAuth, magic link y confirmación de correo.
+
 ### Changed
 - Node fijado en 22 LTS (`.nvmrc` 22.22.3, `engines` `>=22.22.3 <23`).
 - `lint` falla también con warnings (`--max-warnings=0`).
