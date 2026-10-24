@@ -14,8 +14,9 @@ motor de torneos como un **producto SaaS** vendible a otros organizadores.
 
 ## Estado actual
 
-**Módulo 0: Fundación.** Monorepo y CI (PR 00a); esqueletos de web y API, tokens de diseño (PR 00b). Arquitectura y stack
-definidos en `docs/`.
+**Módulo 1: Motor de torneos** (`packages/core`, ver su `README.md`). Antes:
+Módulo 0 (monorepo, CI, web, API, Supabase, auth y design system). Arquitectura
+y stack definidos en `docs/`.
 
 ## Desarrollo
 
