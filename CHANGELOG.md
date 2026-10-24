@@ -5,6 +5,34 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 ## [Unreleased]
 
+### Added (m0d — design system)
+- `packages/ui` sobre shadcn/ui (new-york, Radix) adaptado a los tokens:
+  átomos (Button, Input, Textarea, Select, Checkbox, Switch, RadioGroup, Label,
+  Badge con acentos por circuito, Avatar, Separator, Skeleton, Spinner, Tooltip,
+  Kbd, GlassPanel), moléculas (FormField, Card, Dialog, AlertDialog,
+  ConfirmDialog con motivo obligatorio, DropdownMenu, Tabs, Toast, Command,
+  Pagination, Popover, Sheet) y organismos (DataTable con orden, filtro,
+  paginación, selección, acciones en lote y estados; AppShell; PageHeader;
+  EmptyState; ErrorState; Table). Story de Storybook para cada uno.
+- Tokens "afilados" (radios), alias semánticos, utilidades `caps`, `hairline`,
+  `focus-ring`, `glass`, `tabular`; modo oscuro único.
+- Animaciones con Motion: `FadeIn`, `SlideUp`, `Stagger`, `PageTransition`;
+  `prefers-reduced-motion` las desactiva (CSS, sin desajuste de hidratación).
+- `/admin/kitchen-sink` (super_admin; activo en desarrollo o con
+  `KITCHEN_SINK_ENABLED=true`) con todos los componentes y estados.
+- AppShell en `/admin` y `/app`; `Toaster` y `TooltipProvider` globales.
+- Tests de contraste AA, paridad de tokens de movimiento, DataTable,
+  ConfirmDialog, AppShell y primitivas de movimiento.
+
+### Changed (m0d)
+- `Button` migrado a `cva` + `asChild` conservando su API (`primary`,
+  `secondary`, `ghost`; `sm`, `md`, `lg`) y con nuevas variantes.
+- `FormField` usa los átomos `Label` e `Input`, misma API.
+- ESLint (`@league/config/eslint-react`): solo tokens en componentes.
+- Vitest usa caché por paquete (evita carreras al correr en paralelo).
+- `apps/web`: `lint` corre `next typegen` antes de ESLint (fallaba en un checkout
+  limpio porque `PageProps` se genera en `.next/`).
+
 ### Added (00c)
 - Supabase: `supabase/config.toml` vinculado a `penta-dev`, sin exposición
   automática de tablas, confirmación de correo obligatoria, Discord activo y

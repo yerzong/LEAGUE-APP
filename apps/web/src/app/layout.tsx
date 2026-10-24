@@ -1,3 +1,4 @@
+import { Toaster, TooltipProvider } from '@league/ui';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
@@ -14,7 +15,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang={locale}>
-      <body className="min-h-dvh antialiased">{children}</body>
+      <body className="min-h-dvh antialiased">
+        <TooltipProvider>{children}</TooltipProvider>
+        <Toaster />
+      </body>
     </html>
   );
 }
