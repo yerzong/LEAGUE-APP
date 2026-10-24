@@ -63,3 +63,8 @@ export class TransitionGuardError extends DomainError {
 export class RoundInProgressError extends DomainError {
   readonly code = 'round_in_progress';
 }
+
+/** A team membership rule was broken; `details.reason` says which. */
+export class TeamRuleError extends DomainError {
+  readonly code = 'team_rule_violation';
+}

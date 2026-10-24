@@ -138,3 +138,22 @@ export {
 } from './lifecycle/tournament.js';
 export { matchLifecycle, type MatchContext, type MatchEvent } from './lifecycle/match.js';
 export { gameLifecycle, type GameContext, type GameEvent } from './lifecycle/game.js';
+
+// Teams
+export {
+  assertCanChangeRole,
+  assertCanCreateTeam,
+  assertCanJoin,
+  assertCanLeave,
+  assertCanRemove,
+  assertCanTransferCaptaincy,
+  DEFAULT_TEAM_LIMITS,
+  isPlayingRole,
+  teamCan,
+  type ActiveMember,
+  type CreateTeamState,
+  type JoinCandidate,
+  type TeamLimits,
+  type TeamPermission,
+  type TeamRole,
+} from './teams/teams.js';
