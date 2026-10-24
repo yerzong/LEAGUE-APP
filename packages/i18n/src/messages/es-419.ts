@@ -106,6 +106,44 @@ export const es419 = {
       motion: 'Movimiento',
     },
   },
+  // Keyed by the reason codes of the eligibility engine (@league/core). Rank
+  // placeholders receive the already formatted rank name.
+  eligibility: {
+    reasons: {
+      riot_account_not_verified: 'Tu cuenta de Riot no está verificada.',
+      region_not_allowed:
+        'Tu región no está permitida en este torneo. Regiones válidas: {allowed}.',
+      country_not_allowed: 'Tu país no está permitido en este torneo. Países válidos: {allowed}.',
+      rank_below_min: 'Tu rango ({rank}) está por debajo del mínimo ({min}).',
+      rank_above_max: 'Tu rango ({rank}) supera el máximo permitido ({max}).',
+      peak_rank_above_max:
+        'Tu rango más alto de los últimos {windowDays} días ({peak}) supera el máximo permitido ({max}).',
+      team_average_below_min:
+        'El rango promedio del equipo ({average}) está por debajo del mínimo ({min}).',
+      team_average_above_max:
+        'El rango promedio del equipo ({average}) supera el máximo permitido ({max}).',
+      account_level_below_min: 'Tu cuenta es nivel {level}; se requiere al menos el nivel {min}.',
+      account_too_new: 'Tu cuenta tiene {days} días; se requieren al menos {min}.',
+      ranked_games_below_min:
+        'Llevas {games} partidas clasificatorias esta temporada; se requieren al menos {min}.',
+      birth_date_missing: 'Necesitamos tu fecha de nacimiento para verificar la edad mínima.',
+      underage: 'Este torneo requiere una edad mínima de {min} años.',
+      gender_not_declared: 'Este torneo requiere que hayas declarado tu género en tu perfil.',
+      gender_not_allowed: 'Este torneo es exclusivo para las categorías que indica su reglamento.',
+      gender_declared_too_late:
+        'Tu género debe estar declarado desde antes del anuncio del torneo.',
+      institution_not_verified: 'Necesitas un correo institucional verificado.',
+      institution_mismatch: 'Tu institución no corresponde a la de este torneo.',
+      active_roster_in_restricted_tier:
+        'Tienes un roster activo en una categoría (Tier {tier}) que este torneo no admite.',
+      exclusivity_conflict:
+        'Ya formas parte de otro roster activo dentro del mismo ámbito de exclusividad.',
+      exclusivity_cooldown:
+        'Saliste de un equipo hace poco; podrás unirte a otro a partir del {availableAt}.',
+      sanctioned: 'Tienes una sanción vigente.',
+      legal_name_missing: 'Debes capturar tu nombre legal para participar en torneos con premios.',
+    },
+  },
   health: {
     label: 'API',
     status: {
