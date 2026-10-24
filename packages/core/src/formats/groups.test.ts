@@ -93,7 +93,7 @@ describe('groups format', () => {
       advancing: ['E1', 'E2', 'E4', 'E3'],
       eliminated: ['E5', 'E8', 'E6', 'E7'],
     });
-    expect(groups.isComplete(matches)).toBe(true);
+    expect(groups.isComplete(matches, { seriesFormat: 'bo3', groupCount: 2 })).toBe(true);
   });
 
   it('reports the tie of the group that cannot be resolved', () => {

@@ -59,3 +59,7 @@ export class InvalidTransitionError extends DomainError {
 export class TransitionGuardError extends DomainError {
   readonly code = 'transition_guard_failed';
 }
+
+export class RoundInProgressError extends DomainError {
+  readonly code = 'round_in_progress';
+}

@@ -114,10 +114,10 @@ describe('single elimination progression', () => {
     if (!first) throw new Error('empty');
     const afterOne = singleElimination.onMatchCompleted(matches, finish(first, 'E8'));
     expect(byId(afterOne, 'r2-m1').entrantA).toBe('E8');
-    expect(singleElimination.isComplete(afterOne)).toBe(false);
+    expect(singleElimination.isComplete(afterOne, { seriesFormat: 'bo1' })).toBe(false);
 
     const done = playOut(singleElimination, matches);
-    expect(singleElimination.isComplete(done)).toBe(true);
+    expect(singleElimination.isComplete(done, { seriesFormat: 'bo1' })).toBe(true);
     expect(byId(done, 'r3-m1').result?.winner).toBe('E1');
   });
 
@@ -211,7 +211,7 @@ describe('single elimination progression', () => {
     for (const n of [3, 5, 6, 7]) {
       const done = playOut(singleElimination, generate(n), underdogWins);
       expect(done.some(isReady)).toBe(false);
-      expect(singleElimination.isComplete(done)).toBe(true);
+      expect(singleElimination.isComplete(done, { seriesFormat: 'bo1' })).toBe(true);
     }
   });
 });

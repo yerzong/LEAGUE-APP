@@ -1,7 +1,9 @@
 import { InvalidFormatConfigError, UnknownFormatError } from '../errors.js';
+import { doubleElimination, type DoubleEliminationConfig } from './double-elimination.js';
 import { groups, type GroupsConfig } from './groups.js';
 import { doubleRoundRobin, roundRobin, type RoundRobinConfig } from './round-robin.js';
 import { singleElimination, type SingleEliminationConfig } from './single-elimination.js';
+import { swiss, type SwissConfig } from './swiss.js';
 import type { PhaseFormatStrategy } from './strategy.js';
 
 /**
@@ -13,6 +15,8 @@ export interface PhaseFormatConfigs {
   double_round_robin: RoundRobinConfig;
   groups: GroupsConfig;
   single_elimination: SingleEliminationConfig;
+  double_elimination: DoubleEliminationConfig;
+  swiss: SwissConfig;
 }
 
 export type PhaseFormat = keyof PhaseFormatConfigs;
@@ -52,5 +56,7 @@ export function createFormatRegistry(): PhaseFormatRegistry {
     .register(roundRobin)
     .register(doubleRoundRobin)
     .register(groups)
-    .register(singleElimination);
+    .register(singleElimination)
+    .register(doubleElimination)
+    .register(swiss);
 }

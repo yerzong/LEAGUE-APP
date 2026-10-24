@@ -45,5 +45,6 @@ export interface PhaseFormatStrategy<TConfig extends BaseFormatConfig = BaseForm
   ): AdvancementResult;
   /** Records a finished match (with its `result`) and moves its entrants forward. */
   onMatchCompleted(bracket: readonly Match[], match: Match): Match[];
-  isComplete(matches: readonly Match[]): boolean;
+  /** Every match is final and, for formats paired round by round, no round is left. */
+  isComplete(matches: readonly Match[], config: TConfig): boolean;
 }

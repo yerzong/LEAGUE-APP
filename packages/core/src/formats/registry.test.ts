@@ -20,6 +20,8 @@ describe('format registry', () => {
       'double_round_robin',
       'groups',
       'single_elimination',
+      'double_elimination',
+      'swiss',
     ]);
     expect(registry.get('round_robin')).toBe(roundRobin);
     expect(

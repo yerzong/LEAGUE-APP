@@ -120,14 +120,14 @@ describe('round robin results', () => {
       result: { winner: first.entrantA },
     });
     expect(next.filter((m) => m.status === 'pending')).toHaveLength(schedule.length - 1);
-    expect(roundRobin.isComplete(next)).toBe(false);
+    expect(roundRobin.isComplete(next, { seriesFormat: 'bo3' })).toBe(false);
   });
 
   it('is complete when every match is finished or canceled', () => {
     const done = schedule.map((m, i) =>
       i === 0 ? { ...m, status: 'canceled' as const } : complete(m, 2, 1),
     );
-    expect(roundRobin.isComplete(done)).toBe(true);
+    expect(roundRobin.isComplete(done, { seriesFormat: 'bo3' })).toBe(true);
   });
 
   it('rejects results that do not fit the match', () => {
