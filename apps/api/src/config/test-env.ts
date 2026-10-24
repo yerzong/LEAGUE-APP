@@ -5,6 +5,7 @@ export function testEnv(overrides: NodeJS.ProcessEnv = {}): Env {
   return loadEnv({
     SUPABASE_URL: 'http://127.0.0.1:54321',
     SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_test',
+    SUPABASE_SECRET_KEY: 'sb_secret_test',
     ...overrides,
   });
 }

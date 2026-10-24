@@ -15,6 +15,7 @@ export const PublicTeamMemberSchema = z.object({
 });
 
 export const PublicTeamSchema = z.object({
+  id: z.uuid(),
   slug: z.string(),
   name: z.string(),
   tag: z.string(),

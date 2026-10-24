@@ -31,3 +31,19 @@ export class AccessTokenGuard implements CanActivate {
     return true;
   }
 }
+
+/** Public routes: sets the user when a valid token is sent, never rejects. */
+@Injectable()
+export class OptionalAccessTokenGuard implements CanActivate {
+  constructor(@Inject(ACCESS_TOKEN_VERIFIER) private readonly verifier: AccessTokenVerifier) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const [scheme, token] = request.headers.authorization?.split(' ') ?? [];
+    if (scheme?.toLowerCase() === 'bearer' && token) {
+      const user = await this.verifier.verify(token);
+      if (user) request.user = user;
+    }
+    return true;
+  }
+}

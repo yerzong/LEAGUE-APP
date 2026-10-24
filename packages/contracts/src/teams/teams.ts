@@ -130,9 +130,17 @@ export const ReceivedInvitationSchema = z.object({
   expiresAt: z.iso.datetime({ offset: true }),
 });
 
-export const ChangeMemberRoleRequestSchema = z.object({
-  teamRole: AssignableTeamRoleSchema,
-  gameRole: PlayerRoleSchema.nullable().optional(),
+/** `teamRole` changes the internal role; `gameRole` (top, jungle…) can be set for anyone, captain included. */
+export const ChangeMemberRoleRequestSchema = z
+  .object({
+    teamRole: AssignableTeamRoleSchema.optional(),
+    gameRole: PlayerRoleSchema.nullable().optional(),
+  })
+  .refine((v) => v.teamRole !== undefined || v.gameRole !== undefined, 'nothing_to_change');
+
+export const DecideJoinRequestSchema = z.object({
+  decision: z.enum(['approve', 'decline']),
+  teamRole: AssignableTeamRoleSchema.default('player'),
 });
 
 export const CreateJoinRequestSchema = z.object({ message: optionalText(280) });
@@ -192,6 +200,7 @@ export type TeamDetail = z.infer<typeof TeamDetailSchema>;
 export type CreateInvitationRequest = z.infer<typeof CreateInvitationRequestSchema>;
 export type ReceivedInvitation = z.infer<typeof ReceivedInvitationSchema>;
 export type ChangeMemberRoleRequest = z.infer<typeof ChangeMemberRoleRequestSchema>;
+export type DecideJoinRequest = z.infer<typeof DecideJoinRequestSchema>;
 export type CreateJoinRequest = z.infer<typeof CreateJoinRequestSchema>;
 export type TransferCaptaincyRequest = z.infer<typeof TransferCaptaincyRequestSchema>;
 export type DissolveTeamRequest = z.infer<typeof DissolveTeamRequestSchema>;

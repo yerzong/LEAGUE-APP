@@ -100,7 +100,7 @@ export const PrivacyFieldSchema = z.enum([
   'age',
 ]);
 
-export const PrivacySettingsSchema = z.record(PrivacyFieldSchema, PrivacyVisibilitySchema);
+export const PrivacySettingsSchema = z.partialRecord(PrivacyFieldSchema, PrivacyVisibilitySchema);
 
 export const DEFAULT_PRIVACY: Readonly<
   Record<z.infer<typeof PrivacyFieldSchema>, z.infer<typeof PrivacyVisibilitySchema>>

@@ -5,6 +5,7 @@ import { loadEnv } from './env.js';
 const required = {
   SUPABASE_URL: 'http://127.0.0.1:54321',
   SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_test',
+  SUPABASE_SECRET_KEY: 'sb_secret_test',
 };
 
 describe('loadEnv', () => {
@@ -14,6 +15,8 @@ describe('loadEnv', () => {
       PORT: 4000,
       WEB_ORIGIN: 'http://localhost:3000',
       APP_VERSION: '0.0.0',
+      DEFAULT_ORGANIZATION_SLUG: 'penta-league',
+      RIOT_PROVIDER: 'stub',
       ...required,
     });
   });
@@ -29,6 +32,22 @@ describe('loadEnv', () => {
   });
 
   it('requires the Supabase project', () => {
-    expect(() => loadEnv({})).toThrow(/SUPABASE_URL[\s\S]*SUPABASE_PUBLISHABLE_KEY/);
+    expect(() => loadEnv({})).toThrow(
+      /SUPABASE_URL[\s\S]*SUPABASE_PUBLISHABLE_KEY[\s\S]*SUPABASE_SECRET_KEY/,
+    );
+  });
+
+  it('needs a Riot API key for the real provider and forbids the stub in production', () => {
+    expect(() => loadEnv({ ...required, RIOT_PROVIDER: 'riot' })).toThrow(/RIOT_API_KEY/);
+    expect(
+      loadEnv({ ...required, RIOT_PROVIDER: 'riot', RIOT_API_KEY: 'RGAPI-x' }).RIOT_PROVIDER,
+    ).toBe('riot');
+    expect(() => loadEnv({ ...required, NODE_ENV: 'production' })).toThrow(/RIOT_PROVIDER/);
+  });
+
+  it('never prints values in the error, only variable names', () => {
+    expect(() => loadEnv({ ...required, PORT: 'secret-looking-value' })).not.toThrow(
+      /secret-looking-value/,
+    );
   });
 });
