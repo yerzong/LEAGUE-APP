@@ -1,23 +1,33 @@
+import { LayoutDashboardIcon, SwatchBookIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 
-import { brand } from '@/config/brand';
 import { messages } from '@/config/i18n';
+import { isKitchenSinkEnabled } from '@/config/kitchen-sink';
 import { SignOutButton } from '@/features/auth/components/sign-out-button';
 import { requireSuperAdmin } from '@/features/auth/session';
+import { BrandMark } from '@/features/shell/brand-mark';
+import { ZoneShell } from '@/features/shell/zone-shell';
+
+const { nav } = messages.shell;
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   await requireSuperAdmin('/admin');
 
+  const items = [
+    { href: '/admin', label: nav.adminHome, icon: <LayoutDashboardIcon /> },
+    ...(isKitchenSinkEnabled()
+      ? [{ href: '/admin/kitchen-sink', label: nav.kitchenSink, icon: <SwatchBookIcon /> }]
+      : []),
+  ];
+
   return (
-    <div className="flex min-h-dvh flex-col">
-      <header className="flex items-center justify-between border-b border-border bg-surface px-4 py-3">
-        <span className="font-display text-lg font-bold uppercase text-brand">{brand.name}</span>
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-text-muted">{messages.zones.admin}</span>
-          <SignOutButton />
-        </div>
-      </header>
-      <main className="flex-1 px-4 py-8">{children}</main>
-    </div>
+    <ZoneShell
+      brand={<BrandMark href="/admin" />}
+      title={messages.zones.admin}
+      nav={items}
+      actions={<SignOutButton />}
+    >
+      {children}
+    </ZoneShell>
   );
 }

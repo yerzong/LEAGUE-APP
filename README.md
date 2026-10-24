@@ -28,6 +28,7 @@ pnpm dev           # web en http://localhost:3000, API en http://localhost:4000
 pnpm lint && pnpm typecheck && pnpm test && pnpm build
 pnpm test:e2e      # Playwright (primera vez: pnpm --filter @league/web exec playwright install chromium)
 pnpm --filter @league/ui storybook   # Storybook en http://localhost:6006
+# Kitchen sink del design system (super_admin, solo en desarrollo): http://localhost:3000/admin/kitchen-sink
 pnpm format        # aplica Prettier
 ```
 

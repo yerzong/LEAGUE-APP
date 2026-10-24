@@ -124,6 +124,18 @@ Contraste calculado contra el fondo `#0B0B10` (WCAG: ≥ 4.5 texto normal,
 --ease-*      Curvas de animación
 ```
 
+Implementación (m0d, estilo "limpio y afilado"), en `packages/ui/src/styles/tokens.css`:
+- **Radios afilados:** `xs` 1px · `sm` 2px · `md` 3px · `lg` 4px · `xl` 6px.
+- **Espaciado:** paso de 4px de Tailwind (`--spacing: 0.25rem`), equivale a `--space-*`.
+- **Alias semánticos** de shadcn/ui (`primary`, `muted`, `destructive`, `ring`…)
+  que solo apuntan a los tokens de marca; un restyle cambia los tokens, no los alias.
+- **Glass** (`--glass-*`, utilidad `.glass`, componente `GlassPanel`): solo acentos.
+- **Motion:** `--duration-*`/`--ease-*` reflejados en `src/motion/tokens.ts`
+  (un test exige que coincidan).
+- Contraste AA verificado por test (texto sobre superficies y sobre glass).
+- ESLint rechaza hex, tamaños arbitrarios (`p-[13px]`), la paleta por defecto
+  de Tailwind y `style` inline en componentes.
+
 ---
 
 ## 4. Librería de componentes (`packages/ui`)
