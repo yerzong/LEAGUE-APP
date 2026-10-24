@@ -5,6 +5,24 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 ## [Unreleased]
 
+### Added (m01 — motor de torneos)
+- `packages/core` con TDD y cobertura mínima obligatoria (95/90/95/95):
+  - Series Bo1/Bo3/Bo5 a partir de sus partidas, con validación de coherencia.
+  - Sistema de puntos configurable (victoria/derrota/empate + bonus) y
+    desempates como Chain of Responsibility que reporta el criterio y el valor
+    de cada separación y marca los empates que requieren tiebreaker manual.
+  - Formatos como Strategy con registro abierto: round robin (una y dos
+    vueltas), grupos, eliminación simple (byes, tercer lugar), eliminación
+    doble (gran final y reset opcional) y suizo (sin revanchas, byes, umbrales
+    de avance/eliminación).
+  - Fearless Draft por equipo (y variante global) con validación de draft.
+  - Motor de elegibilidad con Specification: rango, peak, promedio del equipo,
+    cuenta, edad, género con `declared_before`, institución, tier máximo,
+    exclusividad con cooldown, sanciones y nombre legal.
+  - Máquinas de estado de torneo, serie y partida con errores tipados.
+  - `packages/core/README.md` con la API pública y ejemplos (probados).
+- `packages/i18n`: mensajes es-419 para cada motivo de no elegibilidad.
+
 ### Added (m0d — design system)
 - `packages/ui` sobre shadcn/ui (new-york, Radix) adaptado a los tokens:
   átomos (Button, Input, Textarea, Select, Checkbox, Switch, RadioGroup, Label,

@@ -18,11 +18,12 @@
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run --coverage"
   },
   "devDependencies": {
     "@league/config": "workspace:*",
     "@types/node": "24.19.2",
+    "@vitest/coverage-v8": "5.0.5",
     "eslint": "10.13.0",
     "typescript": "6.0.3",
     "vite": "8.3.5",
