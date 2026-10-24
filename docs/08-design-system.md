@@ -29,6 +29,14 @@ color se propaga a todo sin rediseñar nada a mano.
 - **Dirección de color:** marca madre **plata monocromo**; cada circuito tiene su
   propio acento (ver sección 3).
 
+### Dirección visual (decidida): limpio y afilado
+
+Estilo tipo **LoL Esports oficial**: base negra, acento plata, líneas finas,
+títulos en mayúsculas con tracking. **Glass solo como acento** (MVP, partido en
+vivo, modales), nunca como base. Animaciones sutiles con Motion, respetando
+`prefers-reduced-motion`. Implementación y componentes en
+`docs/specs/m0d-design-system.md` (base: shadcn/ui adaptado a estos tokens).
+
 ### Versiones del logo (decisión: una sola forma de logo)
 | Versión | Archivo | Uso |
 |---------|---------|-----|
