@@ -62,6 +62,50 @@ export const es419 = {
       unknown: 'Algo salió mal. Inténtalo de nuevo.',
     },
   },
+  shell: {
+    navigation: 'Navegación principal',
+    openMenu: 'Abrir menú',
+    closeMenu: 'Cerrar menú',
+    nav: {
+      adminHome: 'Inicio',
+      kitchenSink: 'Componentes',
+      portalHome: 'Inicio',
+    },
+  },
+  common: {
+    close: 'Cerrar',
+    cancel: 'Cancelar',
+    loading: 'Cargando',
+    retry: 'Reintentar',
+  },
+  dataTable: {
+    filterPlaceholder: 'Buscar',
+    previousPage: 'Anterior',
+    nextPage: 'Siguiente',
+    pageInfo: 'Página {page} de {count}',
+    selectAll: 'Seleccionar todos',
+    selectRow: 'Seleccionar fila',
+    selectedInfo: '{count} seleccionados',
+    sortBy: 'Ordenar por {column}',
+  },
+  kitchenSink: {
+    eyebrow: 'Design system',
+    title: 'Kitchen sink',
+    description:
+      'Todos los componentes y estados del estándar visual. Apruébalo aquí antes de construir módulos.',
+    sections: {
+      foundations: 'Fundamentos',
+      buttons: 'Botones',
+      forms: 'Formularios',
+      indicators: 'Indicadores',
+      surfaces: 'Superficies y glass',
+      overlays: 'Diálogos y menús',
+      navigation: 'Navegación',
+      data: 'Tabla de datos',
+      states: 'Estados vacío y error',
+      motion: 'Movimiento',
+    },
+  },
   health: {
     label: 'API',
     status: {

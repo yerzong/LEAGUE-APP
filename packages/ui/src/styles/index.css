@@ -1,13 +1,27 @@
 /*
  * Tailwind preset for every app: `@import 'tailwindcss'; @import '@league/ui/styles.css';`
  */
+@import 'tw-animate-css';
 @import './fonts.css';
 @import './tokens.css';
 
 /* Let Tailwind see the classes used by the components in this package. */
 @source '../';
 
+/* Dark-first and dark-only for now: `dark:` variants from shadcn/ui always apply. */
+@custom-variant dark (&);
+
 @layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-border);
+  }
+
   body {
     background-color: var(--color-bg);
     color: var(--color-text);
@@ -26,7 +40,61 @@
       animation-duration: 0.01ms !important;
       transition-duration: 0.01ms !important;
     }
+
+    /* Motion primitives (src/motion): show the final state, no movement. */
+    [data-motion] {
+      opacity: 1 !important;
+      transform: none !important;
+    }
   }
+}
+
+/* --- Sharp style utilities ------------------------------------------------ */
+
+/* Broadcast-style label: uppercase with tracking (titles, eyebrows, table heads). */
+@utility caps {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Hairline divider/border used across panels. */
+@utility hairline {
+  border-width: 1px;
+  border-color: var(--color-border);
+}
+
+/* Consistent keyboard focus ring for custom interactive elements. */
+@utility focus-ring {
+  outline: none;
+  &:focus-visible {
+    outline: 2px solid var(--color-brand-bright);
+    outline-offset: 2px;
+  }
+}
+
+/* Dialog/sheet width that keeps a gutter on small screens. */
+@utility max-w-viewport-gutter {
+  max-width: calc(100% - var(--spacing) * 8);
+}
+
+/*
+ * Glass: premium accent only (MVP card, live match panel, featured modal).
+ * Never on tables, page backgrounds or long lists: blur is costly and lowers
+ * contrast. Text on glass must use text/text-muted tokens (AA verified).
+ */
+@utility glass {
+  background-color: var(--glass-background);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+}
+
+/* Sonner toasts, styled from tokens. */
+[data-sonner-toaster] {
+  --normal-bg: var(--color-surface);
+  --normal-text: var(--color-text);
+  --normal-border: var(--color-border);
+  --border-radius: var(--radius-sm);
 }
 
 @utility tabular {

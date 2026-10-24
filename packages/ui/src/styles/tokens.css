@@ -51,10 +51,14 @@
   /* Spacing: 4px step (4/8/12/16/24/32... via p-1, p-2, p-3, p-4, p-6, p-8) */
   --spacing: 0.25rem;
 
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
+  /* Sharp corners (m0d "limpio y afilado"): components use xs-md; lg-xl only for large panels. */
+  --radius-xs: 0.0625rem;
+  --radius-sm: 0.125rem;
+  --radius-md: 0.1875rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.375rem;
 
+  --shadow-xs: 0 1px 1px rgb(0 0 0 / 0.35);
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
   --shadow-md: 0 4px 12px rgb(0 0 0 / 0.45);
   --shadow-lg: 0 12px 32px rgb(0 0 0 / 0.5);
@@ -63,8 +67,39 @@
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
+/*
+ * Semantic aliases used by the shadcn/ui-based components. They only point at
+ * the brand tokens above; restyling means changing those, never these.
+ */
+@theme inline {
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-text);
+  --color-card: var(--color-surface);
+  --color-card-foreground: var(--color-text);
+  --color-popover: var(--color-surface);
+  --color-popover-foreground: var(--color-text);
+  --color-primary: var(--color-brand);
+  --color-primary-foreground: var(--color-bg);
+  --color-secondary: var(--color-surface-2);
+  --color-secondary-foreground: var(--color-text);
+  --color-muted: var(--color-surface-2);
+  --color-muted-foreground: var(--color-text-muted);
+  --color-accent: var(--color-surface-2);
+  --color-accent-foreground: var(--color-text);
+  --color-destructive: var(--color-danger);
+  --color-destructive-foreground: var(--color-bg);
+  --color-input: var(--color-border);
+  --color-ring: var(--color-brand-bright);
+}
+
+/* Motion (mirrored for JS in src/motion/tokens.ts; a test keeps them equal). */
 :root {
   --duration-fast: 120ms;
   --duration-base: 200ms;
   --duration-slow: 400ms;
+
+  /* Glass: accent only (MVP card, live match panel, featured modals). */
+  --glass-background: rgb(22 22 31 / 0.72);
+  --glass-border: rgb(201 206 214 / 0.16);
+  --glass-blur: 12px;
 }

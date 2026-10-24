@@ -1,7 +1,40 @@
-export {
-  Button,
-  type ButtonProps,
-  type ButtonSize,
-  type ButtonVariant,
-} from './atoms/button/button.js';
-export { FormField, type FormFieldProps } from './molecules/form-field/form-field.js';
+// Design system public API. Components are presentational: no fetching, no business logic.
+export { cn } from './lib/cn.js';
+
+export * from './atoms/avatar/avatar.js';
+export * from './atoms/badge/badge.js';
+export * from './atoms/button/button.js';
+export * from './atoms/checkbox/checkbox.js';
+export * from './atoms/glass-panel/glass-panel.js';
+export * from './atoms/input/input.js';
+export * from './atoms/kbd/kbd.js';
+export * from './atoms/label/label.js';
+export * from './atoms/radio-group/radio-group.js';
+export * from './atoms/select/select.js';
+export * from './atoms/separator/separator.js';
+export * from './atoms/skeleton/skeleton.js';
+export * from './atoms/spinner/spinner.js';
+export * from './atoms/switch/switch.js';
+export * from './atoms/textarea/textarea.js';
+export * from './atoms/tooltip/tooltip.js';
+export * from './molecules/alert-dialog/alert-dialog.js';
+export * from './molecules/card/card.js';
+export * from './molecules/command/command.js';
+export * from './molecules/confirm-dialog/confirm-dialog.js';
+export * from './molecules/dialog/dialog.js';
+export * from './molecules/dropdown-menu/dropdown-menu.js';
+export * from './molecules/form-field/form-field.js';
+export * from './molecules/pagination/pagination.js';
+export * from './molecules/popover/popover.js';
+export * from './molecules/sheet/sheet.js';
+export * from './molecules/tabs/tabs.js';
+export * from './molecules/toast/toaster.js';
+export * from './organisms/app-shell/app-shell.js';
+export * from './organisms/data-table/data-table.js';
+export * from './organisms/empty-state/empty-state.js';
+export * from './organisms/error-state/error-state.js';
+export * from './organisms/page-header/page-header.js';
+export * from './organisms/table/table.js';
+
+export * from './motion/primitives.js';
+export { motionTokens } from './motion/tokens.js';
