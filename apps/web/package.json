@@ -13,6 +13,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@hookform/resolvers": "5.9.1",
     "@league/contracts": "workspace:*",
     "@league/db": "workspace:*",
     "@league/i18n": "workspace:*",
@@ -23,6 +24,7 @@
     "next": "16.4.3",
     "react": "19.3.1",
     "react-dom": "19.3.1",
+    "react-hook-form": "7.89.0",
     "server-only": "0.0.1",
     "zod": "4.6.7"
   },
