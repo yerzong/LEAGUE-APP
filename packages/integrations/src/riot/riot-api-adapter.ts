@@ -134,7 +134,7 @@ export class RiotApiAccountAdapter implements RiotAccountPort {
       throw new RiotApiError('unauthorized', response.status);
     if (!response.ok) throw new RiotApiError('unavailable', response.status);
     try {
-      return (await response.json());
+      return await response.json();
     } catch {
       throw new RiotApiError('unavailable', response.status);
     }
