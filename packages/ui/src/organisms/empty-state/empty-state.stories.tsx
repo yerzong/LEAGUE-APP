@@ -23,3 +23,11 @@ export const Default: Story = {};
 export const Minimal: Story = {
   args: { icon: undefined, action: undefined, description: undefined },
 };
+export const Showcase: Story = {
+  args: {
+    variant: 'showcase',
+    title: 'Aún no hay partidos programados',
+    description: 'El calendario aparecerá aquí en cuanto arranque la temporada.',
+    action: <Button variant="outline">Explorar equipos</Button>,
+  },
+};

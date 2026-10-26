@@ -1,5 +1,6 @@
 // Design system public API. Components are presentational: no fetching, no business logic.
 export { cn } from './lib/cn.js';
+export type { LinkProps, RenderLink } from './lib/link.js';
 
 export * from './atoms/avatar/avatar.js';
 export * from './atoms/badge/badge.js';
@@ -18,6 +19,7 @@ export * from './atoms/switch/switch.js';
 export * from './atoms/textarea/textarea.js';
 export * from './atoms/tooltip/tooltip.js';
 export * from './molecules/alert-dialog/alert-dialog.js';
+export * from './molecules/breadcrumbs/breadcrumbs.js';
 export * from './molecules/card/card.js';
 export * from './molecules/command/command.js';
 export * from './molecules/confirm-dialog/confirm-dialog.js';
@@ -27,15 +29,20 @@ export * from './molecules/field/field.js';
 export * from './molecules/form-field/form-field.js';
 export * from './molecules/pagination/pagination.js';
 export * from './molecules/popover/popover.js';
+export * from './molecules/section-heading/section-heading.js';
 export * from './molecules/sheet/sheet.js';
 export * from './molecules/tabs/tabs.js';
 export * from './molecules/toast/toaster.js';
 export * from './molecules/uploader/uploader.js';
+export * from './molecules/user-menu/user-menu.js';
 export * from './organisms/app-shell/app-shell.js';
 export * from './organisms/data-table/data-table.js';
 export * from './organisms/empty-state/empty-state.js';
 export * from './organisms/error-state/error-state.js';
+export * from './organisms/hero/hero.js';
 export * from './organisms/page-header/page-header.js';
+export * from './organisms/public-footer/public-footer.js';
+export * from './organisms/public-header/public-header.js';
 export * from './organisms/table/table.js';
 
 export * from './motion/primitives.js';
