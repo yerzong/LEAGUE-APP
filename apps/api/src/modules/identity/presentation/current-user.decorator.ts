@@ -11,3 +11,9 @@ export const CurrentUser = createParamDecorator(
     return user;
   },
 );
+
+/** The user on routes with OptionalAccessTokenGuard, or null for anonymous requests. */
+export const OptionalUser = createParamDecorator(
+  (_data: unknown, context: ExecutionContext): AuthenticatedUser | null =>
+    context.switchToHttp().getRequest<AuthenticatedRequest>().user ?? null,
+);

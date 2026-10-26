@@ -1,8 +1,15 @@
 import { type DynamicModule, Module } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
 
 import { ENV, type Env } from './config/env.js';
 import { HealthModule } from './modules/health/health.module.js';
+import { AuthModule } from './modules/identity/auth.module.js';
 import { IdentityModule } from './modules/identity/identity.module.js';
+import { PublicSiteModule } from './modules/public-site/public-site.module.js';
+import { RiotAccountsModule } from './modules/riot-accounts/riot-accounts.module.js';
+import { TeamsModule } from './modules/teams/teams.module.js';
+import { ApplicationErrorFilter } from './shared/application-error.filter.js';
+import { SharedModule } from './shared/shared.module.js';
 
 @Module({})
 export class AppModule {
@@ -10,8 +17,19 @@ export class AppModule {
     return {
       module: AppModule,
       global: true,
-      imports: [HealthModule, IdentityModule],
-      providers: [{ provide: ENV, useValue: env }],
+      imports: [
+        SharedModule,
+        AuthModule,
+        HealthModule,
+        IdentityModule,
+        RiotAccountsModule,
+        TeamsModule,
+        PublicSiteModule,
+      ],
+      providers: [
+        { provide: ENV, useValue: env },
+        { provide: APP_FILTER, useClass: ApplicationErrorFilter },
+      ],
       exports: [ENV],
     };
   }

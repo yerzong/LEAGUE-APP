@@ -14,9 +14,10 @@ motor de torneos como un **producto SaaS** vendible a otros organizadores.
 
 ## Estado actual
 
-**Módulo 1: Motor de torneos** (`packages/core`, ver su `README.md`). Antes:
-Módulo 0 (monorepo, CI, web, API, Supabase, auth y design system). Arquitectura
-y stack definidos en `docs/`.
+**Módulo 2: Perfiles, cuenta de Riot y equipos** (portal `/app`, páginas
+públicas `/equipos/[slug]` y `/jugadores/[username]`). Antes: módulo 1 (motor de
+torneos en `packages/core`) y módulo 0 (monorepo, CI, web, API, Supabase, auth y
+design system). Arquitectura y stack definidos en `docs/`.
 
 ## Desarrollo
 
@@ -53,7 +54,18 @@ tests de RLS (`supabase/tests`) corren en CI con `supabase test db`.
 
 Variables de entorno: copia `apps/api/.env.example` a `apps/api/.env` y
 `apps/web/.env.example` a `apps/web/.env.local` (los valores por defecto sirven
-para desarrollo local).
+para desarrollo local). La API necesita `SUPABASE_SECRET_KEY` (clave secreta de
+`penta-dev`, solo del lado servidor): `supabase projects api-keys --reveal`.
+
+Cuenta de Riot: con `RIOT_PROVIDER=stub` (por defecto) la API nunca llama a Riot;
+cualquier Riot ID existe (salvo los que empiezan con `missing`) y el ícono
+"cambia" en la segunda consulta, así que el flujo de verificación se completa
+solo. Con `RIOT_PROVIDER=riot` y `RIOT_API_KEY` usa la API real.
+
+E2E: `pnpm test:e2e` lee `apps/api/.env` y corre los flujos de perfil, Riot,
+equipos e invitaciones contra `penta-dev` con usuarios de prueba que crea y
+borra al terminar (sin esa variable esos flujos se omiten). En CI corren contra
+un Supabase local (`supabase start`).
 
 Las dependencias se fijan con versión exacta (`savePrefix: ''` en
 `pnpm-workspace.yaml`).

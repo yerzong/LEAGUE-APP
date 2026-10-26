@@ -18,9 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      # Placeholders: builds and E2E never sign in, so no Supabase project is contacted.
-      NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
-      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ci
+      # config.toml enables Discord; real credentials are only needed to log in.
+      SUPABASE_AUTH_EXTERNAL_DISCORD_CLIENT_ID: ci-placeholder
+      SUPABASE_AUTH_EXTERNAL_DISCORD_SECRET: ci-placeholder
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -35,6 +35,33 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+
+      # The E2E flows (profile, Riot stub, teams) need Auth, the Data API and
+      # Storage. Builds embed the public URL and key, so this runs first.
+      - uses: supabase/setup-cli@45a513f8c64c0bc8e0e3dfe572b5c95be85f6359 # v3.0.1
+        with:
+          version: 2.120.0
+
+      - name: Start local Supabase
+        run: >-
+          supabase start
+          -x realtime,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+
+      - name: Expose local Supabase to builds, API and E2E
+        run: |
+          supabase status -o json > "$RUNNER_TEMP/supabase.json"
+          python3 - "$RUNNER_TEMP/supabase.json" >> "$GITHUB_ENV" <<'PY'
+          import json, sys
+          s = json.load(open(sys.argv[1]))
+          # Local development keys: not secrets, regenerated on every run.
+          publishable = s.get('PUBLISHABLE_KEY') or s['ANON_KEY']
+          secret = s.get('SECRET_KEY') or s['SERVICE_ROLE_KEY']
+          print(f"SUPABASE_URL={s['API_URL']}")
+          print(f"NEXT_PUBLIC_SUPABASE_URL={s['API_URL']}")
+          print(f"SUPABASE_PUBLISHABLE_KEY={publishable}")
+          print(f"NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY={publishable}")
+          print(f"SUPABASE_SECRET_KEY={secret}")
+          PY
 
       # On pull requests only the packages affected by the change (and their
       # dependents) run; on main everything runs.
@@ -72,11 +99,12 @@ jobs:
         with:
           version: 2.120.0
 
-      # Only Postgres and Auth are needed: Auth owns the auth schema the trigger hooks into.
+      # Postgres, Auth (owns the auth schema the trigger hooks into) and Storage
+      # (owns storage.buckets, which the migrations seed).
       - name: Start local Supabase
         run: >-
           supabase start
-          -x realtime,storage-api,imgproxy,kong,mailpit,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+          -x realtime,imgproxy,kong,mailpit,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
 
       - name: Recreate schema and seed from scratch
         run: supabase db reset

@@ -26,6 +26,10 @@
         "APP_VERSION",
         "SUPABASE_URL",
         "SUPABASE_PUBLISHABLE_KEY",
+        "SUPABASE_SECRET_KEY",
+        "DEFAULT_ORGANIZATION_SLUG",
+        "RIOT_PROVIDER",
+        "RIOT_API_KEY",
         "NEXT_PUBLIC_*",
         "KITCHEN_SINK_ENABLED"
       ],
@@ -40,6 +44,10 @@
         "APP_VERSION",
         "SUPABASE_URL",
         "SUPABASE_PUBLISHABLE_KEY",
+        "SUPABASE_SECRET_KEY",
+        "DEFAULT_ORGANIZATION_SLUG",
+        "RIOT_PROVIDER",
+        "RIOT_API_KEY",
         "NEXT_PUBLIC_*",
         "KITCHEN_SINK_ENABLED"
       ],
@@ -57,6 +65,10 @@
         "NODE_ENV",
         "SUPABASE_URL",
         "SUPABASE_PUBLISHABLE_KEY",
+        "SUPABASE_SECRET_KEY",
+        "DEFAULT_ORGANIZATION_SLUG",
+        "RIOT_PROVIDER",
+        "RIOT_API_KEY",
         "NEXT_PUBLIC_*",
         "KITCHEN_SINK_ENABLED"
       ]

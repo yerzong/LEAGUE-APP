@@ -5,6 +5,46 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 ## [Unreleased]
 
+### Added (m02 — perfiles, cuenta de Riot y equipos)
+- Migración `profiles_riot_and_teams` (aplicada en `penta-dev`): columnas de
+  perfil en `users`, `user_private_data`, `user_social_links`,
+  `user_privacy_settings`, `riot_accounts` (`UNIQUE (puuid) WHERE unlinked_at
+  IS NULL`), `riot_verification_attempts`, `riot_rank_snapshots`,
+  `riot_id_history`, `clubs`/`club_members` (solo tablas), `teams` (nombre y tag
+  únicos por organización), `team_members` (`UNIQUE (team_id, user_id) WHERE
+  left_at IS NULL`, un capitán), `team_invitations`, `team_join_requests`,
+  `team_captaincy_transfers`, `team_name_history`, `free_agent_listings` y
+  `audit_logs` (append-only). RLS en todas, grants explícitos, buckets públicos
+  `avatars` y `team-logos` (solo escribe la API) y funciones `svc_*` atómicas.
+  Tests pgTAP de RLS e integridad.
+- `packages/core`: reglas de equipos (permisos por rol, límites de creación y
+  capitanía, unirse, salir, quitar, cambiar rol, transferir capitanía).
+- `packages/contracts`: esquemas de perfil, datos privados, privacidad, redes,
+  verificación de Riot, equipos, invitaciones, solicitudes, agente libre,
+  páginas públicas y errores de la API.
+- `packages/integrations`: `RiotAccountPort` con adaptador de la API de Riot
+  (account-v1, summoner-v4, league-v4) y stub en memoria.
+- API: módulos `identity` (perfil, onboarding, datos privados con género
+  bloqueado tras declararlo, privacidad, redes, foto, búsqueda), `riot-accounts`
+  (verificación por ícono, desvincular con auditoría), `teams` (crear, editar,
+  logo, invitaciones por usuario o enlace, solicitudes, roles, salir, quitar,
+  transferir capitanía, disolver con auditoría, agente libre) y `public-site`
+  (páginas públicas que respetan la privacidad de cada jugador).
+- Web: `/app/perfil`, `/app/riot`, `/app/equipos`, `/app/equipos/nuevo`,
+  `/app/equipos/[slug]`, `/app/invitaciones/[code]`, `/app/agente-libre`,
+  onboarding e invitaciones en `/app`; públicas `/equipos/[slug]` y
+  `/jugadores/[username]`. Formularios con React Hook Form + Zod.
+- `packages/ui`: `Field` y `Uploader`.
+- E2E (Playwright): completar perfil, vincular Riot (stub), crear equipo,
+  invitar y aceptar.
+
+### Changed (m02)
+- `IdentityModule` separa la verificación de tokens en un `AuthModule` global.
+- CI: el job de verificación levanta Supabase local para los E2E; el de base de
+  datos incluye Storage (las migraciones crean buckets).
+- `apps/web/vitest.config.js`: el alias `@` decodifica la ruta (fallaba con
+  espacios en el directorio).
+
 ### Added (m01 — motor de torneos)
 - `packages/core` con TDD y cobertura mínima obligatoria (95/90/95/95):
   - Series Bo1/Bo3/Bo5 a partir de sus partidas, con validación de coherencia.

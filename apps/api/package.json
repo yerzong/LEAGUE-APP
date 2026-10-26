@@ -13,7 +13,9 @@
   },
   "dependencies": {
     "@league/contracts": "workspace:*",
+    "@league/core": "workspace:*",
     "@league/db": "workspace:*",
+    "@league/integrations": "workspace:*",
     "@nestjs/common": "12.2.0",
     "@nestjs/core": "12.2.0",
     "@nestjs/platform-express": "12.2.0",
