@@ -14,10 +14,11 @@ motor de torneos como un **producto SaaS** vendible a otros organizadores.
 
 ## Estado actual
 
-**Módulo 2: Perfiles, cuenta de Riot y equipos** (portal `/app`, páginas
-públicas `/equipos/[slug]` y `/jugadores/[username]`). Antes: módulo 1 (motor de
-torneos en `packages/core`) y módulo 0 (monorepo, CI, web, API, Supabase, auth y
-design system). Arquitectura y stack definidos en `docs/`.
+**Módulo 3: Navegación y vitrina pública** (header y footer públicos, home
+vitrina, directorios `/torneos`, `/equipos` y `/jugadores`, páginas legales,
+404/error con la marca, SEO básico). Antes: módulo 2 (perfiles, cuenta de Riot y
+equipos), módulo 1 (motor de torneos en `packages/core`) y módulo 0 (monorepo,
+CI, web, API, Supabase, auth y design system). Arquitectura y stack definidos en `docs/`.
 
 ## Desarrollo
 

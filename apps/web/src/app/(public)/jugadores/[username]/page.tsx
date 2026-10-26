@@ -3,10 +3,12 @@ import {
   AvatarFallback,
   AvatarImage,
   Badge,
+  Breadcrumbs,
   Card,
   CardContent,
   PageHeader,
 } from '@league/ui';
+import { format } from '@league/i18n';
 import { BadgeCheckIcon } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -16,9 +18,12 @@ import { cache } from 'react';
 import { messages } from '@/config/i18n';
 import { countryName } from '@/features/profile/options';
 import { LoadError } from '@/features/shell/load-error';
+import { PageContainer } from '@/features/site/components/page-container';
+import { pageMetadata } from '@/features/site/metadata';
 import { getPublicPlayer } from '@/features/teams/api';
 import { TeamCard } from '@/features/teams/components/team-card';
 import { initials } from '@/lib/ui/dates';
+import { renderRouterLink } from '@/lib/ui/router-link';
 
 const t = messages.publicPages.player;
 const loadPlayer = cache(getPublicPlayer);
@@ -27,11 +32,23 @@ export async function generateMetadata({
   params,
 }: PageProps<'/jugadores/[username]'>): Promise<Metadata> {
   const player = await loadPlayer((await params).username);
-  return { title: player.ok ? (player.data.displayName ?? player.data.username) : t.notFound };
+  if (!player.ok) return { title: t.notFound, robots: { index: false } };
+  const p = player.data;
+  const name = p.displayName ?? p.username;
+  return pageMetadata({
+    title: name,
+    description: p.bio ?? format(t.shareDescription, { name, username: p.username }),
+    path: `/jugadores/${p.username}`,
+    image: p.avatarUrl,
+  });
 }
 
-export default async function PublicPlayerPage({ params }: PageProps<'/jugadores/[username]'>) {
+export default async function PublicPlayerPage({
+  params,
+  searchParams,
+}: PageProps<'/jugadores/[username]'>) {
   const { username } = await params;
+  const { equipo } = await searchParams;
   const player = await loadPlayer(username);
   if (!player.ok) {
     if (player.code === 'player_not_found' || player.code === 'validation_failed') notFound();
@@ -40,9 +57,25 @@ export default async function PublicPlayerPage({ params }: PageProps<'/jugadores
   const p = player.data;
   const name = p.displayName ?? p.username;
   const roles = [p.primaryRole, p.secondaryRole].filter((role) => role !== null);
+  // Coming from a roster (`?equipo=`): the trail goes through that team, if it is one of theirs.
+  const fromTeam = p.teams.find((team) => team.slug === equipo);
 
   return (
-    <div className="flex flex-col gap-8 py-10">
+    <PageContainer>
+      <Breadcrumbs
+        label={messages.breadcrumbs.label}
+        items={[
+          { label: messages.breadcrumbs.home, href: '/' },
+          ...(fromTeam
+            ? [
+                { label: messages.publicNav.teams, href: '/equipos' },
+                { label: fromTeam.name, href: `/equipos/${fromTeam.slug}` },
+              ]
+            : [{ label: messages.publicNav.players, href: '/jugadores' }]),
+          { label: name },
+        ]}
+        renderLink={renderRouterLink}
+      />
       <div className="flex flex-wrap items-center gap-6">
         <Avatar size="lg" className="size-24">
           {p.avatarUrl && <AvatarImage src={p.avatarUrl} alt="" />}
@@ -115,6 +148,6 @@ export default async function PublicPlayerPage({ params }: PageProps<'/jugadores
           </Card>
         </section>
       )}
-    </div>
+    </PageContainer>
   );
 }

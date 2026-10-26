@@ -8,6 +8,7 @@ import {
   runId,
   type TestAccount,
 } from './support/accounts';
+import { signIn } from './support/sign-in';
 
 // The pilot flow (docs/specs/m02): complete the profile, link Riot (stub),
 // create a team, invite a player who accepts. Needs a real Supabase project.
@@ -21,16 +22,6 @@ const anaUsername = `ana_${runId}`;
 const betoUsername = `beto_${runId}`;
 const teamName = `Aurora ${runId}`;
 const teamTag = `A${runId.slice(-4).toUpperCase()}`.replace(/[^A-Z0-9]/g, 'X');
-
-async function signIn(page: Page, account: TestAccount) {
-  await page.goto('/login?next=/app');
-  // The login page also has the magic link form, with its own "Correo".
-  const form = page.locator('form').filter({ has: page.getByLabel('Contraseña') });
-  await form.getByLabel('Correo').fill(account.email);
-  await form.getByLabel('Contraseña').fill(account.password);
-  await form.getByRole('button', { name: 'Entrar', exact: true }).click();
-  await expect(page).toHaveURL('/app');
-}
 
 async function choose(page: Page, label: string, option: string) {
   await page.getByLabel(label, { exact: true }).click();
@@ -144,6 +135,15 @@ test('invites a player who accepts', async ({ page, browser }) => {
   await expect(publicPage.getByRole('heading', { name: teamName })).toBeVisible();
   await expect(publicPage.getByRole('link', { name: 'Ana López' })).toBeVisible();
   await expect(publicPage.getByRole('link', { name: 'Beto' })).toBeVisible();
+  // The directory lists the real team, and the roster leads to the player through it.
+  await publicPage.goto(`/equipos?q=${encodeURIComponent(teamName)}`);
+  await expect(publicPage.getByRole('link', { name: new RegExp(teamName) })).toContainText(
+    '2 integrantes',
+  );
+  await publicPage.goto(`/equipos/aurora-${runId}`);
+  await publicPage.getByRole('link', { name: 'Ana López' }).click();
+  const trail = publicPage.getByRole('navigation', { name: 'Ruta de navegación' });
+  await expect(trail.getByRole('link', { name: teamName })).toBeVisible();
   await publicPage.goto(`/jugadores/${anaUsername}`);
   await expect(publicPage.getByText(`Riot ID verificado: Ana ${runId}#E2E`)).toBeVisible();
   await anonymous.close();
