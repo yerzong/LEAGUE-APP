@@ -3,6 +3,7 @@ import type { Tables } from '@league/db';
 
 import { conflict } from '../../../shared/application-error.js';
 import { assertNoError, isUniqueViolation } from '../../../shared/database/postgres-errors.js';
+import { likeEscape } from '../../../shared/database/like-escape.js';
 import type { AdminClient } from '../../../shared/database/supabase-admin.js';
 import type { PrivateData, ProfileChanges, ProfileRepository } from '../application/ports.js';
 import type { Profile } from '../domain/profile.js';
@@ -40,9 +41,6 @@ const toProfile = (row: ProfileRow): Profile => ({
   isFreeAgent: row.is_free_agent,
   platformRole: row.platform_role,
 });
-
-/** Escapes LIKE wildcards in user input. */
-const likeEscape = (value: string) => value.replace(/[\\%_]/g, (c) => `\\${c}`);
 
 export class SupabaseProfileRepository implements ProfileRepository {
   constructor(private readonly db: AdminClient) {}
@@ -171,6 +169,31 @@ export class SupabaseProfileRepository implements ProfileRepository {
       p_links: links.map((l) => ({ ...l })),
     });
     assertNoError(error);
+  }
+
+  async listPublic({
+    query,
+    limit,
+    offset,
+  }: {
+    query: string;
+    limit: number;
+    offset: number;
+  }): Promise<{ profiles: Profile[]; total: number }> {
+    let select = this.db
+      .from('users')
+      .select(PROFILE_COLUMNS, { count: 'exact' })
+      .is('deleted_at', null)
+      .eq('status', 'active')
+      .not('username', 'is', null);
+    // The contract only lets letters, digits, spaces and `_ . -` through.
+    if (query !== '') {
+      const pattern = `*${likeEscape(query)}*`;
+      select = select.or(`username.ilike.${pattern},display_name.ilike.${pattern}`);
+    }
+    const { data, count, error } = await select.order('username').range(offset, offset + limit - 1);
+    assertNoError(error);
+    return { profiles: (data ?? []).map(toProfile), total: count ?? 0 };
   }
 
   async search(query: string, limit: number): Promise<Profile[]> {

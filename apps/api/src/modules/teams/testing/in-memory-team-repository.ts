@@ -127,6 +127,26 @@ export class InMemoryTeamRepository implements TeamRepository {
     );
   }
 
+  listActive(
+    organizationId: string,
+    { query, limit, offset }: { query: string; limit: number; offset: number },
+  ) {
+    const q = query.toLowerCase();
+    const found = this.teams
+      .filter(
+        (t) =>
+          t.organizationId === organizationId &&
+          t.status === 'active' &&
+          (t.name.toLowerCase().includes(q) || t.tag.toLowerCase().includes(q)),
+      )
+      .reverse();
+    return Promise.resolve({ teams: found.slice(offset, offset + limit), total: found.length });
+  }
+
+  activeMemberCounts(teamIds: readonly string[]): Promise<Map<string, number>> {
+    return Promise.resolve(new Map(teamIds.map((id) => [id, this.active(id).length])));
+  }
+
   activeTeamsOf(userId: string) {
     return Promise.resolve(
       this.members

@@ -659,4 +659,12 @@ export class TeamQueries {
   logoUrl(path: string | null): string | null {
     return this.deps.storage.publicUrl('team-logos', path);
   }
+
+  async listActive(window: { query: string; limit: number; offset: number }) {
+    return this.deps.teams.listActive(await this.deps.organization.id(), window);
+  }
+
+  memberCounts(teamIds: readonly string[]): Promise<Map<string, number>> {
+    return this.deps.teams.activeMemberCounts(teamIds);
+  }
 }

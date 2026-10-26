@@ -10,6 +10,8 @@ import { TeamsModule } from '../teams/teams.module.js';
 import {
   GetPublicPlayerUseCase,
   GetPublicTeamUseCase,
+  ListPublicPlayersUseCase,
+  ListPublicTeamsUseCase,
   PUBLIC_PAGES_DEPS,
   type PublicPagesDeps,
 } from './application/public-pages.js';
@@ -44,6 +46,16 @@ import { PublicController } from './presentation/public.controller.js';
       provide: GetPublicPlayerUseCase,
       inject: [PUBLIC_PAGES_DEPS],
       useFactory: (d: PublicPagesDeps) => new GetPublicPlayerUseCase(d),
+    },
+    {
+      provide: ListPublicTeamsUseCase,
+      inject: [PUBLIC_PAGES_DEPS],
+      useFactory: (d: PublicPagesDeps) => new ListPublicTeamsUseCase(d),
+    },
+    {
+      provide: ListPublicPlayersUseCase,
+      inject: [PUBLIC_PAGES_DEPS],
+      useFactory: (d: PublicPagesDeps) => new ListPublicPlayersUseCase(d),
     },
   ],
 })
