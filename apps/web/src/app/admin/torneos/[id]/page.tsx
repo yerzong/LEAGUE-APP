@@ -6,6 +6,13 @@ import type { ReactNode } from 'react';
 
 import { messages } from '@/config/i18n';
 import { LoadError } from '@/features/shell/load-error';
+import {
+  CompetitionCalendarPanel,
+  CompetitionMatchesPanel,
+  CompetitionPhasesPanel,
+  CompetitionStandingsPanel,
+} from '@/features/competition/components/admin-panels';
+import { getAdminBoard } from '@/features/competition/api';
 import { getAdminTournament, getAuditTrail, getRegistrations } from '@/features/tournaments/api';
 import {
   TournamentStatusBadge,
@@ -13,13 +20,9 @@ import {
 } from '@/features/tournaments/components/status-badges';
 import {
   AuditPanel,
-  CalendarPanel,
-  NextDelivery,
   ParticipantsPanel,
-  PhasesPanel,
   RegistrationsPanel,
   SettingsPanel,
-  StandingsPlaceholder,
   SummaryPanel,
 } from '@/features/tournaments/tracking/tracking-panels';
 import { TrackingTabs } from '@/features/tournaments/tracking/tracking-tabs';
@@ -45,16 +48,18 @@ export default async function TournamentTrackingPage({
   searchParams,
 }: PageProps<'/admin/torneos/[id]'>) {
   const [{ id }, query] = await Promise.all([params, searchParams]);
-  const [detail, registrations, audit] = await Promise.all([
+  const [detail, registrations, audit, board] = await Promise.all([
     getAdminTournament(id),
     getRegistrations(id),
     getAuditTrail(id),
+    getAdminBoard(id),
   ]);
   if (!detail.ok) {
     if (detail.code === 'tournament_not_found' || detail.code === 'validation_failed') notFound();
     return <LoadError code={detail.code} />;
   }
   if (!registrations.ok) return <LoadError code={registrations.code} />;
+  if (!board.ok) return <LoadError code={board.code} />;
   const data = detail.data;
   const list = registrations.data;
   const requested = Array.isArray(query.tab) ? query.tab[0] : query.tab;
@@ -64,10 +69,10 @@ export default async function TournamentTrackingPage({
     summary: <SummaryPanel detail={data} registrations={list} />,
     registrations: <RegistrationsPanel detail={data} registrations={list} />,
     participants: <ParticipantsPanel detail={data} registrations={list} />,
-    phases: <PhasesPanel detail={data} />,
-    calendar: <CalendarPanel detail={data} />,
-    matches: <NextDelivery />,
-    standings: <StandingsPlaceholder />,
+    phases: <CompetitionPhasesPanel detail={data} board={board.data} />,
+    calendar: <CompetitionCalendarPanel detail={data} board={board.data} />,
+    matches: <CompetitionMatchesPanel detail={data} board={board.data} />,
+    standings: <CompetitionStandingsPanel board={board.data} />,
     settings: <SettingsPanel detail={data} />,
     audit: audit.ok ? (
       <AuditPanel detail={data} entries={audit.data} />

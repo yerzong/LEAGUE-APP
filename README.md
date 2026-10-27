@@ -14,10 +14,12 @@ motor de torneos como un **producto SaaS** vendible a otros organizadores.
 
 ## Estado actual
 
-**Módulo 4: Torneos e inscripciones** (asistente de creación en
-`/admin/torneos`, plantillas, página de seguimiento del evento, explorar e
-inscribirse en `/app/torneos` con elegibilidad y anti-chapulineo calculados con
-`packages/core`, listado y detalle público en `/torneos`). Antes: módulo 3
+**Módulo 5: Partidas y standings** (fixtures generados por `packages/core`
+desde los inscritos, check-in, doble reporte, disputas, reprogramación,
+standings y bracket en vivo con Supabase Realtime; pestañas de partidas,
+calendario y standings en `/admin/torneos/[id]`, centro de partida en
+`/app/partidas` y bracket/tablas públicos en `/torneos/[slug]`). Antes: módulo 4
+(torneos e inscripciones), módulo 3
 (navegación y vitrina pública), módulo 2 (perfiles, cuenta de Riot y
 equipos), módulo 1 (motor de torneos en `packages/core`) y módulo 0 (monorepo,
 CI, web, API, Supabase, auth y design system). Arquitectura y stack definidos en `docs/`.
@@ -66,7 +68,8 @@ cualquier Riot ID existe (salvo los que empiezan con `missing`) y el ícono
 solo. Con `RIOT_PROVIDER=riot` y `RIOT_API_KEY` usa la API real.
 
 E2E: `pnpm test:e2e` lee `apps/api/.env` y corre los flujos de perfil, Riot,
-equipos, invitaciones y torneos (crear → publicar → inscribir → aprobar) contra
+equipos, invitaciones, torneos (crear → publicar → inscribir → aprobar) y un
+torneo relámpago completo (fixtures → check-in → doble reporte → campeón) contra
 `penta-dev` con usuarios y torneos de prueba que crea y borra al terminar (sin
 esa variable esos flujos se omiten). La única excepción es la cuenta
 `e2e-staff@example.com`: publicar y aprobar quedan en `audit_logs`, que es
@@ -76,6 +79,14 @@ un Supabase local (`supabase start`).
 Torneos: los cambios de estado y las inscripciones escriben eventos de dominio en
 `outbox_events` (`tournament.published`, `registration.approved`, …) en la misma
 transacción; todavía nadie los consume (los enganchan notificaciones y el bot).
+
+Partidas: la API abre y cierra el check-in sola cada `CHECKIN_SWEEP_SECONDS`
+(60 por defecto, `0` lo apaga): al cerrar, quien no hizo check-in pierde por
+W.O.; si faltan los dos, la partida queda para el staff. Los resultados se
+confirman cuando los dos capitanes reportan lo mismo; si no, la partida queda en
+disputa. Todo se escribe con `svc_commit_competition` (una transacción con
+standings, auditoría y eventos `match.*` en `outbox_events`). La evidencia va al
+bucket privado `match-evidence` y se muestra con URLs firmadas.
 
 Las dependencias se fijan con versión exacta (`savePrefix: ''` en
 `pnpm-workspace.yaml`).

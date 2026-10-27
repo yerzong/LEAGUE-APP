@@ -17,6 +17,7 @@ describe('loadEnv', () => {
       APP_VERSION: '0.0.0',
       DEFAULT_ORGANIZATION_SLUG: 'penta-league',
       RIOT_PROVIDER: 'stub',
+      CHECKIN_SWEEP_SECONDS: 60,
       ...required,
     });
   });

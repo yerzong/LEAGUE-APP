@@ -1,4 +1,12 @@
-import { GamepadIcon, HouseIcon, SearchIcon, ShieldIcon, TrophyIcon, UserIcon } from 'lucide-react';
+import {
+  GamepadIcon,
+  HouseIcon,
+  SearchIcon,
+  ShieldIcon,
+  SwordsIcon,
+  TrophyIcon,
+  UserIcon,
+} from 'lucide-react';
 import type { ReactNode } from 'react';
 
 import { messages } from '@/config/i18n';
@@ -23,6 +31,7 @@ export default async function PortalLayout({ children }: { children: ReactNode }
         { href: '/app/riot', label: nav.riot, icon: <GamepadIcon /> },
         { href: '/app/equipos', label: nav.teams, icon: <ShieldIcon /> },
         { href: '/app/torneos', label: nav.portalTournaments, icon: <TrophyIcon /> },
+        { href: '/app/partidas', label: nav.portalMatches, icon: <SwordsIcon /> },
         { href: '/app/agente-libre', label: nav.freeAgent, icon: <SearchIcon /> },
       ]}
       actions={

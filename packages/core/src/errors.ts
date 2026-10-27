@@ -82,3 +82,8 @@ export class InvalidSeedingError extends DomainError {
 export class LockedSectionError extends DomainError {
   readonly code = 'section_locked';
 }
+
+/** No slot fits the schedule windows (none configured, or all blacked out). */
+export class InvalidScheduleError extends DomainError {
+  readonly code = 'invalid_schedule';
+}

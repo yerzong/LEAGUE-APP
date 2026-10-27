@@ -23,6 +23,10 @@ import { getSessionUser } from '@/features/auth/session';
 import { LoadError } from '@/features/shell/load-error';
 import { PageContainer } from '@/features/site/components/page-container';
 import { pageMetadata } from '@/features/site/metadata';
+import { getPublicBoard } from '@/features/competition/api';
+import { BoardView, MatchList } from '@/features/competition/components/board-view';
+import { LiveRefresh } from '@/features/competition/components/live-refresh';
+import { FINISHED_STATUSES } from '@/features/competition/format';
 import { getPublicTournament } from '@/features/tournaments/api';
 import { RulebookView } from '@/features/tournaments/components/rulebook-view';
 import {
@@ -59,7 +63,11 @@ export async function generateMetadata({
 
 export default async function PublicTournamentPage({ params }: PageProps<'/torneos/[slug]'>) {
   const { slug } = await params;
-  const [result, viewer] = await Promise.all([loadTournament(slug), getSessionUser()]);
+  const [result, viewer, board] = await Promise.all([
+    loadTournament(slug),
+    getSessionUser(),
+    getPublicBoard(slug),
+  ]);
   if (!result.ok) {
     if (result.code === 'tournament_not_found' || result.code === 'validation_failed') notFound();
     return <LoadError code={result.code} />;
@@ -122,7 +130,45 @@ export default async function PublicTournamentPage({ params }: PageProps<'/torne
         />
       </div>
 
-      <TournamentFacts tournament={tournament} />
+      {board.ok && board.data.phases.some((p) => p.matches.length > 0) && (
+        <>
+          <Section id="bracket" title={messages.competition.board.title}>
+            <LiveRefresh tournamentId={tournament.id} />
+            <BoardView board={board.data} matchBase={`/torneos/${tournament.slug}/partidas`} />
+          </Section>
+          <Section id="calendario" title={messages.competition.board.calendar}>
+            <MatchList
+              matches={board.data.phases
+                .flatMap((p) => p.matches)
+                .filter((m) => !FINISHED_STATUSES.has(m.status) && m.status !== 'canceled')
+                .sort(
+                  (a, b) =>
+                    (a.scheduledAt ? Date.parse(a.scheduledAt) : Number.MAX_SAFE_INTEGER) -
+                    (b.scheduledAt ? Date.parse(b.scheduledAt) : Number.MAX_SAFE_INTEGER),
+                )}
+              phase={undefined}
+              matchBase={`/torneos/${tournament.slug}/partidas`}
+              timeZone={tournament.timezone}
+            />
+          </Section>
+          <Section id="resultados" title={messages.competition.board.results}>
+            <MatchList
+              matches={board.data.phases
+                .flatMap((p) => p.matches)
+                .filter((m) => FINISHED_STATUSES.has(m.status))
+                .sort((a, b) => Date.parse(b.finalizedAt ?? '') - Date.parse(a.finalizedAt ?? ''))}
+              phase={undefined}
+              matchBase={`/torneos/${tournament.slug}/partidas`}
+              timeZone={tournament.timezone}
+            />
+          </Section>
+        </>
+      )}
+
+      <TournamentFacts
+        tournament={tournament}
+        started={board.ok && board.data.phases.some((p) => p.matches.length > 0)}
+      />
 
       <Section id="participantes" title={d.participants}>
         {tournament.participants.length === 0 ? (

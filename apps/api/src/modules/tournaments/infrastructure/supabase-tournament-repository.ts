@@ -456,7 +456,7 @@ export class SupabaseTournamentRepository implements TournamentRepository {
   async phases(tournamentId: string): Promise<PhaseRecord[]> {
     const { data, error } = await this.db
       .from('phases')
-      .select('id, name, position, format, series_format, groups(id, name, position)')
+      .select('id, name, position, format, series_format, status, groups(id, name, position)')
       .eq('tournament_id', tournamentId)
       .order('position');
     check(error);
@@ -467,9 +467,10 @@ export class SupabaseTournamentRepository implements TournamentRepository {
       // Only the formats of packages/core are ever written.
       format: p.format as PhaseRecord['format'],
       seriesFormat: p.series_format,
+      status: p.status,
       groups: [...p.groups]
         .sort((a, b) => a.position - b.position)
-        .map((g) => ({ id: g.id, name: g.name })),
+        .map((g) => ({ id: g.id, name: g.name, position: g.position })),
     }));
   }
 
@@ -519,17 +520,23 @@ export class SupabaseTournamentRepository implements TournamentRepository {
   }
 
   async auditTrail(tournamentId: string, limit: number): Promise<AuditRecord[]> {
-    const { data: entrants, error: entrantsError } = await this.db
-      .from('entrants')
-      .select('id')
-      .eq('tournament_id', tournamentId);
-    check(entrantsError);
-    const ids = [tournamentId, ...(entrants ?? []).map((e) => e.id)];
+    // The tournament, its registrations and its matches.
+    const [entrants, matches] = await Promise.all([
+      this.db.from('entrants').select('id').eq('tournament_id', tournamentId),
+      this.db.from('matches').select('id').eq('tournament_id', tournamentId),
+    ]);
+    check(entrants.error);
+    check(matches.error);
+    const ids = [
+      tournamentId,
+      ...(entrants.data ?? []).map((e) => e.id),
+      ...(matches.data ?? []).map((m) => m.id),
+    ];
     const { data, error } = await this.db
       .from('audit_logs')
       .select('*')
       .in('entity_id', ids)
-      .in('entity_type', ['tournament', 'entrant'])
+      .in('entity_type', ['tournament', 'entrant', 'match'])
       .order('created_at', { ascending: false })
       .limit(limit);
     check(error);

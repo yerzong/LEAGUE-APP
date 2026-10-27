@@ -16,6 +16,8 @@ export const EnvSchema = z
     // `stub` never calls Riot (tests, E2E, local without a key).
     RIOT_PROVIDER: z.enum(['riot', 'stub']).default('stub'),
     RIOT_API_KEY: z.string().min(1).optional(),
+    // Seconds between check-in sweeps (open and close windows, forfeits); 0 turns it off.
+    CHECKIN_SWEEP_SECONDS: z.coerce.number().int().min(0).max(3600).default(60),
   })
   .superRefine((env, ctx) => {
     if (env.RIOT_PROVIDER === 'riot' && !env.RIOT_API_KEY) {

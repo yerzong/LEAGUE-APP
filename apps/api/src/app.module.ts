@@ -5,7 +5,10 @@ import { ENV, type Env } from './config/env.js';
 import { HealthModule } from './modules/health/health.module.js';
 import { AuthModule } from './modules/identity/auth.module.js';
 import { IdentityModule } from './modules/identity/identity.module.js';
+import { MatchesModule } from './modules/matches/matches.module.js';
 import { PublicSiteModule } from './modules/public-site/public-site.module.js';
+import { SchedulingModule } from './modules/scheduling/scheduling.module.js';
+import { StandingsModule } from './modules/standings/standings.module.js';
 import { RegistrationsModule } from './modules/registrations/registrations.module.js';
 import { RiotAccountsModule } from './modules/riot-accounts/riot-accounts.module.js';
 import { TeamsModule } from './modules/teams/teams.module.js';
@@ -28,6 +31,9 @@ export class AppModule {
         TeamsModule,
         TournamentsModule,
         RegistrationsModule,
+        MatchesModule,
+        SchedulingModule,
+        StandingsModule,
         PublicSiteModule,
       ],
       providers: [

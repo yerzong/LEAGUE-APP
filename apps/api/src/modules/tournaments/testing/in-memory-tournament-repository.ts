@@ -45,6 +45,16 @@ export class InMemoryTournamentRepository implements TournamentRepository {
     return t;
   }
 
+  /** Test helper: a phase status reached by the matches module. */
+  setPhaseStatus(tournamentId: string, phaseId: string, status: PhaseRecord['status']): void {
+    this.phaseRows.set(
+      tournamentId,
+      (this.phaseRows.get(tournamentId) ?? []).map((p) =>
+        p.id === phaseId ? { ...p, status } : p,
+      ),
+    );
+  }
+
   /** Test helper: statuses reached in later modules. */
   setStatus(tournamentId: string, status: TournamentStatus): void {
     this.get(tournamentId).status = status;
@@ -154,7 +164,8 @@ export class InMemoryTournamentRepository implements TournamentRepository {
         position: row.position,
         format: row.format,
         seriesFormat: row.seriesFormat,
-        groups: row.groups.map((name) => ({ id: this.nextId(), name })),
+        status: 'pending' as const,
+        groups: row.groups.map((name, i) => ({ id: this.nextId(), name, position: i + 1 })),
       })),
     );
   }

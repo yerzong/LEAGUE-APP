@@ -5,6 +5,38 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 ## [Unreleased]
 
+### Added (m05 — partidas, resultados y standings)
+- Migraciones `matches_results_standings` y `competition_keep_phase_seeds`
+  (aplicadas en `penta-dev`): `matches` (con `version` para bloqueo optimista),
+  `match_officials`, `match_checkins`, `reschedule_requests`, `games`,
+  `game_participants`, `draft_actions`, vista `fearless_locks`,
+  `result_reports`, `disputes`, `dispute_evidence`, `standings` y
+  `standing_overrides`. RLS en todas (las partes de una partida ven sus
+  reportes, disputas y reprogramaciones; solo la API escribe), `matches` y
+  `standings` en la publicación de Realtime, bucket privado `match-evidence` y
+  `svc_commit_competition` (aplica partidas, juegos, standings, auditoría y
+  eventos en una transacción). Tests pgTAP.
+- `packages/core`: conciliación del doble reporte, ventana y resultado del
+  check-in (W.O.), plazo de disputa, calendario automático dentro de las
+  ventanas de juego, progreso de fase (standings, clasificados y siembra de la
+  siguiente fase) y horas por zona horaria.
+- `packages/contracts`: vistas de partida, standings con criterios de desempate
+  y tablero del torneo; solicitudes de reporte, disputa, resolución,
+  reprogramación y horario.
+- API: módulos `matches` (generar fixtures, check-in manual y automático,
+  doble reporte con evidencia, resultado y W.O. del staff, disputas con
+  evidencia y resolución), `scheduling` (calendario automático, horario manual
+  auditado, reprogramación propuesta/aceptada/aprobada) y `standings`
+  (`GET /public/tournaments/:slug/board`, `GET /admin/tournaments/:id/board`).
+- `packages/ui`: `Bracket` y `StandingsTable`.
+- Web: pestañas de fases, calendario, partidas y standings en
+  `/admin/torneos/[id]` y gestión de cada partida; `/app/partidas` (mis
+  partidas y centro de partida: check-in, reporte, disputa, reprogramación);
+  bracket, calendario y resultados en `/torneos/[slug]` en vivo con Realtime y
+  detalle público de la partida.
+- E2E: torneo relámpago completo contra `penta-dev` (crear → inscribir →
+  aprobar → fixtures → jugar → campeón) que borra sus datos.
+
 ### Added (m04 — torneos e inscripciones)
 - Migración `tournaments_and_registrations` (aplicada en `penta-dev`):
   `seasons`, `circuits`, `circuit_tournaments`, `tournament_templates`,
