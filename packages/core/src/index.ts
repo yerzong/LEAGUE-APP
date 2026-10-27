@@ -196,3 +196,30 @@ export {
   type SeedingOptions,
 } from './tournaments/seeding.js';
 export { describeStructure, type PhasePlan, type PhaseShape } from './tournaments/structure.js';
+// Competition: dual report, check-in, scheduling and phase progress
+export {
+  reconcileReports,
+  scoreReport,
+  type Reconciliation,
+  type ReportedGame,
+  type ResultReport,
+} from './competition/reports.js';
+export {
+  checkinOutcome,
+  checkinWindow,
+  disputeDeadline,
+  type CheckinOutcome,
+} from './competition/checkin.js';
+export {
+  autoSchedule,
+  isWithinWindows,
+  zonedTime,
+  type Blackout,
+  type WindowSpec,
+} from './competition/schedule.js';
+export {
+  phaseProgress,
+  seedsFromAdvancement,
+  type PhaseEntrantStatus,
+  type PhaseProgress,
+} from './competition/progress.js';
