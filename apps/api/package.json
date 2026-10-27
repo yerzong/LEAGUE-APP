@@ -9,7 +9,9 @@
     "start": "node --env-file-if-exists=.env dist/main.js",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "seed:demo": "tsx --env-file-if-exists=.env src/dev/seed/cli.ts demo",
+    "seed:reset": "tsx --env-file-if-exists=.env src/dev/seed/cli.ts reset"
   },
   "dependencies": {
     "@league/contracts": "workspace:*",
