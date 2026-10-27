@@ -6,6 +6,8 @@ import type {
   TeamStatus,
 } from '@league/contracts';
 
+import { toSlug } from '../../../shared/slug.js';
+
 export interface TeamRecord {
   readonly id: string;
   readonly organizationId: string;
@@ -69,12 +71,4 @@ export const INVITATION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 export const FREE_AGENT_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
 /** URL-safe slug from a team name: "Águilas del Norte" → "aguilas-del-norte". */
-export function slugify(name: string): string {
-  const slug = name
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-  return slug === '' ? 'equipo' : slug;
-}
+export const slugify = (name: string): string => toSlug(name, 'equipo');

@@ -2,7 +2,11 @@
 import type { RiotRankEntry } from '@league/integrations';
 
 import { ApplicationError, conflict } from '../../../shared/application-error.js';
-import type { NewVerificationAttempt, RiotAccountRepository } from '../application/ports.js';
+import type {
+  NewVerificationAttempt,
+  RankSnapshotRecord,
+  RiotAccountRepository,
+} from '../application/ports.js';
 import type { LinkedRiotAccount, VerificationAttempt } from '../domain/riot-account.js';
 
 export class InMemoryRiotAccountRepository implements RiotAccountRepository {
@@ -22,6 +26,24 @@ export class InMemoryRiotAccountRepository implements RiotAccountRepository {
   findActiveByUsers(userIds: readonly string[]): Promise<LinkedRiotAccount[]> {
     return Promise.resolve(
       this.accounts.filter((a) => userIds.includes(a.userId) && a.unlinkedAt === null),
+    );
+  }
+
+  rankHistoryOf(accountIds: readonly string[]): Promise<RankSnapshotRecord[]> {
+    return Promise.resolve(
+      this.accounts
+        .filter((a) => accountIds.includes(a.id))
+        .flatMap((a) =>
+          a.ranks.map((r) => ({
+            accountId: a.id,
+            queue: r.queue,
+            tier: r.tier,
+            division: r.division,
+            wins: 0,
+            losses: 0,
+            capturedAt: a.verifiedAt,
+          })),
+        ),
     );
   }
 

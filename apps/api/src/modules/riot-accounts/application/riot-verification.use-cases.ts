@@ -163,6 +163,19 @@ export class UnlinkRiotAccountUseCase {
 }
 
 /** Read API other modules use (identity, teams, public pages). */
+export interface RiotEligibilityFacts {
+  readonly accountId: string;
+  readonly riotId: string;
+  readonly region: string;
+  readonly summonerLevel: number | null;
+  readonly rank: { readonly tier: string; readonly division?: number } | null;
+  readonly rankHistory: readonly {
+    readonly rank: { readonly tier: string; readonly division?: number };
+    readonly takenAt: string;
+  }[];
+  readonly rankedGames: number | null;
+}
+
 export class RiotAccountQueries {
   constructor(private readonly repository: RiotAccountRepository) {}
 
@@ -179,5 +192,35 @@ export class RiotAccountQueries {
 
   async accountOf(userId: string): Promise<LinkedRiotAccount | null> {
     return this.repository.findActiveByUser(userId);
+  }
+
+  /** Riot data the eligibility rules read (docs/13 §5): solo queue rank and its history. */
+  async eligibilityFacts(userIds: readonly string[]): Promise<Map<string, RiotEligibilityFacts>> {
+    if (userIds.length === 0) return new Map();
+    const accounts = await this.repository.findActiveByUsers(userIds);
+    const history = await this.repository.rankHistoryOf(accounts.map((a) => a.id));
+    return new Map(
+      accounts.map((a) => {
+        const solo = history.filter((s) => s.accountId === a.id && s.queue === 'solo');
+        const latest = solo[0];
+        const rankOf = (s: (typeof solo)[number]) =>
+          s.division === null ? { tier: s.tier } : { tier: s.tier, division: s.division };
+        return [
+          a.userId,
+          {
+            accountId: a.id,
+            riotId: `${a.gameName}#${a.tagLine}`,
+            region: a.region,
+            summonerLevel: a.summonerLevel,
+            rank: latest ? rankOf(latest) : null,
+            rankHistory: solo.map((s) => ({
+              rank: rankOf(s),
+              takenAt: s.capturedAt.toISOString(),
+            })),
+            rankedGames: latest ? latest.wins + latest.losses : null,
+          },
+        ];
+      }),
+    );
   }
 }

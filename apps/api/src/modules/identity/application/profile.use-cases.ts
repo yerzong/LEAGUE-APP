@@ -217,6 +217,18 @@ export interface UserSummary {
   readonly avatarUrl: string | null;
 }
 
+export interface EligibilityFacts {
+  readonly birthDate: string | null;
+  readonly countryCode: string | null;
+  readonly gender: { readonly value: string; readonly declaredAt: string } | null;
+  readonly legalNameProvided: boolean;
+  readonly institution: {
+    readonly id: string;
+    readonly email: string;
+    readonly verified: boolean;
+  } | null;
+}
+
 /** Read API other modules use (teams, public pages). */
 export class ProfileQueries {
   constructor(
@@ -241,6 +253,44 @@ export class ProfileQueries {
 
   findById(userId: string): Promise<Profile | null> {
     return this.profiles.findById(userId);
+  }
+
+  /** Profile data the eligibility rules read (docs/13 §5). Server side only. */
+  async eligibilityFacts(userIds: readonly string[]): Promise<Map<string, EligibilityFacts>> {
+    if (userIds.length === 0) return new Map();
+    const [found, privateData] = await Promise.all([
+      this.profiles.findByIds(userIds),
+      this.profiles.eligibilityDataOf(userIds),
+    ]);
+    return new Map(
+      found.map((p) => {
+        const data = privateData.get(p.id);
+        return [
+          p.id,
+          {
+            birthDate: p.birthDate,
+            countryCode: p.countryCode,
+            gender:
+              data?.gender && data.genderDeclaredAt
+                ? { value: data.gender, declaredAt: data.genderDeclaredAt.toISOString() }
+                : null,
+            legalNameProvided: data?.legalNameProvided ?? false,
+            institution: data?.institutionalEmail
+              ? {
+                  id: '',
+                  email: data.institutionalEmail,
+                  verified: data.institutionalEmailVerified,
+                }
+              : null,
+          },
+        ];
+      }),
+    );
+  }
+
+  /** Staff of the platform (the /admin console): the super admin role for now. */
+  async isStaff(userId: string): Promise<boolean> {
+    return (await this.profiles.findById(userId))?.platformRole === 'super_admin';
   }
 
   findByUsername(username: string): Promise<Profile | null> {

@@ -1,6 +1,6 @@
 import type { AdminClient } from '../database/supabase-admin.js';
 
-export type ImageBucket = 'avatars' | 'team-logos';
+export type ImageBucket = 'avatars' | 'team-logos' | 'tournament-covers';
 
 export interface ImageStorage {
   upload(bucket: ImageBucket, path: string, bytes: Buffer, contentType: string): Promise<void>;

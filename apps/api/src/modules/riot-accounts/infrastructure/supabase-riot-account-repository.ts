@@ -9,7 +9,11 @@ import {
   raisedCode,
 } from '../../../shared/database/postgres-errors.js';
 import type { AdminClient } from '../../../shared/database/supabase-admin.js';
-import type { NewVerificationAttempt, RiotAccountRepository } from '../application/ports.js';
+import type {
+  NewVerificationAttempt,
+  RankSnapshotRecord,
+  RiotAccountRepository,
+} from '../application/ports.js';
 import type { LinkedRiotAccount, VerificationAttempt } from '../domain/riot-account.js';
 
 type AccountRow = Tables<'riot_accounts'>;
@@ -81,6 +85,25 @@ export class SupabaseRiotAccountRepository implements RiotAccountRepository {
       .eq('is_primary', true);
     assertNoError(error);
     return (data ?? []).map((row) => toAccount(row, []));
+  }
+
+  async rankHistoryOf(accountIds: readonly string[]): Promise<RankSnapshotRecord[]> {
+    if (accountIds.length === 0) return [];
+    const { data, error } = await this.db
+      .from('riot_rank_snapshots')
+      .select('*')
+      .in('riot_account_id', [...accountIds])
+      .order('captured_at', { ascending: false });
+    assertNoError(error);
+    return (data ?? []).map((s) => ({
+      accountId: s.riot_account_id,
+      queue: s.queue,
+      tier: s.tier as RiotRank['tier'],
+      division: s.division,
+      wins: s.wins,
+      losses: s.losses,
+      capturedAt: new Date(s.captured_at),
+    }));
   }
 
   async findOwnerOfPuuid(puuid: string): Promise<string | null> {
