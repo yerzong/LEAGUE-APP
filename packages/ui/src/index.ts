@@ -37,6 +37,7 @@ export * from './molecules/toast/toaster.js';
 export * from './molecules/uploader/uploader.js';
 export * from './molecules/user-menu/user-menu.js';
 export * from './organisms/app-shell/app-shell.js';
+export * from './organisms/bracket/bracket.js';
 export * from './organisms/data-table/data-table.js';
 export * from './organisms/empty-state/empty-state.js';
 export * from './organisms/error-state/error-state.js';
@@ -44,6 +45,7 @@ export * from './organisms/hero/hero.js';
 export * from './organisms/page-header/page-header.js';
 export * from './organisms/public-footer/public-footer.js';
 export * from './organisms/public-header/public-header.js';
+export * from './organisms/standings-table/standings-table.js';
 export * from './organisms/table/table.js';
 export * from './organisms/wizard/wizard.js';
 
