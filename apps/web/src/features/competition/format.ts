@@ -67,8 +67,12 @@ export function slotName(
 }
 
 /** "Desempate: resultado directo (6), diferencia de partidas (+2)". */
-export function tiebreakNote(row: Pick<StandingRow, 'tiebreaks' | 'tiedWith'>): string | null {
-  if (row.tiedWith.length > 0) return c.table.unresolved;
+export function tiebreakNote(
+  row: Pick<StandingRow, 'tiebreaks' | 'tiedWith'>,
+  phaseCompleted = true,
+): string | null {
+  // While the phase is played a level score is just a level score.
+  if (row.tiedWith.length > 0) return phaseCompleted ? c.table.unresolved : null;
   if (row.tiebreaks.length === 0) return null;
   const criteria = row.tiebreaks
     .map((step) => {

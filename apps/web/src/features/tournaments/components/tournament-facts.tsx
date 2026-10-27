@@ -41,7 +41,14 @@ export function Section({
 }
 
 /** Information, format, eligibility and prizes of a tournament (public page and portal). */
-export function TournamentFacts({ tournament }: { tournament: PublicTournamentDetail }) {
+export function TournamentFacts({
+  tournament,
+  started = false,
+}: {
+  tournament: PublicTournamentDetail;
+  /** Fixtures exist: the bracket is shown above, no "coming soon" note. */
+  started?: boolean;
+}) {
   const tz = tournament.timezone;
   const roster = format(d.roster, {
     starters: tournament.roster.starters,
@@ -151,7 +158,7 @@ export function TournamentFacts({ tournament }: { tournament: PublicTournamentDe
             </li>
           ))}
         </ol>
-        <p className="text-sm text-text-muted">{d.bracketSoon}</p>
+        {!started && <p className="text-sm text-text-muted">{d.bracketSoon}</p>}
       </Section>
 
       <Section id="elegibilidad" title={d.eligibility}>

@@ -1794,6 +1794,7 @@ export const es419 = {
       unresolved: 'Empate sin resolver: requiere partida de desempate',
     },
     board: {
+      title: 'Bracket y tablas',
       bracket: 'Bracket',
       table: 'Tabla',
       calendar: 'Calendario',
@@ -1828,7 +1829,8 @@ export const es419 = {
       title: 'Mis partidas',
       description: 'Check-in, reporte de resultado, reprogramaciones y disputas de tus partidas.',
       empty: 'Todavía no tienes partidas.',
-      emptyDescription: 'Cuando un torneo en el que estés inscrito genere sus enfrentamientos, aparecerán aquí.',
+      emptyDescription:
+        'Cuando un torneo en el que estés inscrito genere sus enfrentamientos, aparecerán aquí.',
       upcoming: 'Próximas',
       results: 'Resultados',
       calendar: 'Mi calendario',
@@ -1890,7 +1892,8 @@ export const es419 = {
       generated: 'Enfrentamientos generados.',
       generateHint: 'Disponible con las inscripciones cerradas y la siembra aplicada.',
       autoSchedule: 'Programar automáticamente',
-      autoScheduleDescription: 'Asigna horario a las partidas sin hora, dentro de las ventanas de juego.',
+      autoScheduleDescription:
+        'Asigna horario a las partidas sin hora, dentro de las ventanas de juego.',
       autoScheduled: '{count} partidas programadas.',
       setTime: 'Cambiar horario',
       time: 'Fecha y hora',
@@ -1913,7 +1916,8 @@ export const es419 = {
       confirmResult: 'Confirmar resultado',
       overrideResult: 'Corregir resultado',
       resultTitle: 'Resultado de la partida',
-      resultDescription: 'Queda en auditoría con tu motivo. Si la partida ya terminó, el bracket se recalcula.',
+      resultDescription:
+        'Queda en auditoría con tu motivo. Si la partida ya terminó, el bracket se recalcula.',
       resultSaved: 'Resultado guardado.',
       forfeit: 'Dar forfeit',
       forfeitLoser: 'Pierde por forfeit',

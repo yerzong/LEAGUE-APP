@@ -56,6 +56,7 @@ describe('tiebreak note', () => {
     ).toBe('Desempate: Resultado directo (3), Diferencia de partidas (+2)');
     expect(tiebreakNote({ tiebreaks: [], tiedWith: [] })).toBeNull();
     expect(tiebreakNote({ tiebreaks: [], tiedWith: ['x'] })).toContain('sin resolver');
+    expect(tiebreakNote({ tiebreaks: [], tiedWith: ['x'] }, false)).toBeNull();
     expect(signed(2)).toBe('+2');
     expect(signed(-1)).toBe('-1');
   });

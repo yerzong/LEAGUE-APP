@@ -105,7 +105,7 @@ const columns = [
 
 export function Tables({ phase }: { phase: PhaseBoard }) {
   return (
-    <div className="grid gap-4 lg:grid-cols-2">
+    <div className="grid min-w-0 gap-4 lg:grid-cols-2">
       {phase.groups.map((group) => {
         const rows: StandingsRow[] = group.standings.map((row) => ({
           id: row.entrant.id,
@@ -135,12 +135,12 @@ export function Tables({ phase }: { phase: PhaseBoard }) {
                 {c.standingStatuses[row.status]}
               </Badge>
             ),
-          note: tiebreakNote(row) ?? undefined,
+          note: tiebreakNote(row, phase.status === 'completed') ?? undefined,
           highlight: row.status === 'in_contention' ? undefined : row.status,
         }));
         const caption = group.name ? format(c.group, { name: group.name }) : phase.name;
         return (
-          <div key={group.id ?? 'all'} className="flex flex-col gap-2">
+          <div key={group.id ?? 'all'} className="flex min-w-0 flex-col gap-2">
             {group.name && <h4 className="text-sm text-text-muted caps">{caption}</h4>}
             <StandingsTable
               caption={caption}
@@ -237,7 +237,7 @@ export function BoardView({ board, matchBase }: BoardViewProps) {
       {board.phases
         .filter((p) => p.matches.length > 0)
         .map((phase) => (
-          <section key={phase.id} aria-label={phase.name} className="flex flex-col gap-4">
+          <section key={phase.id} aria-label={phase.name} className="flex min-w-0 flex-col gap-4">
             <h3 className="font-display text-xl font-bold text-text caps">
               {phase.position}. {phase.name}
             </h3>

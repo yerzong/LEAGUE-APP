@@ -132,7 +132,7 @@ export default async function PublicTournamentPage({ params }: PageProps<'/torne
 
       {board.ok && board.data.phases.some((p) => p.matches.length > 0) && (
         <>
-          <Section id="bracket" title={messages.competition.board.bracket}>
+          <Section id="bracket" title={messages.competition.board.title}>
             <LiveRefresh tournamentId={tournament.id} />
             <BoardView board={board.data} matchBase={`/torneos/${tournament.slug}/partidas`} />
           </Section>
@@ -165,7 +165,10 @@ export default async function PublicTournamentPage({ params }: PageProps<'/torne
         </>
       )}
 
-      <TournamentFacts tournament={tournament} />
+      <TournamentFacts
+        tournament={tournament}
+        started={board.ok && board.data.phases.some((p) => p.matches.length > 0)}
+      />
 
       <Section id="participantes" title={d.participants}>
         {tournament.participants.length === 0 ? (
