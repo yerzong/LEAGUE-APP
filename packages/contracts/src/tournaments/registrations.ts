@@ -133,6 +133,8 @@ export const RegistrationOptionSchema = z.object({
   failures: z.array(EligibilityFailureSchema),
   blockers: z.array(z.string()),
   registration: z.object({ id: z.uuid(), status: EntrantStatusSchema }).nullable(),
+  /** Display names of the players named in `failures`. */
+  names: z.record(z.uuid(), z.string()),
 });
 
 export const ExploreTournamentSchema = PublicTournamentListItemSchema.extend({

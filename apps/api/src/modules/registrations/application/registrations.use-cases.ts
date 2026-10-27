@@ -177,6 +177,12 @@ const toFailure =
     ),
   });
 
+/** How a player is named to their captain. */
+const nameOf = (evidence: Evidence, userId: string) => {
+  const facts = evidence.facts.get(userId);
+  return facts?.displayName ?? facts?.username ?? facts?.riot?.riotId ?? '—';
+};
+
 const toViolation = (v: RosterViolation) => ({ reason: v.reason, details: { ...v.details } });
 
 const canWithdraw = (e: EntrantRecord, t: TournamentRecord) =>
@@ -560,6 +566,11 @@ export class ExploreTournamentsUseCase {
           failures: result.failed.map(toFailure(true)),
           blockers: [...closed, ...blockers],
           registration: registration ? { id: registration.id, status: registration.status } : null,
+          names: Object.fromEntries(
+            result.failed.flatMap((f) =>
+              f.userId ? [[f.userId, nameOf(evidence, f.userId)]] : [],
+            ),
+          ),
         };
       };
       const options =

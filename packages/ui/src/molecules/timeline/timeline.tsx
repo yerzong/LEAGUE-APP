@@ -24,7 +24,10 @@ export function Timeline({ items, label, className }: TimelineProps) {
       {items.map((item, index) => (
         <li key={item.id} className="relative flex gap-3 pb-5 last:pb-0">
           {index < items.length - 1 && (
-            <span aria-hidden className="absolute top-4 bottom-0 left-1.5 w-px -translate-x-1/2 bg-border" />
+            <span
+              aria-hidden
+              className="absolute top-4 bottom-0 left-1.5 w-px -translate-x-1/2 bg-border"
+            />
           )}
           <span
             aria-hidden

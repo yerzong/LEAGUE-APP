@@ -103,7 +103,13 @@ export const RankSchema = z
     path: ['division'],
   });
 
-const IsoDateTime = z.iso.datetime({ offset: true });
+/** Normalized to `toISOString()` so stored and submitted configs compare equal. */
+const IsoDateTime = z.iso.datetime({ offset: true }).transform((v) => new Date(v).toISOString());
+/** `player` is the default target: kept implicit for the same reason. */
+const RankTarget = z
+  .enum(['player', 'team_average'])
+  .transform((v) => (v === 'team_average' ? v : undefined))
+  .optional();
 const count = (max: number) => z.number().int().min(0).max(max);
 
 /**
@@ -125,17 +131,17 @@ export const EligibilityRuleSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('rank_min'),
     params: z.object({ rank: RankSchema }),
-    appliesTo: z.enum(['player', 'team_average']).optional(),
+    appliesTo: RankTarget,
   }),
   z.object({
     type: z.literal('rank_max'),
     params: z.object({ rank: RankSchema }),
-    appliesTo: z.enum(['player', 'team_average']).optional(),
+    appliesTo: RankTarget,
   }),
   z.object({
     type: z.literal('peak_rank_max'),
     params: z.object({ rank: RankSchema, windowDays: z.number().int().min(1).max(365) }),
-    appliesTo: z.enum(['player', 'team_average']).optional(),
+    appliesTo: RankTarget,
   }),
   z.object({
     type: z.literal('account_level_min'),
@@ -318,8 +324,16 @@ export const TournamentConfigSchema = z
       registrationClosesAt: IsoDateTime.nullable(),
       startsAt: IsoDateTime.nullable(),
       endsAt: IsoDateTime.nullable(),
-      windows: z.array(ScheduleWindowSchema).max(21),
-      blackouts: z.array(ScheduleBlackoutSchema).max(30),
+      windows: z
+        .array(ScheduleWindowSchema)
+        .max(21)
+        .transform((list) =>
+          [...list].sort((a, b) => a.weekday - b.weekday || a.startTime.localeCompare(b.startTime)),
+        ),
+      blackouts: z
+        .array(ScheduleBlackoutSchema)
+        .max(30)
+        .transform((list) => [...list].sort((a, b) => a.startsAt.localeCompare(b.startsAt))),
       checkinOpensMinutes: z.number().int().min(5).max(240),
       checkinClosesMinutes: z.number().int().min(0).max(120),
       rescheduleWithinWindowsOnly: z.boolean(),

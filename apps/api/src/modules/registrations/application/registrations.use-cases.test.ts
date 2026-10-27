@@ -585,6 +585,7 @@ describe('staff lists and the portal', () => {
         ],
         blockers: [],
         registration: null,
+        names: { [EVA]: 'user5' },
       },
     ]);
 
@@ -597,6 +598,7 @@ describe('staff lists and the portal', () => {
         failures: [],
         blockers: ['not_team_manager'],
         registration: null,
+        names: {},
       },
     ]);
   });

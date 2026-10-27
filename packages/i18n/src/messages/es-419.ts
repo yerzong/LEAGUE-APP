@@ -823,7 +823,8 @@ export const es419 = {
     invalid_transition: 'Esa acción no está disponible en el estado actual del torneo.',
     no_phases: 'El torneo necesita al menos una fase.',
     reason_required: 'Escribe un motivo de al menos 10 caracteres.',
-    tournament_not_published: 'Publica el torneo antes de publicar una nueva versión del reglamento.',
+    tournament_not_published:
+      'Publica el torneo antes de publicar una nueva versión del reglamento.',
     tournament_not_draft: 'El torneo ya fue publicado.',
     tournament_status_changed: 'Alguien más cambió el torneo. Recarga la página.',
     no_rulebook_draft: 'Guarda el borrador del reglamento antes de publicarlo.',
@@ -857,8 +858,10 @@ export const es419 = {
       rank_above_max: 'Rango ({rank}) por encima del máximo ({max}).',
       peak_rank_above_max:
         'Rango más alto de los últimos {windowDays} días ({peak}) por encima del máximo ({max}).',
-      team_average_below_min: 'Rango promedio del equipo ({average}) por debajo del mínimo ({min}).',
-      team_average_above_max: 'Rango promedio del equipo ({average}) por encima del máximo ({max}).',
+      team_average_below_min:
+        'Rango promedio del equipo ({average}) por debajo del mínimo ({min}).',
+      team_average_above_max:
+        'Rango promedio del equipo ({average}) por encima del máximo ({max}).',
       account_level_below_min: 'Cuenta nivel {level}; se requiere al menos el nivel {min}.',
       account_too_new: 'La cuenta es demasiado nueva para este torneo.',
       ranked_games_below_min:
@@ -867,7 +870,8 @@ export const es419 = {
       underage: 'No cumple la edad mínima ({min} años).',
       gender_not_declared: 'Falta declarar el género en el perfil.',
       gender_not_allowed: 'No corresponde a las categorías de este torneo.',
-      gender_declared_too_late: 'El género debe estar declarado desde antes del anuncio del torneo.',
+      gender_declared_too_late:
+        'El género debe estar declarado desde antes del anuncio del torneo.',
       institution_not_verified: 'Falta un correo institucional verificado.',
       institution_mismatch: 'La institución no corresponde a la de este torneo.',
       active_roster_in_restricted_tier:
@@ -1162,7 +1166,8 @@ export const es419 = {
     wizard: {
       newTitle: 'Nuevo torneo',
       editTitle: 'Editar torneo',
-      newDescription: 'Configura todo paso a paso. Puedes guardar como borrador en cualquier momento.',
+      newDescription:
+        'Configura todo paso a paso. Puedes guardar como borrador en cualquier momento.',
       fromTemplate: 'Basado en la plantilla «{name}».',
       progress: 'Paso {step} de {count}',
       back: 'Anterior',
@@ -1231,7 +1236,8 @@ export const es419 = {
         winConditionHint: 'Opcional, por ejemplo en 1v1: primera sangre o 100 de farm.',
       },
       eligibility: {
-        intro: 'Arma la lista de reglas. Cada inscripción se evalúa con ellas, jugador por jugador.',
+        intro:
+          'Arma la lista de reglas. Cada inscripción se evalúa con ellas, jugador por jugador.',
         exclusivity: 'Exclusividad (anti-chapulineo)',
         exclusivityHint:
           'Temporada y circuito estarán disponibles cuando existan temporadas y circuitos.',
@@ -1463,12 +1469,18 @@ export const es419 = {
         exceptionDescription:
           '{name} no cumple todas las reglas. Aprobarla es una excepción manual y queda en auditoría con tu motivo.',
         rejectTitle: '¿Rechazar a {name}?',
-        rejectDescription: 'Su roster quedará libre para otras inscripciones. El motivo lo verá el capitán.',
+        rejectDescription:
+          'Su roster quedará libre para otras inscripciones. El motivo lo verá el capitán.',
         approved: 'Inscripción aprobada.',
         rejected: 'Inscripción rechazada.',
         promoted: 'Inscripción enviada a revisión.',
         rejectionReason: 'Motivo: {reason}',
-        rosterColumns: { player: 'Jugador', role: 'Rol', riotId: 'Riot ID', eligibility: 'Elegibilidad' },
+        rosterColumns: {
+          player: 'Jugador',
+          role: 'Rol',
+          riotId: 'Riot ID',
+          eligibility: 'Elegibilidad',
+        },
       },
       participants: {
         empty: 'Aún no hay participantes aprobados.',
@@ -1482,7 +1494,8 @@ export const es419 = {
         manualSeed: 'Seed de {name}',
       },
       phases: {
-        intro: 'Estructura creada al publicar. Los enfrentamientos se generan al cerrar inscripciones (siguiente entrega).',
+        intro:
+          'Estructura creada al publicar. Los enfrentamientos se generan al cerrar inscripciones (siguiente entrega).',
         empty: 'La estructura se crea al publicar el torneo.',
         group: 'Grupo {name}',
         series: 'Series {format}',
@@ -1561,8 +1574,8 @@ export const es419 = {
         noTeams: 'Para inscribirte necesitas ser capitán o co-capitán de un equipo.',
         createTeam: 'Crear equipo',
         roster: 'Roster',
-        rosterHint: '{starters} titulares, hasta {subs} suplentes{coach}.',
-        rosterCoach: ' y un coach',
+        rosterHint: '{starters} titulares · suplentes máx.: {subs}{coach}.',
+        rosterCoach: ' · con coach',
         include: 'Incluir a {name}',
         role: 'Rol de {name}',
         validation: 'Validación',
@@ -1632,8 +1645,8 @@ export const es419 = {
         windows: 'Horarios de juego',
         fee: 'Cuota',
         free: 'Gratuito',
-        roster: 'Roster: {starters} titulares, hasta {subs} suplentes{coach}',
-        rosterCoach: ' y coach',
+        roster: '{starters} titulares · suplentes máx.: {subs}{coach}',
+        rosterCoach: ' · con coach',
         supervision: 'Resultados',
         phase: '{position}. {name}',
         phaseDetail: '{format} · {series}{final} · {draft}',
