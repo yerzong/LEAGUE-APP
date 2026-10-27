@@ -88,6 +88,32 @@ disputa. Todo se escribe con `svc_commit_competition` (una transacción con
 standings, auditoría y eventos `match.*` en `outbox_events`). La evidencia va al
 bucket privado `match-evidence` y se muestra con URLs firmadas.
 
+Datos de demo (solo `penta-dev`, docs/specs/m0dev): con la API detenida,
+
+```sh
+SEED_ENABLED=true pnpm seed:demo    # 54 jugadores, 8 equipos, temporada, circuito y 3 torneos
+SEED_ENABLED=true pnpm seed:reset   # borra todo lo marcado demo
+```
+
+El seed corre los casos de uso de la API en proceso (mismas validaciones,
+auditoría, eventos y standings), así que lo sembrado es indistinguible de lo
+real: una Copa Relámpago de 8 equipos con bracket listo para jugar, una Liga de 6
+con tres jornadas jugadas (standings con desempates) y un torneo con
+inscripciones abiertas (máximo Diamante I: el roster de Jaguares no es elegible).
+Se puede correr varias veces sin duplicar; al final imprime los enlaces y las
+cuentas (`*@demo.penta.local`, contraseña `SEED_DEMO_PASSWORD` o la de
+`apps/api/src/dev/seed/demo-data.ts`). Se niega a correr sin
+`SEED_ENABLED=true`, con `NODE_ENV=production`, contra cualquier proyecto que no
+sea `penta-dev` o con la API encendida (su barrido de check-in chocaría con las
+jornadas pasadas que reproduce). `seed:reset` anonimiza en vez de borrar la
+cuenta de staff demo, porque aparece en `audit_logs` (append-only). El código
+vive en `apps/api/src/dev` y no entra al build de la API.
+
+Autollenar: con `NEXT_PUBLIC_DEV_TOOLS=true` en `apps/web/.env.local` (y
+apuntando a `penta-dev`) el asistente de torneo, el perfil y crear equipo
+muestran "Rellenar con datos de ejemplo"; llena el formulario, no lo envía. Sin
+la bandera el botón ni siquiera entra al bundle.
+
 Las dependencias se fijan con versión exacta (`savePrefix: ''` en
 `pnpm-workspace.yaml`).
 
