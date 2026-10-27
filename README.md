@@ -14,9 +14,11 @@ motor de torneos como un **producto SaaS** vendible a otros organizadores.
 
 ## Estado actual
 
-**Módulo 3: Navegación y vitrina pública** (header y footer públicos, home
-vitrina, directorios `/torneos`, `/equipos` y `/jugadores`, páginas legales,
-404/error con la marca, SEO básico). Antes: módulo 2 (perfiles, cuenta de Riot y
+**Módulo 4: Torneos e inscripciones** (asistente de creación en
+`/admin/torneos`, plantillas, página de seguimiento del evento, explorar e
+inscribirse en `/app/torneos` con elegibilidad y anti-chapulineo calculados con
+`packages/core`, listado y detalle público en `/torneos`). Antes: módulo 3
+(navegación y vitrina pública), módulo 2 (perfiles, cuenta de Riot y
 equipos), módulo 1 (motor de torneos en `packages/core`) y módulo 0 (monorepo,
 CI, web, API, Supabase, auth y design system). Arquitectura y stack definidos en `docs/`.
 
@@ -64,9 +66,16 @@ cualquier Riot ID existe (salvo los que empiezan con `missing`) y el ícono
 solo. Con `RIOT_PROVIDER=riot` y `RIOT_API_KEY` usa la API real.
 
 E2E: `pnpm test:e2e` lee `apps/api/.env` y corre los flujos de perfil, Riot,
-equipos e invitaciones contra `penta-dev` con usuarios de prueba que crea y
-borra al terminar (sin esa variable esos flujos se omiten). En CI corren contra
+equipos, invitaciones y torneos (crear → publicar → inscribir → aprobar) contra
+`penta-dev` con usuarios y torneos de prueba que crea y borra al terminar (sin
+esa variable esos flujos se omiten). La única excepción es la cuenta
+`e2e-staff@example.com`: publicar y aprobar quedan en `audit_logs`, que es
+append-only, así que esa cuenta se reutiliza entre corridas. En CI corren contra
 un Supabase local (`supabase start`).
+
+Torneos: los cambios de estado y las inscripciones escriben eventos de dominio en
+`outbox_events` (`tournament.published`, `registration.approved`, …) en la misma
+transacción; todavía nadie los consume (los enganchan notificaciones y el bot).
 
 Las dependencias se fijan con versión exacta (`savePrefix: ''` en
 `pnpm-workspace.yaml`).

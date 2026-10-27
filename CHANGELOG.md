@@ -5,6 +5,44 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 ## [Unreleased]
 
+### Added (m04 — torneos e inscripciones)
+- Migración `tournaments_and_registrations` (aplicada en `penta-dev`):
+  `seasons`, `circuits`, `circuit_tournaments`, `tournament_templates`,
+  `tournaments` (tipo, tier, estado, visibilidad, modalidad, supervisión,
+  co-stream, premios…), `tournament_game_settings`, `tournament_roster_rules`,
+  `eligibility_rules`, `schedule_windows`, `schedule_blackouts`, `rulebooks`,
+  `rulebook_versions` (versiones publicadas congeladas), `tournament_staff`,
+  `tournament_prizes`, `prize_deliveries`, `entrants` (una inscripción activa por
+  equipo y torneo), `entrant_roster_members` (índice parcial
+  `UNIQUE (user_id, exclusivity_key)`: anti-chapulineo en la base de datos),
+  `roster_change_requests`, `phases`, `groups`, `phase_entrants` y
+  `outbox_events`. RLS en todas (un equipo no ve inscripciones ajenas que no
+  estén aprobadas; solo la API escribe), funciones `svc_*` que guardan, auditan y
+  emiten eventos en una transacción, bucket `tournament-covers`. Tests pgTAP.
+- `packages/core`: reglas efectivas del torneo (exclusividad por ámbito), clave
+  de exclusividad, validación de roster, política de edición por estado
+  (docs/14 §3.2), ciclo de vida de la inscripción, siembra (manual, aleatoria,
+  por rango promedio) y vista previa de la estructura de fases.
+- `packages/contracts`: configuración completa del asistente
+  (`TournamentConfigSchema`) y vistas de admin, portal y público.
+- API: módulos `tournaments` (crear borrador, editar según estado, publicar con
+  fases y grupos vacíos, abrir/cerrar/cancelar/archivar, reglamento con
+  versiones, plantillas, auditoría) y `registrations` (validación en vivo,
+  inscribir con elegibilidad y exclusividad de `core`, lista de espera, aprobar
+  —con excepción manual auditada—, rechazar, retirar, siembra), y
+  `GET /public/tournaments[/:slug]`. Solo staff (`super_admin`) administra.
+- `packages/ui`: `Wizard` (pasos) y `Timeline`.
+- Web: `/admin/torneos` (lista, asistente de 11 pasos, seguimiento con
+  pestañas), `/admin/plantillas`, `/app/torneos` (explorar con indicador de
+  elegibilidad e inscripción con validación en vivo y reglamento), `/torneos`
+  con filtros y `/torneos/[slug]`; torneos en el sitemap.
+- E2E: crear → publicar → abrir inscripciones → inscribir → anti-chapulineo →
+  aprobar → página pública.
+
+### Changed (m04)
+- Los motivos de elegibilidad (`eligibility.reasons`) se redactan en forma
+  neutral: el capitán los ve por cada jugador del roster.
+
 ### Added (m03 — navegación y vitrina pública)
 - `packages/ui`: `PublicHeader` (nav con secciones "Pronto" sin enlace, menú en
   `Sheet` en móvil), `PublicFooter`, `Hero`, `SectionHeading`, `Breadcrumbs`,
