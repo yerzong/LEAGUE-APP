@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 
 import { messages } from '@/config/i18n';
+import { TeamAutofill } from '@/features/dev-tools/autofill';
 import { regionOptions } from '@/features/forms/options';
 import { SelectField } from '@/features/forms/select-field';
 import { fieldErrorMessage } from '@/lib/ui/forms';
@@ -91,10 +92,17 @@ export function TeamForm({ team, onSaved }: { team?: TeamDetail; onSaved?: () =>
       >
         {(control) => <Textarea {...control} maxLength={500} {...form.register('description')} />}
       </Field>
-      <div className="md:col-span-2">
+      <div className="flex flex-wrap items-center gap-2 md:col-span-2">
         <Button type="submit" disabled={isSubmitting}>
           {team ? messages.common.save : t.create}
         </Button>
+        {TeamAutofill && !team && (
+          <TeamAutofill
+            onFill={(values) => {
+              form.reset(values, { keepDefaultValues: true });
+            }}
+          />
+        )}
       </div>
     </form>
   );

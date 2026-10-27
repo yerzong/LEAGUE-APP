@@ -438,6 +438,10 @@ export const es419 = {
       motion: 'Movimiento',
     },
   },
+  devTools: {
+    autofill: 'Rellenar con datos de ejemplo',
+    filled: 'Datos de ejemplo cargados. Revisa y ajusta antes de guardar.',
+  },
   forms: {
     required: 'Este campo es obligatorio.',
     invalid: 'Revisa este campo.',
