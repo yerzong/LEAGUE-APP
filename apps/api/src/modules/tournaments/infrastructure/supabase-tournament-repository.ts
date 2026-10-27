@@ -456,7 +456,7 @@ export class SupabaseTournamentRepository implements TournamentRepository {
   async phases(tournamentId: string): Promise<PhaseRecord[]> {
     const { data, error } = await this.db
       .from('phases')
-      .select('id, name, position, format, series_format, groups(id, name, position)')
+      .select('id, name, position, format, series_format, status, groups(id, name, position)')
       .eq('tournament_id', tournamentId)
       .order('position');
     check(error);
@@ -467,9 +467,10 @@ export class SupabaseTournamentRepository implements TournamentRepository {
       // Only the formats of packages/core are ever written.
       format: p.format as PhaseRecord['format'],
       seriesFormat: p.series_format,
+      status: p.status,
       groups: [...p.groups]
         .sort((a, b) => a.position - b.position)
-        .map((g) => ({ id: g.id, name: g.name })),
+        .map((g) => ({ id: g.id, name: g.name, position: g.position })),
     }));
   }
 

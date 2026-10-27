@@ -794,4 +794,67 @@ export class RegistrationQueries {
     const counts = await this.deps.registrations.counts(tournamentIds);
     return new Map([...counts].map(([id, c]) => [id, c.approved]));
   }
+
+  /** Every registration of the tournament as matches show it (name, tag, logo, team, seed). */
+  async entrantsOf(tournamentId: string): Promise<EntrantView[]> {
+    const entrants = await this.deps.registrations.listByTournament(tournamentId);
+    const teams = await Promise.all(
+      entrants.map((e) => (e.teamId ? this.deps.teams.findById(e.teamId) : Promise.resolve(null))),
+    );
+    return entrants.map((e, i) => ({
+      id: e.id,
+      status: e.status,
+      displayName: e.displayName,
+      displayTag: e.displayTag,
+      logoUrl: this.deps.teams.logoUrl(e.logoPath),
+      teamId: e.teamId,
+      teamSlug: teams[i]?.slug ?? null,
+      seed: e.seed,
+    }));
+  }
+
+  /**
+   * Registrations of the tournament the user acts for in a match: the team
+   * ones they manage (captain, co-captain) and their own solo one.
+   */
+  async managedBy(userId: string, tournamentId: string): Promise<Set<string>> {
+    const teams = await teamsIManage(this.deps, userId);
+    const mine = await this.deps.registrations.involving(
+      teams.map((t) => t.id),
+      userId,
+    );
+    const teamIds = new Set(teams.map((t) => t.id));
+    return new Set(
+      mine
+        .filter(
+          (e) =>
+            e.tournamentId === tournamentId &&
+            (e.teamId !== null ? teamIds.has(e.teamId) : e.userId === userId),
+        )
+        .map((e) => e.id),
+    );
+  }
+
+  /** Users who play in a registration (starters and substitutes), for "my matches". */
+  async entrantsOfUser(userId: string): Promise<{ entrantId: string; tournamentId: string }[]> {
+    const teams = await this.deps.teams.activeTeamsOf(userId);
+    const mine = await this.deps.registrations.involving(
+      teams.map((t) => t.team.id),
+      userId,
+    );
+    return mine
+      .filter((e) => e.status === 'approved')
+      .map((e) => ({ entrantId: e.id, tournamentId: e.tournamentId }));
+  }
+}
+
+export interface EntrantView {
+  readonly id: string;
+  readonly status: EntrantRecord['status'];
+  readonly displayName: string;
+  readonly displayTag: string | null;
+  readonly logoUrl: string | null;
+  readonly teamId: string | null;
+  readonly teamSlug: string | null;
+  readonly seed: number | null;
 }

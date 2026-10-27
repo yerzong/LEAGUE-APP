@@ -27,7 +27,12 @@ export interface PhaseRecord {
   readonly position: number;
   readonly format: PhaseConfig['format'];
   readonly seriesFormat: PhaseConfig['seriesFormat'];
-  readonly groups: readonly { readonly id: string; readonly name: string }[];
+  readonly status: 'pending' | 'in_progress' | 'completed';
+  readonly groups: readonly {
+    readonly id: string;
+    readonly name: string;
+    readonly position: number;
+  }[];
 }
 
 /** A phase to create on publish (empty: fixtures land in module 05). */
