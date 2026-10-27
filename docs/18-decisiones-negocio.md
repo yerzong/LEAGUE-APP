@@ -33,6 +33,12 @@
 
 Ninguna decisión de negocio pendiente por ahora.
 
+## Ideas futuras (anotadas, no programadas)
+
+| Idea | Nota |
+|------|------|
+| **Asistente de IA para crear torneos** | Botón en el wizard: el admin describe en lenguaje natural ("relámpago de 16 equipos, single elim, este sábado") y la IA precarga los 11 pasos; el admin revisa y confirma. Vive dentro de la app con la clave de IA propia (seguro), es un feature vendible y encaja con la visión de automatización. Construir después del core de torneos (partidas/standings). |
+
 ## Pospuestas
 
 | Tema | Por qué |
