@@ -1,7 +1,15 @@
 // Public team and player pages. Every field passes through the owner's
 // privacy setting against the viewer (public, teammate or staff).
 
-import type { GameRegion, PublicPlayer, PublicTeam, SocialLink } from '@league/contracts';
+import type {
+  DirectoryQuery,
+  GameRegion,
+  PublicPlayer,
+  PublicPlayerList,
+  PublicTeam,
+  PublicTeamList,
+  SocialLink,
+} from '@league/contracts';
 
 import { notFound } from '../../../shared/application-error.js';
 import type { Clock } from '../../../shared/clock.js';
@@ -14,12 +22,22 @@ import {
 } from '../../identity/domain/profile.js';
 import type { MemberRecord, TeamRecord } from '../../teams/domain/team.js';
 
+/** Search and window of a directory read. */
+export interface DirectoryWindow {
+  readonly query: string;
+  readonly limit: number;
+  readonly offset: number;
+}
+
 export interface PublicPagesDeps {
   readonly teams: {
     findBySlug(slug: string): Promise<TeamRecord | null>;
     activeMembers(teamId: string): Promise<MemberRecord[]>;
     activeTeamsOf(userId: string): Promise<{ team: TeamRecord; role: MemberRecord['teamRole'] }[]>;
     logoUrl(path: string | null): string | null;
+    /** Active teams of the organization, newest first. */
+    listActive(window: DirectoryWindow): Promise<{ teams: TeamRecord[]; total: number }>;
+    memberCounts(teamIds: readonly string[]): Promise<Map<string, number>>;
   };
   readonly profiles: {
     findById(userId: string): Promise<Profile | null>;
@@ -27,6 +45,8 @@ export interface PublicPagesDeps {
     privacyOf(userIds: readonly string[]): Promise<Map<string, ResolvedPrivacy>>;
     socialLinksOf(userId: string): Promise<SocialLink[]>;
     avatarUrl(path: string | null): string | null;
+    /** Active users with a username. */
+    listPublic(window: DirectoryWindow): Promise<{ profiles: Profile[]; total: number }>;
   };
   readonly riot: {
     riotIdsOf(userIds: readonly string[]): Promise<Map<string, string>>;
@@ -150,6 +170,68 @@ export class GetPublicPlayerUseCase {
       socialLinks: links
         .filter((l) => canSee(l.visibility, level))
         .map((l) => ({ platform: l.platform, url: l.url, handle: l.handle })),
+    };
+  }
+}
+
+const windowOf = ({ q, page, pageSize }: DirectoryQuery): DirectoryWindow => ({
+  query: q,
+  limit: pageSize,
+  offset: (page - 1) * pageSize,
+});
+
+export class ListPublicTeamsUseCase {
+  constructor(private readonly deps: PublicPagesDeps) {}
+
+  async execute(query: DirectoryQuery): Promise<PublicTeamList> {
+    const { teams, total } = await this.deps.teams.listActive(windowOf(query));
+    const counts = await this.deps.teams.memberCounts(teams.map((t) => t.id));
+    return {
+      items: teams.map((team) => ({
+        slug: team.slug,
+        name: team.name,
+        tag: team.tag,
+        region: team.region,
+        logoUrl: this.deps.teams.logoUrl(team.logoPath),
+        memberCount: counts.get(team.id) ?? 0,
+      })),
+      total,
+      page: query.page,
+      pageSize: query.pageSize,
+    };
+  }
+}
+
+/** Anonymous view: each field is shown only when the player made it public. */
+export class ListPublicPlayersUseCase {
+  constructor(private readonly deps: PublicPagesDeps) {}
+
+  async execute(query: DirectoryQuery): Promise<PublicPlayerList> {
+    const { profiles, total } = await this.deps.profiles.listPublic(windowOf(query));
+    const ids = profiles.map((p) => p.id);
+    const [privacy, riotIds] = await Promise.all([
+      this.deps.profiles.privacyOf(ids),
+      this.deps.riot.riotIdsOf(ids),
+    ]);
+    return {
+      items: profiles.flatMap((profile) => {
+        const settings = privacy.get(profile.id);
+        if (profile.username === null || !settings) return [];
+        const show = (field: keyof ResolvedPrivacy) => canSee(settings[field], 'public');
+        return [
+          {
+            username: profile.username,
+            displayName: profile.displayName,
+            avatarUrl: this.deps.profiles.avatarUrl(profile.avatarPath),
+            primaryRole: show('roles') ? profile.primaryRole : null,
+            gameRegion: show('game_region') ? profile.gameRegion : null,
+            riotVerified: show('riot_account') && riotIds.has(profile.id),
+          },
+        ];
+      }),
+      total,
+      page: query.page,
+      pageSize: query.pageSize,
     };
   }
 }

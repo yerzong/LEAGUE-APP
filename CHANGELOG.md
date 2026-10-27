@@ -5,6 +5,29 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 ## [Unreleased]
 
+### Added (m03 — navegación y vitrina pública)
+- `packages/ui`: `PublicHeader` (nav con secciones "Pronto" sin enlace, menú en
+  `Sheet` en móvil), `PublicFooter`, `Hero`, `SectionHeading`, `Breadcrumbs`,
+  `UserMenu`, variante `showcase` de `EmptyState` y utilidad `hero-grid`.
+- `packages/i18n`: textos de la vitrina, legales, 404/error y `plural()`.
+- `packages/contracts`: `DirectoryQuerySchema` y listas paginadas públicas de
+  equipos y jugadores.
+- API: `GET /public/teams` y `GET /public/players` (anónimos, paginados, con
+  búsqueda); el directorio de jugadores muestra solo lo que cada jugador hizo
+  público.
+- Web: layout público con header (lee la sesión en el servidor: invitado,
+  usuario o staff) y footer con el disclaimer de Riot; home vitrina con estados
+  vacíos; `/torneos`, `/equipos`, `/jugadores`, `/legal`, `/legal/[doc]`
+  (preliminares), `/patrocinadores`; 404 y páginas de error con la marca;
+  breadcrumbs en equipo y jugador; metadatos y Open Graph por página;
+  `sitemap.xml` y `robots.txt`; enlace "Ir al sitio público" en `/app` y
+  `/admin`.
+- E2E: invitado navega la vitrina y llega a login y registro; usuario con sesión
+  llega al portal; staff ve la consola.
+
+### Changed (m03)
+- El estado de la API se movió de la home a `/admin`.
+
 ### Added (m02 — perfiles, cuenta de Riot y equipos)
 - Migración `profiles_riot_and_teams` (aplicada en `penta-dev`): columnas de
   perfil en `users`, `user_private_data`, `user_social_links`,

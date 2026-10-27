@@ -52,6 +52,12 @@ export interface ProfileRepository {
   replaceSocialLinks(userId: string, links: readonly SocialLink[]): Promise<void>;
   /** Users with a username starting with or containing `query` (case-insensitive). */
   search(query: string, limit: number): Promise<Profile[]>;
+  /** Active users with a username, filtered by username or display name. */
+  listPublic(window: {
+    query: string;
+    limit: number;
+    offset: number;
+  }): Promise<{ profiles: Profile[]; total: number }>;
 }
 
 export const PROFILE_REPOSITORY = Symbol('ProfileRepository');

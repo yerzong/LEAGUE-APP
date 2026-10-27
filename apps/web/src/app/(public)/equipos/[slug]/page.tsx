@@ -4,6 +4,7 @@ import {
   AvatarFallback,
   AvatarImage,
   Badge,
+  Breadcrumbs,
   Button,
   Card,
   CardContent,
@@ -19,9 +20,12 @@ import { messages } from '@/config/i18n';
 import { loginPath } from '@/features/auth/access';
 import { getSessionUser } from '@/features/auth/session';
 import { LoadError } from '@/features/shell/load-error';
+import { PageContainer } from '@/features/site/components/page-container';
+import { pageMetadata } from '@/features/site/metadata';
 import { getPublicTeam } from '@/features/teams/api';
 import { JoinRequestButton } from '@/features/teams/components/join-request-button';
 import { formatDate, initials } from '@/lib/ui/dates';
+import { renderRouterLink } from '@/lib/ui/router-link';
 
 const t = messages.publicPages.team;
 const loadTeam = cache(getPublicTeam);
@@ -30,7 +34,19 @@ export async function generateMetadata({
   params,
 }: PageProps<'/equipos/[slug]'>): Promise<Metadata> {
   const team = await loadTeam((await params).slug);
-  return { title: team.ok ? `${team.data.name} [${team.data.tag}]` : t.notFound };
+  if (!team.ok) return { title: t.notFound, robots: { index: false } };
+  const { name, tag, slug, members, region, logoUrl, description } = team.data;
+  return pageMetadata({
+    title: `${name} [${tag}]`,
+    description:
+      description ??
+      format(t.shareDescription, {
+        region: messages.options.gameRegions[region],
+        count: members.length,
+      }),
+    path: `/equipos/${slug}`,
+    image: logoUrl,
+  });
 }
 
 export default async function PublicTeamPage({ params }: PageProps<'/equipos/[slug]'>) {
@@ -44,7 +60,16 @@ export default async function PublicTeamPage({ params }: PageProps<'/equipos/[sl
   const active = data.status === 'active';
 
   return (
-    <div className="flex flex-col gap-8 py-10">
+    <PageContainer>
+      <Breadcrumbs
+        label={messages.breadcrumbs.label}
+        items={[
+          { label: messages.breadcrumbs.home, href: '/' },
+          { label: messages.publicNav.teams, href: '/equipos' },
+          { label: data.name },
+        ]}
+        renderLink={renderRouterLink}
+      />
       <div className="flex flex-wrap items-center gap-6">
         <Avatar size="lg" className="size-24 rounded-md">
           {data.logoUrl && <AvatarImage src={data.logoUrl} alt="" className="rounded-md" />}
@@ -98,7 +123,7 @@ export default async function PublicTeamPage({ params }: PageProps<'/equipos/[sl
                         {member.username ? (
                           <Link
                             className="font-display text-lg"
-                            href={`/jugadores/${member.username}`}
+                            href={`/jugadores/${member.username}?equipo=${data.slug}`}
                           >
                             {name}
                           </Link>
@@ -127,6 +152,6 @@ export default async function PublicTeamPage({ params }: PageProps<'/equipos/[sl
           </ul>
         )}
       </section>
-    </div>
+    </PageContainer>
   );
 }

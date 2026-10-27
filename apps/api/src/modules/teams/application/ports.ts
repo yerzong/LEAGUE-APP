@@ -35,6 +35,12 @@ export interface TeamRepository {
   setLogoPath(teamId: string, path: string, actorId: string): Promise<string | null>;
   nameHistory(teamId: string): Promise<{ name: string; tag: string; changedAt: Date }[]>;
   activeMembers(teamId: string): Promise<MemberRecord[]>;
+  /** Active teams of the organization, newest first, filtered by name or tag. */
+  listActive(
+    organizationId: string,
+    window: { query: string; limit: number; offset: number },
+  ): Promise<{ teams: TeamRecord[]; total: number }>;
+  activeMemberCounts(teamIds: readonly string[]): Promise<Map<string, number>>;
   activeTeamsOf(userId: string): Promise<{ team: TeamRecord; role: MemberRecord['teamRole'] }[]>;
   countTeamsCreatedBy(userId: string, organizationId: string): Promise<number>;
   countActiveCaptaincies(userId: string): Promise<number>;

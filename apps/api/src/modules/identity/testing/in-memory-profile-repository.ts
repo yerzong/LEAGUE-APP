@@ -89,6 +89,18 @@ export class InMemoryProfileRepository implements ProfileRepository {
     return Promise.resolve();
   }
 
+  listPublic({ query, limit, offset }: { query: string; limit: number; offset: number }) {
+    const q = query.toLowerCase();
+    const found = [...this.profiles.values()]
+      .filter(
+        (p) =>
+          p.username !== null &&
+          (p.username.includes(q) || (p.displayName?.toLowerCase().includes(q) ?? false)),
+      )
+      .sort((a, b) => (a.username ?? '').localeCompare(b.username ?? ''));
+    return Promise.resolve({ profiles: found.slice(offset, offset + limit), total: found.length });
+  }
+
   search(query: string, limit: number): Promise<Profile[]> {
     const q = query.toLowerCase();
     return Promise.resolve(

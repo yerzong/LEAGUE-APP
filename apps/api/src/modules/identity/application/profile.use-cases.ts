@@ -259,4 +259,8 @@ export class ProfileQueries {
   avatarUrl(path: string | null): string | null {
     return this.storage.publicUrl('avatars', path);
   }
+
+  listPublic(window: { query: string; limit: number; offset: number }) {
+    return this.profiles.listPublic(window);
+  }
 }

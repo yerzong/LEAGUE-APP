@@ -1,17 +1,27 @@
 import {
+  DirectoryQuerySchema,
+  PublicPlayerListSchema,
   PublicPlayerSchema,
+  PublicTeamListSchema,
   PublicTeamSchema,
   type PublicPlayer,
+  type PublicPlayerList,
   type PublicTeam,
+  type PublicTeamList,
 } from '@league/contracts';
-import { Controller, Get, Inject, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, Param, Query, UseGuards } from '@nestjs/common';
 import { z } from 'zod';
 
 import { validate } from '../../../shared/validation.js';
 import type { AuthenticatedUser } from '../../identity/domain/authenticated-user.js';
 import { OptionalAccessTokenGuard } from '../../identity/presentation/access-token.guard.js';
 import { OptionalUser } from '../../identity/presentation/current-user.decorator.js';
-import { GetPublicPlayerUseCase, GetPublicTeamUseCase } from '../application/public-pages.js';
+import {
+  GetPublicPlayerUseCase,
+  GetPublicTeamUseCase,
+  ListPublicPlayersUseCase,
+  ListPublicTeamsUseCase,
+} from '../application/public-pages.js';
 
 const SlugSchema = z
   .string()
@@ -29,7 +39,23 @@ export class PublicController {
   constructor(
     @Inject(GetPublicTeamUseCase) private readonly team: GetPublicTeamUseCase,
     @Inject(GetPublicPlayerUseCase) private readonly player: GetPublicPlayerUseCase,
+    @Inject(ListPublicTeamsUseCase) private readonly teams: ListPublicTeamsUseCase,
+    @Inject(ListPublicPlayersUseCase) private readonly players: ListPublicPlayersUseCase,
   ) {}
+
+  @Get('teams')
+  async listTeams(@Query() query: unknown): Promise<PublicTeamList> {
+    return PublicTeamListSchema.parse(
+      await this.teams.execute(validate(DirectoryQuerySchema, query)),
+    );
+  }
+
+  @Get('players')
+  async listPlayers(@Query() query: unknown): Promise<PublicPlayerList> {
+    return PublicPlayerListSchema.parse(
+      await this.players.execute(validate(DirectoryQuerySchema, query)),
+    );
+  }
 
   @Get('teams/:slug')
   async getTeam(

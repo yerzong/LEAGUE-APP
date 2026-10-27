@@ -8,6 +8,7 @@ import {
   isUniqueViolation,
   raisedCode,
 } from '../../../shared/database/postgres-errors.js';
+import { likeEscape } from '../../../shared/database/like-escape.js';
 import type { AdminClient } from '../../../shared/database/supabase-admin.js';
 import type { FreeAgentRepository, NewTeam, TeamRepository } from '../application/ports.js';
 import type {
@@ -189,6 +190,42 @@ export class SupabaseTeamRepository implements TeamRepository {
       .order('joined_at');
     check(error);
     return (data ?? []).map(toMember);
+  }
+
+  async listActive(
+    organizationId: string,
+    { query, limit, offset }: { query: string; limit: number; offset: number },
+  ): Promise<{ teams: TeamRecord[]; total: number }> {
+    let select = this.db
+      .from('teams')
+      .select('*', { count: 'exact' })
+      .eq('organization_id', organizationId)
+      .eq('status', 'active')
+      .is('deleted_at', null);
+    // The contract only lets letters, digits, spaces and `_ . -` through.
+    if (query !== '') {
+      const pattern = `*${likeEscape(query)}*`;
+      select = select.or(`name.ilike.${pattern},tag.ilike.${pattern}`);
+    }
+    const { data, count, error } = await select
+      .order('created_at', { ascending: false })
+      .order('id')
+      .range(offset, offset + limit - 1);
+    check(error);
+    return { teams: (data ?? []).map(toTeam), total: count ?? 0 };
+  }
+
+  async activeMemberCounts(teamIds: readonly string[]): Promise<Map<string, number>> {
+    const counts = new Map(teamIds.map((id) => [id, 0]));
+    if (teamIds.length === 0) return counts;
+    const { data, error } = await this.db
+      .from('team_members')
+      .select('team_id')
+      .in('team_id', [...teamIds])
+      .is('left_at', null);
+    check(error);
+    for (const row of data ?? []) counts.set(row.team_id, (counts.get(row.team_id) ?? 0) + 1);
+    return counts;
   }
 
   async activeTeamsOf(

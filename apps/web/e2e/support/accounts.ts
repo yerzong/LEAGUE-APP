@@ -65,6 +65,15 @@ export async function api(
   return response.status === 204 ? null : response.json();
 }
 
+/** Gives the account the staff platform role (access to /admin). */
+export async function makeStaff(account: TestAccount): Promise<void> {
+  const { error } = await admin()
+    .from('users')
+    .update({ platform_role: 'super_admin' })
+    .eq('id', account.id);
+  if (error) throw new Error(`makeStaff failed: ${error.message}`);
+}
+
 /** Deletes everything the accounts created (no cascades by design), then the users. */
 export async function deleteAccounts(accounts: readonly TestAccount[]): Promise<void> {
   if (!hasDatabase || accounts.length === 0) return;

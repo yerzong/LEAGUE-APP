@@ -9,8 +9,322 @@ export const es419 = {
     admin: 'Consola de administración',
   },
   home: {
-    title: 'Bienvenido a {brand}',
-    subtitle: 'Compite como profesional. Torneos, equipos y transmisiones en un solo lugar.',
+    meta: {
+      title: 'Liga amateur de League of Legends',
+    },
+    hero: {
+      eyebrow: 'Liga amateur de League of Legends · México y LATAM',
+      title: 'Compite como profesional',
+      description:
+        '{brand} es la liga donde los equipos amateur juegan con reglas claras, partidas verificadas y producción estilo LCK.',
+      explore: 'Explorar torneos',
+      register: 'Crear cuenta para competir',
+      portal: 'Ir a mi portal',
+      browseTeams: 'Ver equipos',
+    },
+    season: {
+      eyebrow: 'Temporada',
+      title: 'Próximos partidos',
+      emptyTitle: 'Aún no hay partidos programados',
+      emptyDescription:
+        'El calendario aparecerá aquí en cuanto arranque la temporada. Mientras tanto, arma tu equipo.',
+      action: 'Ver torneos',
+    },
+    teams: {
+      eyebrow: 'Comunidad',
+      title: 'Equipos destacados',
+      description: 'Equipos que ya se preparan para competir.',
+      seeAll: 'Ver todos los equipos',
+      emptyTitle: 'Sé el primer equipo de la liga',
+      emptyDescription: 'Todavía no hay equipos registrados. Crea el tuyo e invita a tu roster.',
+      create: 'Crear un equipo',
+    },
+    howItWorks: {
+      eyebrow: 'Cómo funciona',
+      title: 'De la cola solitaria al escenario',
+      steps: [
+        {
+          title: 'Regístrate',
+          description: 'Crea tu cuenta con Discord o con tu correo. Es gratis.',
+        },
+        {
+          title: 'Vincula tu cuenta de Riot',
+          description: 'Verificamos que la cuenta es tuya con un ícono de invocador.',
+        },
+        {
+          title: 'Crea o únete a un equipo',
+          description: 'Arma tu roster, invita jugadores o busca equipo como agente libre.',
+        },
+        {
+          title: 'Compite',
+          description: 'Inscríbete en torneos y juega partidas con resultados verificados.',
+        },
+      ],
+      action: 'Empezar ahora',
+    },
+    finalCta: {
+      title: '¿Listo para competir?',
+      description: 'Crea tu cuenta, vincula Riot y prepárate para el primer torneo.',
+      register: 'Crear mi cuenta',
+      portal: 'Ir a mi portal',
+    },
+  },
+  publicNav: {
+    navigation: 'Navegación principal',
+    openMenu: 'Abrir menú',
+    closeMenu: 'Cerrar menú',
+    soon: 'Pronto',
+    home: 'Inicio',
+    tournaments: 'Torneos',
+    teams: 'Equipos',
+    players: 'Jugadores',
+    news: 'Noticias',
+    live: 'En vivo',
+    login: 'Iniciar sesión',
+    register: 'Registrarte',
+    account: {
+      trigger: 'Menú de cuenta',
+      portal: 'Mi portal',
+      profile: 'Mi perfil',
+      teams: 'Mis equipos',
+      admin: 'Consola de administración',
+      signOut: 'Cerrar sesión',
+    },
+  },
+  footer: {
+    navigation: 'Enlaces del sitio',
+    tagline: 'Liga amateur de League of Legends para México y LATAM.',
+    explore: 'Explora',
+    legal: 'Legal',
+    community: 'Comunidad',
+    sponsor: 'Conviértete en patrocinador',
+    // Shown on every public page (docs/10-legal-cumplimiento.md §3).
+    riotDisclaimer:
+      '{brand} no está respaldado por Riot Games y no refleja las opiniones o puntos de vista de Riot Games ni de nadie oficialmente involucrado en la producción o gestión de las propiedades de Riot Games. Riot Games y todas las propiedades asociadas son marcas comerciales o marcas registradas de Riot Games, Inc.',
+    copyright: '© {year} {brand}',
+    social: ['Discord', 'Twitch', 'YouTube', 'TikTok', 'X'],
+  },
+  breadcrumbs: {
+    label: 'Ruta de navegación',
+    home: 'Inicio',
+  },
+  pagination: {
+    label: 'Paginación',
+    previous: 'Anterior',
+    next: 'Siguiente',
+    status: 'Página {page} de {pages}',
+  },
+  directory: {
+    search: 'Buscar',
+    clear: 'Limpiar',
+    noResultsTitle: 'Sin resultados para “{query}”',
+    noResultsDescription: 'Prueba con otro nombre o revisa la ortografía.',
+    invalidSearch: 'Usa solo letras, números, espacios y _ . -',
+  },
+  tournamentsPage: {
+    title: 'Torneos',
+    description: 'Ligas, relámpagos y circuitos de {brand}.',
+    emptyTitle: 'Los primeros torneos vienen en camino',
+    emptyDescription:
+      'Cuando se abran inscripciones las verás aquí. Prepárate: completa tu perfil y arma tu equipo.',
+    emptyAction: 'Preparar mi cuenta',
+    typesTitle: 'Tipos de torneo',
+    typesDescription: 'Así se organiza la competencia.',
+    types: [
+      {
+        name: 'Relámpago',
+        summary: 'Un día o un fin de semana. Eliminación simple Bo1, final Bo3.',
+        detail: 'La puerta de entrada: ideal para equipos nuevos y otorga puntos de circuito.',
+      },
+      {
+        name: 'Liga principal',
+        summary: 'Temporada regular estilo LCK con playoffs.',
+        detail: 'El formato insignia, con ascenso y descenso entre divisiones.',
+      },
+      {
+        name: 'Copa y suizo',
+        summary: 'Eventos de algunas semanas: grupos o suizo, y playoffs.',
+        detail: 'Formatos intermedios con muchas partidas parejas.',
+      },
+      {
+        name: 'Circuitos',
+        summary: 'Femenil, universitario y por rangos.',
+        detail: 'Comunidades con reglas de elegibilidad propias.',
+      },
+    ],
+  },
+  teamsPage: {
+    title: 'Equipos',
+    description: 'Todos los equipos activos de {brand}.',
+    searchLabel: 'Buscar equipos',
+    searchPlaceholder: 'Nombre o tag',
+    count: { one: '{count} equipo', other: '{count} equipos' },
+    members: { one: '{count} integrante', other: '{count} integrantes' },
+    emptyTitle: 'Aún no hay equipos registrados',
+    emptyDescription: 'Sé el primero: crea tu equipo e invita a tu roster.',
+    create: 'Crear un equipo',
+  },
+  playersPage: {
+    title: 'Jugadores',
+    description: 'La comunidad de {brand}. Cada jugador decide qué muestra.',
+    searchLabel: 'Buscar jugadores',
+    searchPlaceholder: 'Nombre o usuario',
+    count: { one: '{count} jugador', other: '{count} jugadores' },
+    riotVerified: 'Riot verificado',
+    emptyTitle: 'Aún no hay jugadores con perfil público',
+    emptyDescription: 'Crea tu cuenta y completa tu perfil para aparecer aquí.',
+    create: 'Crear mi cuenta',
+    freeAgent: '¿Buscas equipo? Publícate como agente libre',
+  },
+  sponsorPage: {
+    title: 'Conviértete en patrocinador',
+    description:
+      'Lleva tu marca a una comunidad competitiva de League of Legends en México y LATAM.',
+    points: [
+      'Presencia en transmisiones, overlays y redes de la liga.',
+      'Activaciones en torneos relámpago, liga principal y circuitos.',
+      'Audiencia joven y constante, temporada tras temporada.',
+    ],
+    contact: 'Escríbenos',
+    noContact: 'Muy pronto publicaremos el media kit y un canal de contacto directo.',
+  },
+  legal: {
+    title: 'Legal',
+    description: 'Reglas y políticas de {brand}.',
+    preliminary:
+      'Versión preliminar. El texto definitivo se publicará antes del primer torneo; cada inscripción guardará la versión que aceptaste.',
+    otherDocs: 'Otros documentos',
+    docs: {
+      reglamento: {
+        title: 'Reglamento',
+        description: 'Las reglas base de toda competencia de {brand}.',
+        sections: [
+          {
+            title: 'Elegibilidad',
+            body: [
+              'Para competir necesitas una cuenta de {brand} con tu perfil completo y una cuenta de Riot vinculada y verificada, en buen estado y en la región del torneo.',
+              'Una cuenta de Riot solo puede pertenecer a un usuario. Cada torneo puede añadir requisitos de rango, edad o institución.',
+            ],
+          },
+          {
+            title: 'Rosters',
+            body: [
+              'Cada torneo define el tamaño mínimo y máximo del roster, los suplentes y la ventana de cambios.',
+              'Un jugador solo puede estar en un roster activo dentro del ámbito de exclusividad del torneo (temporada, circuito o torneo).',
+            ],
+          },
+          {
+            title: 'Partidas',
+            body: [
+              'Existe una ventana de tolerancia por retraso; pasado el tiempo límite se declara forfeit automático.',
+              'Las pausas y remakes tienen límites por partida definidos en el reglamento de cada torneo.',
+              'Los resultados se reportan con captura y se verifican contra los participantes reales de la partida.',
+            ],
+          },
+          {
+            title: 'Integridad',
+            body: [
+              'Está prohibido el smurfing, el boosting y que juegue alguien que no está inscrito.',
+              'Las sanciones van desde una advertencia hasta el veto permanente, y quedan registradas.',
+            ],
+          },
+        ],
+      },
+      conducta: {
+        title: 'Código de conducta',
+        description: 'Cómo nos tratamos dentro y fuera de la Grieta.',
+        sections: [
+          {
+            title: 'Respeto',
+            body: [
+              'Trata con respeto a rivales, compañeros, árbitros, staff y audiencia.',
+              'No se toleran insultos, acoso, discriminación ni discursos de odio.',
+            ],
+          },
+          {
+            title: 'Juego limpio',
+            body: [
+              'Nada de trampas, scripts, cuentas compartidas, smurfs ni arreglos de partidas.',
+              'Juega cada partida para ganar dentro de las reglas.',
+            ],
+          },
+          {
+            title: 'Sanciones',
+            body: [
+              'Según la gravedad: advertencia, pérdida de partida, descalificación o veto temporal o permanente.',
+              'Cada sanción se puede disputar por el proceso de disputas del torneo.',
+            ],
+          },
+        ],
+      },
+      privacidad: {
+        title: 'Aviso de privacidad',
+        description: 'Qué datos pedimos, para qué y cómo los proteges.',
+        sections: [
+          {
+            title: 'Datos que tratamos',
+            body: [
+              'Correo y datos de inicio de sesión; perfil público (nombre visible, usuario, rol, región, país, foto); cuenta de Riot vinculada; y, solo cuando un torneo lo exige, datos privados como nombre legal o teléfono.',
+              'Pedimos lo mínimo y en el momento en que hace falta.',
+            ],
+          },
+          {
+            title: 'Para qué',
+            body: [
+              'Operar la liga: verificar identidad y elegibilidad, organizar equipos y torneos, y publicar resultados.',
+            ],
+          },
+          {
+            title: 'Tu control',
+            body: [
+              'Tú decides qué parte de tu perfil es pública, visible solo para tu equipo o privada. Tu fecha de nacimiento nunca se publica.',
+              'Puedes ejercer tus derechos de acceso, rectificación, cancelación y oposición conforme a la LFPDPPP.',
+            ],
+          },
+          {
+            title: 'Menores de edad',
+            body: [
+              'Muchos jugadores son menores de edad. La política de edad mínima y de consentimiento parental se publicará junto con el texto definitivo.',
+            ],
+          },
+        ],
+      },
+      terminos: {
+        title: 'Términos de servicio',
+        description: 'Las condiciones para usar {brand}.',
+        sections: [
+          {
+            title: 'Tu cuenta',
+            body: [
+              'Eres responsable de tu cuenta y de la información que registras. Una persona, una cuenta.',
+            ],
+          },
+          {
+            title: 'Uso del servicio',
+            body: [
+              'Al inscribirte en un torneo aceptas su reglamento y el código de conducta en la versión vigente.',
+              'Podemos suspender cuentas que incumplan estas reglas.',
+            ],
+          },
+          {
+            title: 'Riot Games',
+            body: ['{brand} es una competencia de comunidad y no está respaldada por Riot Games.'],
+          },
+        ],
+      },
+    },
+  },
+  notFoundPage: {
+    title: 'Esta página no existe',
+    description: 'Puede que el enlace esté roto o que la página se haya movido.',
+    home: 'Volver al inicio',
+    explore: 'Ver equipos',
+  },
+  errorPage: {
+    title: 'Algo salió mal',
+    description: 'Tuvimos un problema al cargar esta página. Inténtalo de nuevo en un momento.',
+    retry: 'Reintentar',
+    home: 'Volver al inicio',
   },
   portal: {
     title: 'Portal del jugador',
@@ -64,6 +378,7 @@ export const es419 = {
   },
   shell: {
     navigation: 'Navegación principal',
+    backToSite: 'Ir al sitio público',
     openMenu: 'Abrir menú',
     closeMenu: 'Cerrar menú',
     nav: {
@@ -425,6 +740,7 @@ export const es419 = {
       since: 'Desde {date}',
       disbanded: 'Este equipo fue disuelto.',
       notFound: 'No encontramos este equipo.',
+      shareDescription: 'Equipo de la región {region} con {count} jugadores públicos.',
     },
     player: {
       riotVerified: 'Riot ID verificado',
@@ -437,6 +753,7 @@ export const es419 = {
       country: 'País',
       social: 'Redes',
       notFound: 'No encontramos a este jugador.',
+      shareDescription: 'Perfil de {name} (@{username}).',
     },
   },
   // Keyed by the `code` of API errors (ApiErrorSchema). `unknown` is the fallback.

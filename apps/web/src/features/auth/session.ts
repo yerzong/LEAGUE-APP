@@ -11,6 +11,9 @@ export interface SessionUser {
   id: string;
   email: string | null;
   platformRole: PlatformRole;
+  username: string | null;
+  displayName: string | null;
+  avatarPath: string | null;
 }
 
 /** Verified session user (JWT checked by Supabase), or null. */
@@ -23,7 +26,7 @@ export async function getSessionUser(): Promise<SessionUser | null> {
   // RLS lets a user read only their own profile row.
   const { data: profile } = await supabase
     .from('users')
-    .select('platform_role')
+    .select('platform_role, username, display_name, avatar_path')
     .eq('id', claims.sub)
     .maybeSingle();
 
@@ -31,6 +34,9 @@ export async function getSessionUser(): Promise<SessionUser | null> {
     id: claims.sub,
     email: typeof claims.email === 'string' ? claims.email : null,
     platformRole: profile?.platform_role ?? 'user',
+    username: profile?.username ?? null,
+    displayName: profile?.display_name ?? null,
+    avatarPath: profile?.avatar_path ?? null,
   };
 }
 

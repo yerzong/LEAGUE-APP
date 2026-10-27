@@ -17,8 +17,11 @@ interface RequestOptions<S extends z.ZodType | undefined> {
   form?: FormData;
   /** Response contract; omit for 204 responses. */
   schema?: S;
-  /** `optional` sends the token when there is a session (public pages). */
-  auth?: 'required' | 'optional';
+  /**
+   * `optional` sends the token when there is a session (public pages);
+   * `none` never reads the session (anonymous lists, sitemap).
+   */
+  auth?: 'required' | 'optional' | 'none';
 }
 
 async function accessToken(): Promise<string | null> {
@@ -34,7 +37,7 @@ export async function apiRequest<S extends z.ZodType | undefined = undefined>(
   { method = 'GET', body, form, schema, auth = 'required' }: RequestOptions<S> = {},
 ): Promise<ApiResult<S extends z.ZodType ? z.infer<S> : null>> {
   type Data = S extends z.ZodType ? z.infer<S> : null;
-  const token = await accessToken();
+  const token = auth === 'none' ? null : await accessToken();
   if (!token && auth === 'required') return { ok: false, status: 401, code: 'unauthorized' };
 
   const headers: Record<string, string> = { accept: 'application/json' };

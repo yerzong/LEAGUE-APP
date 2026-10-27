@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 
 import { messages } from '@/config/i18n';
 import { SignOutButton } from '@/features/auth/components/sign-out-button';
+import { BackToSiteLink } from '@/features/shell/back-to-site-link';
 import { requireUser } from '@/features/auth/session';
 import { BrandMark } from '@/features/shell/brand-mark';
 import { ZoneShell } from '@/features/shell/zone-shell';
@@ -23,7 +24,12 @@ export default async function PortalLayout({ children }: { children: ReactNode }
         { href: '/app/equipos', label: nav.teams, icon: <ShieldIcon /> },
         { href: '/app/agente-libre', label: nav.freeAgent, icon: <SearchIcon /> },
       ]}
-      actions={<SignOutButton />}
+      actions={
+        <>
+          <BackToSiteLink />
+          <SignOutButton />
+        </>
+      }
     >
       {children}
     </ZoneShell>
