@@ -520,17 +520,23 @@ export class SupabaseTournamentRepository implements TournamentRepository {
   }
 
   async auditTrail(tournamentId: string, limit: number): Promise<AuditRecord[]> {
-    const { data: entrants, error: entrantsError } = await this.db
-      .from('entrants')
-      .select('id')
-      .eq('tournament_id', tournamentId);
-    check(entrantsError);
-    const ids = [tournamentId, ...(entrants ?? []).map((e) => e.id)];
+    // The tournament, its registrations and its matches.
+    const [entrants, matches] = await Promise.all([
+      this.db.from('entrants').select('id').eq('tournament_id', tournamentId),
+      this.db.from('matches').select('id').eq('tournament_id', tournamentId),
+    ]);
+    check(entrants.error);
+    check(matches.error);
+    const ids = [
+      tournamentId,
+      ...(entrants.data ?? []).map((e) => e.id),
+      ...(matches.data ?? []).map((m) => m.id),
+    ];
     const { data, error } = await this.db
       .from('audit_logs')
       .select('*')
       .in('entity_id', ids)
-      .in('entity_type', ['tournament', 'entrant'])
+      .in('entity_type', ['tournament', 'entrant', 'match'])
       .order('created_at', { ascending: false })
       .limit(limit);
     check(error);
