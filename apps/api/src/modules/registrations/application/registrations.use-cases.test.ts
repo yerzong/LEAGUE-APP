@@ -261,7 +261,7 @@ describe('CheckRegistrationUseCase', () => {
       roster: rosterOf(ANA, BETO),
     });
     expect(check.failures).toEqual([
-      { rule: 'age_min', userId: BETO, reason: 'underage', details: {} },
+      { rule: 'age_min', userId: BETO, reason: 'underage', details: { min: 16 } },
     ]);
   });
 

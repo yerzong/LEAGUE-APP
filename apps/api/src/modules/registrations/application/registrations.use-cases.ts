@@ -46,7 +46,7 @@ import type { TournamentRecord } from '../../tournaments/domain/tournament.js';
 import {
   ACTIVE_STATUSES,
   OPEN_FOR_DECISIONS,
-  PERSONAL_RULES,
+  PERSONAL_DETAILS,
   type EntrantRecord,
   type RosterRecord,
 } from '../domain/registration.js';
@@ -163,14 +163,18 @@ function evaluate(
   );
 }
 
-/** Failure for the API; `forCaptain` hides personal details of teammates. */
+/** Failure for the API; `forCaptain` drops personal details of teammates. */
 const toFailure =
   (forCaptain: boolean) =>
   (f: EligibilityResult['failed'][number]): EligibilityFailure => ({
     rule: f.rule,
     userId: f.userId,
     reason: f.reason,
-    details: forCaptain && PERSONAL_RULES.has(f.rule) ? {} : { ...f.details },
+    details: Object.fromEntries(
+      Object.entries(f.details).filter(
+        ([key]) => !forCaptain || !(PERSONAL_DETAILS[f.rule] ?? []).includes(key),
+      ),
+    ),
   });
 
 const toViolation = (v: RosterViolation) => ({ reason: v.reason, details: { ...v.details } });

@@ -38,12 +38,11 @@ export const OPEN_FOR_DECISIONS = [
 ] as const;
 
 /**
- * Rules whose failure details are personal data of a teammate (age, gender
- * declaration, institution): the captain sees the reason only; staff sees all.
+ * Failure details that are personal data of a teammate (their age, when they
+ * declared their gender): the captain sees the reason and the tournament
+ * limits only; staff sees everything.
  */
-export const PERSONAL_RULES: ReadonlySet<string> = new Set([
-  'age_min',
-  'gender',
-  'institution',
-  'legal_name_required',
-]);
+export const PERSONAL_DETAILS: Readonly<Record<string, readonly string[]>> = {
+  age_min: ['age'],
+  gender: ['declaredAt'],
+};
