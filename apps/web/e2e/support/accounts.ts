@@ -122,6 +122,23 @@ export async function deleteTournaments(slugPrefix: string): Promise<void> {
   const P = (phases ?? []).map((p: { id: string }) => p.id);
   const { data: rulebooks } = await db.from('rulebooks').select('id').in('tournament_id', T);
   const R = (rulebooks ?? []).map((r: { id: string }) => r.id);
+  const { data: matches } = await db.from('matches').select('id').in('tournament_id', T);
+  const M = (matches ?? []).map((m: { id: string }) => m.id);
+  const competition = [
+    () => db.from('outbox_events').delete().in('aggregate_id', M),
+    () => db.from('standings').delete().in('tournament_id', T),
+    // Games, check-ins, reports, disputes and reschedules go with their match.
+    () =>
+      db
+        .from('matches')
+        .update({ next_match_winner_id: null, next_match_loser_id: null })
+        .in('tournament_id', T),
+    () => db.from('matches').delete().in('tournament_id', T),
+  ];
+  for (const step of competition) {
+    const { error } = await step();
+    if (error) throw new Error(`E2E match cleanup failed: ${error.message}`);
+  }
   const steps = [
     () =>
       db

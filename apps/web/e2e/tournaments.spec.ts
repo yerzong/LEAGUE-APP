@@ -84,6 +84,8 @@ async function teamWith(
 }
 
 test.beforeAll(async () => {
+  // Several accounts, Riot links and teams: longer than a test.
+  test.setTimeout(180_000);
   staff = await staffAccount();
   ana = await createAccount('t-ana');
   beto = await createAccount('t-beto');
