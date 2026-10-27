@@ -29,6 +29,7 @@ import type {
 } from '@league/contracts';
 
 import { conflict, forbidden, notFound } from '../../../shared/application-error.js';
+import { uniqueSlug } from '../../../shared/slug.js';
 import { validateImage, type UploadedImage } from '../../../shared/storage/image.js';
 import {
   FREE_AGENT_TTL_MS,
@@ -207,10 +208,9 @@ export class CreateTeamUseCase {
       DEFAULT_TEAM_LIMITS,
     );
 
-    const base = slugify(input.name);
-    let slug = base;
-    for (let n = 2; await this.deps.teams.slugExists(organizationId, slug); n += 1)
-      slug = `${base}-${String(n)}`;
+    const slug = await uniqueSlug(slugify(input.name), (candidate) =>
+      this.deps.teams.slugExists(organizationId, candidate),
+    );
 
     const teamId = await this.deps.teams.create({
       organizationId,
@@ -643,6 +643,10 @@ export class UpdateFreeAgentUseCase {
 /** Read API for other modules (public pages). */
 export class TeamQueries {
   constructor(private readonly deps: TeamsDeps) {}
+
+  findById(teamId: string): Promise<TeamRecord | null> {
+    return this.deps.teams.findById(teamId);
+  }
 
   async findBySlug(slug: string): Promise<TeamRecord | null> {
     return this.deps.teams.findBySlug(await this.deps.organization.id(), slug);

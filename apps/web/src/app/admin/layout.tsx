@@ -1,4 +1,4 @@
-import { LayoutDashboardIcon, SwatchBookIcon } from 'lucide-react';
+import { LayersIcon, LayoutDashboardIcon, SwatchBookIcon, TrophyIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 import { messages } from '@/config/i18n';
@@ -16,6 +16,8 @@ export default async function AdminLayout({ children }: { children: ReactNode })
 
   const items = [
     { href: '/admin', label: nav.adminHome, icon: <LayoutDashboardIcon /> },
+    { href: '/admin/torneos', label: nav.adminTournaments, icon: <TrophyIcon /> },
+    { href: '/admin/plantillas', label: nav.adminTemplates, icon: <LayersIcon /> },
     ...(isKitchenSinkEnabled()
       ? [{ href: '/admin/kitchen-sink', label: nav.kitchenSink, icon: <SwatchBookIcon /> }]
       : []),

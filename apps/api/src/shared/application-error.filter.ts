@@ -1,4 +1,4 @@
-import { TeamRuleError } from '@league/core';
+import { DomainError } from '@league/core';
 import {
   type ArgumentsHost,
   Catch,
@@ -33,7 +33,9 @@ export class ApplicationErrorFilter implements ExceptionFilter {
         .json({ code: exception.code, details: exception.details });
       return;
     }
-    if (exception instanceof TeamRuleError) {
+    // Rules of packages/core (team, lifecycle, edit policy, roster…): a guard or
+    // team rule names its `reason`, the others their own code.
+    if (exception instanceof DomainError) {
       const { reason, ...details } = exception.details;
       response
         .status(409)

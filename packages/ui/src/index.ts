@@ -32,6 +32,7 @@ export * from './molecules/popover/popover.js';
 export * from './molecules/section-heading/section-heading.js';
 export * from './molecules/sheet/sheet.js';
 export * from './molecules/tabs/tabs.js';
+export * from './molecules/timeline/timeline.js';
 export * from './molecules/toast/toaster.js';
 export * from './molecules/uploader/uploader.js';
 export * from './molecules/user-menu/user-menu.js';
@@ -44,6 +45,7 @@ export * from './organisms/page-header/page-header.js';
 export * from './organisms/public-footer/public-footer.js';
 export * from './organisms/public-header/public-header.js';
 export * from './organisms/table/table.js';
+export * from './organisms/wizard/wizard.js';
 
 export * from './motion/primitives.js';
 export { motionTokens } from './motion/tokens.js';

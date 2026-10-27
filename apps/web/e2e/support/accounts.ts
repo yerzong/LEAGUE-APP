@@ -65,6 +65,102 @@ export async function api(
   return response.status === 204 ? null : response.json();
 }
 
+/**
+ * The staff account of the E2E runs. Approving, publishing or canceling is
+ * written to the append-only audit log, whose actor cannot be deleted, so this
+ * account is kept between runs (no username: it never shows in /jugadores).
+ */
+export async function staffAccount(): Promise<TestAccount> {
+  const email = 'e2e-staff@example.com';
+  const password = `E2e-staff-${runId}-pass!`;
+  const db = admin();
+  const { data: list, error: listError } = await db.auth.admin.listUsers({
+    page: 1,
+    perPage: 1000,
+  });
+  if (listError) throw listError;
+  let id = list.users.find((u) => u.email === email)?.id;
+  if (id) {
+    const { error } = await db.auth.admin.updateUserById(id, { password });
+    if (error) throw error;
+  } else {
+    const { data, error } = await db.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+    });
+    if (error) throw error;
+    id = data.user.id;
+  }
+  const { error: roleError } = await db
+    .from('users')
+    .update({ platform_role: 'super_admin' })
+    .eq('id', id);
+  if (roleError) throw new Error(`staffAccount failed: ${roleError.message}`);
+  const client = createClient(url ?? '', publishableKey ?? '', { auth: { persistSession: false } });
+  const { data: session, error: signInError } = await client.auth.signInWithPassword({
+    email,
+    password,
+  });
+  if (signInError) throw signInError;
+  return { id, email, password, token: session.session.access_token };
+}
+
+/** Deletes tournaments and everything hanging from them (audit entries stay: append-only). */
+export async function deleteTournaments(slugPrefix: string): Promise<void> {
+  if (!hasDatabase) return;
+  const db = admin();
+  const { data: tournaments } = await db
+    .from('tournaments')
+    .select('id')
+    .like('slug', `${slugPrefix}%`);
+  const T = (tournaments ?? []).map((t: { id: string }) => t.id);
+  if (T.length === 0) return;
+  const { data: entrants } = await db.from('entrants').select('id').in('tournament_id', T);
+  const E = (entrants ?? []).map((e: { id: string }) => e.id);
+  const { data: phases } = await db.from('phases').select('id').in('tournament_id', T);
+  const P = (phases ?? []).map((p: { id: string }) => p.id);
+  const { data: rulebooks } = await db.from('rulebooks').select('id').in('tournament_id', T);
+  const R = (rulebooks ?? []).map((r: { id: string }) => r.id);
+  const steps = [
+    () =>
+      db
+        .from('outbox_events')
+        .delete()
+        .in('aggregate_id', [...T, ...E]),
+    () => db.from('entrant_roster_members').delete().in('entrant_id', E),
+    () => db.from('phase_entrants').delete().in('phase_id', P),
+    () => db.from('entrants').delete().in('id', E),
+    () => db.from('tournament_roster_rules').delete().in('tournament_id', T),
+    () => db.from('groups').delete().in('phase_id', P),
+    () => db.from('phases').delete().in('id', P),
+    () => db.from('tournament_game_settings').delete().in('tournament_id', T),
+    () => db.from('eligibility_rules').delete().in('tournament_id', T),
+    () => db.from('schedule_windows').delete().in('tournament_id', T),
+    () => db.from('schedule_blackouts').delete().in('tournament_id', T),
+    () => db.from('tournament_prizes').delete().in('tournament_id', T),
+    () => db.from('circuit_tournaments').delete().in('tournament_id', T),
+    () => db.from('tournaments').update({ current_rulebook_version_id: null }).in('id', T),
+    () => db.from('rulebook_versions').delete().in('rulebook_id', R),
+    () => db.from('rulebooks').delete().in('id', R),
+    () => db.from('tournaments').delete().in('id', T),
+  ];
+  for (const step of steps) {
+    const { error } = await step();
+    if (error) throw new Error(`E2E tournament cleanup failed: ${error.message}`);
+  }
+}
+
+/** Deletes templates created by a run (by name prefix). */
+export async function deleteTemplates(namePrefix: string): Promise<void> {
+  if (!hasDatabase) return;
+  const { error } = await admin()
+    .from('tournament_templates')
+    .delete()
+    .like('name', `${namePrefix}%`);
+  if (error) throw new Error(`E2E template cleanup failed: ${error.message}`);
+}
+
 /** Gives the account the staff platform role (access to /admin). */
 export async function makeStaff(account: TestAccount): Promise<void> {
   const { error } = await admin()

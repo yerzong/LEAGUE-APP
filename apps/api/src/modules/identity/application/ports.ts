@@ -36,6 +36,14 @@ export interface PrivateData {
   readonly genderLocked: boolean;
 }
 
+export interface EligibilityPrivateData {
+  readonly legalNameProvided: boolean;
+  readonly gender: Gender | null;
+  readonly genderDeclaredAt: Date | null;
+  readonly institutionalEmail: string | null;
+  readonly institutionalEmailVerified: boolean;
+}
+
 export interface ProfileRepository {
   findById(userId: string): Promise<Profile | null>;
   findByUsername(username: string): Promise<Profile | null>;
@@ -45,6 +53,8 @@ export interface ProfileRepository {
   /** Returns the previous path. */
   setAvatarPath(userId: string, path: string): Promise<string | null>;
   getPrivateData(userId: string): Promise<PrivateData | null>;
+  /** What eligibility rules read from the private data, per user (never sent to clients). */
+  eligibilityDataOf(userIds: readonly string[]): Promise<Map<string, EligibilityPrivateData>>;
   savePrivateData(userId: string, data: PrivateData): Promise<void>;
   getPrivacy(userIds: readonly string[]): Promise<Map<string, PrivacySettings>>;
   savePrivacy(userId: string, settings: PrivacySettings): Promise<void>;

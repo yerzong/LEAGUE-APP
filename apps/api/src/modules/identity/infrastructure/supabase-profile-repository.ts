@@ -5,7 +5,12 @@ import { conflict } from '../../../shared/application-error.js';
 import { assertNoError, isUniqueViolation } from '../../../shared/database/postgres-errors.js';
 import { likeEscape } from '../../../shared/database/like-escape.js';
 import type { AdminClient } from '../../../shared/database/supabase-admin.js';
-import type { PrivateData, ProfileChanges, ProfileRepository } from '../application/ports.js';
+import type {
+  PrivateData,
+  ProfileChanges,
+  ProfileRepository,
+  EligibilityPrivateData,
+} from '../application/ports.js';
 import type { Profile } from '../domain/profile.js';
 
 const PROFILE_COLUMNS =
@@ -93,6 +98,31 @@ export class SupabaseProfileRepository implements ProfileRepository {
     const { error } = await this.db.from('users').update({ avatar_path: path }).eq('id', userId);
     assertNoError(error);
     return previous?.avatarPath ?? null;
+  }
+
+  async eligibilityDataOf(
+    userIds: readonly string[],
+  ): Promise<Map<string, EligibilityPrivateData>> {
+    if (userIds.length === 0) return new Map();
+    const { data, error } = await this.db
+      .from('user_private_data')
+      .select(
+        'user_id, legal_first_name, legal_last_name, gender, gender_declared_at, institutional_email, institutional_email_verified_at',
+      )
+      .in('user_id', [...userIds]);
+    assertNoError(error);
+    return new Map(
+      (data ?? []).map((row) => [
+        row.user_id,
+        {
+          legalNameProvided: Boolean(row.legal_first_name && row.legal_last_name),
+          gender: row.gender,
+          genderDeclaredAt: row.gender_declared_at ? new Date(row.gender_declared_at) : null,
+          institutionalEmail: row.institutional_email,
+          institutionalEmailVerified: row.institutional_email_verified_at !== null,
+        },
+      ]),
+    );
   }
 
   async getPrivateData(userId: string): Promise<PrivateData | null> {

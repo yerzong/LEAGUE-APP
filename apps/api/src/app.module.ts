@@ -6,8 +6,10 @@ import { HealthModule } from './modules/health/health.module.js';
 import { AuthModule } from './modules/identity/auth.module.js';
 import { IdentityModule } from './modules/identity/identity.module.js';
 import { PublicSiteModule } from './modules/public-site/public-site.module.js';
+import { RegistrationsModule } from './modules/registrations/registrations.module.js';
 import { RiotAccountsModule } from './modules/riot-accounts/riot-accounts.module.js';
 import { TeamsModule } from './modules/teams/teams.module.js';
+import { TournamentsModule } from './modules/tournaments/tournaments.module.js';
 import { ApplicationErrorFilter } from './shared/application-error.filter.js';
 import { SharedModule } from './shared/shared.module.js';
 
@@ -24,6 +26,8 @@ export class AppModule {
         IdentityModule,
         RiotAccountsModule,
         TeamsModule,
+        TournamentsModule,
+        RegistrationsModule,
         PublicSiteModule,
       ],
       providers: [

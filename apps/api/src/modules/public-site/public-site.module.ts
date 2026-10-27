@@ -7,6 +7,10 @@ import { RiotAccountQueries } from '../riot-accounts/application/riot-verificati
 import { RiotAccountsModule } from '../riot-accounts/riot-accounts.module.js';
 import { TeamQueries } from '../teams/application/teams.use-cases.js';
 import { TeamsModule } from '../teams/teams.module.js';
+import { RegistrationQueries } from '../registrations/application/registrations.use-cases.js';
+import { RegistrationsModule } from '../registrations/registrations.module.js';
+import { TournamentQueries } from '../tournaments/application/tournaments.use-cases.js';
+import { TournamentsModule } from '../tournaments/tournaments.module.js';
 import {
   GetPublicPlayerUseCase,
   GetPublicTeamUseCase,
@@ -15,12 +19,25 @@ import {
   PUBLIC_PAGES_DEPS,
   type PublicPagesDeps,
 } from './application/public-pages.js';
+import {
+  GetPublicTournamentUseCase,
+  ListPublicTournamentsUseCase,
+  PUBLIC_TOURNAMENTS_DEPS,
+  type PublicTournamentsDeps,
+} from './application/public-tournaments.js';
+import { PublicTournamentsController } from './presentation/public-tournaments.controller.js';
 import { PublicController } from './presentation/public.controller.js';
 
-/** Read-only composition of identity, riot-accounts and teams for the public site. */
+/** Read-only composition of identity, riot-accounts, teams and tournaments for the public site. */
 @Module({
-  imports: [IdentityModule, RiotAccountsModule, TeamsModule],
-  controllers: [PublicController],
+  imports: [
+    IdentityModule,
+    RiotAccountsModule,
+    TeamsModule,
+    TournamentsModule,
+    RegistrationsModule,
+  ],
+  controllers: [PublicController, PublicTournamentsController],
   providers: [
     {
       provide: PUBLIC_PAGES_DEPS,
@@ -36,6 +53,24 @@ import { PublicController } from './presentation/public.controller.js';
         riot,
         clock,
       }),
+    },
+    {
+      provide: PUBLIC_TOURNAMENTS_DEPS,
+      inject: [TournamentQueries, RegistrationQueries],
+      useFactory: (
+        tournaments: TournamentQueries,
+        registrations: RegistrationQueries,
+      ): PublicTournamentsDeps => ({ tournaments, registrations }),
+    },
+    {
+      provide: ListPublicTournamentsUseCase,
+      inject: [PUBLIC_TOURNAMENTS_DEPS],
+      useFactory: (d: PublicTournamentsDeps) => new ListPublicTournamentsUseCase(d),
+    },
+    {
+      provide: GetPublicTournamentUseCase,
+      inject: [PUBLIC_TOURNAMENTS_DEPS],
+      useFactory: (d: PublicTournamentsDeps) => new GetPublicTournamentUseCase(d),
     },
     {
       provide: GetPublicTeamUseCase,

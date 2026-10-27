@@ -157,3 +157,42 @@ export {
   type TeamPermission,
   type TeamRole,
 } from './teams/teams.js';
+// Tournaments and registrations
+export {
+  effectiveEligibilityRules,
+  exclusivityKey,
+  rosterExclusivityKey,
+  type ExclusivityPolicy,
+  type TournamentRef,
+} from './tournaments/rules.js';
+export {
+  assertValidRoster,
+  validateRoster,
+  type RosterEntry,
+  type RosterRole,
+  type RosterRules,
+  type RosterViolation,
+} from './tournaments/roster.js';
+export {
+  changesNeedingConfirmation,
+  editPolicy,
+  TOURNAMENT_SECTIONS,
+  type EditMode,
+  type EditPolicy,
+  type TournamentSection,
+} from './tournaments/edit-policy.js';
+export {
+  entrantLifecycle,
+  type EntrantContext,
+  type EntrantEvent,
+  type EntrantStatus,
+} from './tournaments/entrant.js';
+export {
+  averageRankValue,
+  seedEntrants,
+  type SeedAssignment,
+  type SeedCandidate,
+  type SeedingMethod,
+  type SeedingOptions,
+} from './tournaments/seeding.js';
+export { describeStructure, type PhasePlan, type PhaseShape } from './tournaments/structure.js';

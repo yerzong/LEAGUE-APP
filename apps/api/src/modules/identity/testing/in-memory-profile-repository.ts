@@ -2,7 +2,12 @@
 import type { PrivacySettings, SocialLink } from '@league/contracts';
 
 import { conflict } from '../../../shared/application-error.js';
-import type { PrivateData, ProfileChanges, ProfileRepository } from '../application/ports.js';
+import type {
+  PrivateData,
+  ProfileChanges,
+  ProfileRepository,
+  EligibilityPrivateData,
+} from '../application/ports.js';
 import type { Profile } from '../domain/profile.js';
 
 export const emptyProfile = (id: string, overrides: Partial<Profile> = {}): Profile => ({
@@ -60,6 +65,29 @@ export class InMemoryProfileRepository implements ProfileRepository {
     const current = this.profiles.get(userId);
     if (current) this.profiles.set(userId, { ...current, avatarPath: path });
     return Promise.resolve(current?.avatarPath ?? null);
+  }
+
+  eligibilityDataOf(userIds: readonly string[]): Promise<Map<string, EligibilityPrivateData>> {
+    return Promise.resolve(
+      new Map(
+        userIds.flatMap((id) => {
+          const data = this.privateData.get(id);
+          if (!data) return [];
+          return [
+            [
+              id,
+              {
+                legalNameProvided: Boolean(data.legalFirstName && data.legalLastName),
+                gender: data.gender,
+                genderDeclaredAt: data.genderDeclaredAt,
+                institutionalEmail: data.institutionalEmail,
+                institutionalEmailVerified: false,
+              },
+            ] as const,
+          ];
+        }),
+      ),
+    );
   }
 
   getPrivateData(userId: string): Promise<PrivateData | null> {

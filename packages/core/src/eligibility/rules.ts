@@ -121,7 +121,7 @@ function peakRank(player: PlayerProfile, now: string, windowDays: number): Rank 
   );
 }
 
-const isActive = (roster: RosterMembership, now: string) =>
+export const isActive = (roster: RosterMembership, now: string) =>
   roster.leftAt === null || time(roster.leftAt) > time(now);
 
 /** Another registration than the candidate's: a different team, or a different ad-hoc entrant. */
@@ -130,7 +130,8 @@ function isOtherRoster(roster: RosterMembership, candidate: EligibilityCandidate
   return roster.entrantId !== candidate.entrantId;
 }
 
-function inScope(
+/** Whether a roster falls inside an exclusivity scope of the tournament in `context`. */
+export function inScope(
   roster: RosterMembership,
   scope: ExclusivityScope,
   context: EligibilityContext,
