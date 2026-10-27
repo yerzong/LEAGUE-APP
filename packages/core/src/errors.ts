@@ -68,3 +68,17 @@ export class RoundInProgressError extends DomainError {
 export class TeamRuleError extends DomainError {
   readonly code = 'team_rule_violation';
 }
+
+/** A registration roster breaks the tournament roster rules; `details.violations` lists them. */
+export class RosterRuleError extends DomainError {
+  readonly code = 'invalid_roster';
+}
+
+export class InvalidSeedingError extends DomainError {
+  readonly code = 'invalid_seeding';
+}
+
+/** A tournament section cannot be edited in the current status (docs/14 §3.2). */
+export class LockedSectionError extends DomainError {
+  readonly code = 'section_locked';
+}
