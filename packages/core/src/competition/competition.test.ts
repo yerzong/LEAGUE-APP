@@ -174,6 +174,8 @@ describe('phaseProgress', () => {
     }
   };
   const points = { win: 3, loss: 0, draw: 1 };
+  // A variable, not a literal: the registry types the generic strategy loosely.
+  const ROUND_ROBIN = { seriesFormat: 'bo1' as const, legs: 1 as const };
 
   it('marks single elimination losers as eliminated while the bracket is played', () => {
     const strategy = registry.get('single_elimination');
@@ -208,7 +210,7 @@ describe('phaseProgress', () => {
     const strategy = registry.get('round_robin');
     const done = play(
       strategy,
-      strategy.generateMatches(entrants, { seriesFormat: 'bo1', legs: 1 }),
+      strategy.generateMatches(entrants, ROUND_ROBIN),
       (m) => [m.entrantA ?? '', m.entrantB ?? ''].sort()[0] ?? '',
     );
     const progress = phaseProgress(
@@ -232,7 +234,7 @@ describe('phaseProgress', () => {
 
   it('keeps everybody in contention while a table phase is open', () => {
     const strategy = registry.get('round_robin');
-    const matches = strategy.generateMatches(entrants, { seriesFormat: 'bo1', legs: 1 });
+    const matches = strategy.generateMatches(entrants, ROUND_ROBIN);
     const progress = phaseProgress(
       strategy,
       matches,

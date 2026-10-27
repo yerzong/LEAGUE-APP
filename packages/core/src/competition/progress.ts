@@ -1,11 +1,7 @@
 // Where a phase stands: its table (computed by the format strategy), whether
 // it is over, who advances and who is out. The API stores the result.
 
-import type {
-  AdvancementResult,
-  BaseFormatConfig,
-  PhaseFormatStrategy,
-} from '../formats/strategy.js';
+import type { AdvancementResult, PhaseFormatStrategy } from '../formats/strategy.js';
 import type { PointsRule } from '../standings/points.js';
 import type { Standing } from '../standings/standings.js';
 import type { TiebreakRule } from '../standings/tiebreakers.js';
@@ -37,7 +33,8 @@ const loserOf = (m: Match) => {
  * `groups`), `null` for the last phase.
  */
 export function phaseProgress(
-  strategy: PhaseFormatStrategy,
+  /** Any format strategy (its config type is checked by the strategy at runtime). */
+  strategy: PhaseFormatStrategy<never>,
   matches: readonly Match[],
   /** The phase's format config (read by its strategy). */
   config: unknown,
