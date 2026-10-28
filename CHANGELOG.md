@@ -5,6 +5,38 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 ## [Unreleased]
 
+### Added (m06 — notificaciones in-app y correo)
+- Migración `notifications` (aplicada en `penta-dev`): `notification_types`
+  (catálogo de 18 tipos de docs/15 §3), `notification_templates` (plantillas
+  base es-419 y las propias de la organización, con versión),
+  `notification_rules`, `user_notification_preferences`, `notifications`
+  (bandeja, en la publicación de Realtime), `notification_deliveries` (una por
+  canal, `UNIQUE (source_event_id, user_id, channel)`; también es la cola de
+  envío con reintentos) y `push_subscriptions` (estructura). `outbox_events`
+  suma `next_attempt_at`, `locked_until`, `last_error` y `dead_at`. RLS: cada
+  usuario lee solo su bandeja, sus entregas y sus preferencias; plantillas y
+  reglas solo por la API. Funciones `svc_*` para reclamar trabajo con lease,
+  escribir un evento completo de forma atómica e idempotente y auditar los
+  cambios del admin. Tests pgTAP.
+- `packages/core`: canales tras la regla y las preferencias (in-app siempre,
+  críticas que no se apagan, anuncios opt-in), matriz de preferencias, render de
+  plantillas `{{variable}}` y backoff de reintentos.
+- `packages/integrations`: `EmailPort` con `ResendEmailAdapter` (HTTP, clave
+  idempotente por entrega) y `FakeEmailAdapter` (captura los envíos).
+- `packages/contracts`: bandeja, preferencias, tipos/reglas/plantillas, vista
+  previa e historial de entregas.
+- API: módulo `notifications` (worker del outbox y de entregas, mapeo de eventos
+  existentes a tipos, `NotificationChannelPort` con adaptadores in-app y correo;
+  Discord y push registrados sin implementar), `GET /notifications`,
+  `POST /notifications/:id/read`, `POST /notifications/read-all`,
+  `GET|PUT /me/notification-preferences` y `/admin/notifications/*` (tipos,
+  regla, plantillas con vista previa y restaurar, historial de entregas).
+- Web: campana con contador en vivo en `/app` y `/admin`, `/app/notificaciones`,
+  `/app/ajustes/notificaciones`, `/admin/notificaciones` (tipos y reglas, editor
+  de plantillas con vista previa) y `/admin/notificaciones/entregas`.
+- E2E: la aprobación de una inscripción llega a la campana del capitán y al
+  roster, y el staff ve las entregas por correo y la vista previa.
+
 ### Added (m0dev — herramientas de desarrollo)
 - `pnpm seed:demo` / `pnpm seed:reset` (`apps/api/src/dev/seed`, fuera del build):
   escenario demo creado con los casos de uso reales de la API en proceso (Nest

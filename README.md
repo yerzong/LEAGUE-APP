@@ -14,11 +14,11 @@ motor de torneos como un **producto SaaS** vendible a otros organizadores.
 
 ## Estado actual
 
-**Módulo 5: Partidas y standings** (fixtures generados por `packages/core`
-desde los inscritos, check-in, doble reporte, disputas, reprogramación,
-standings y bracket en vivo con Supabase Realtime; pestañas de partidas,
-calendario y standings en `/admin/torneos/[id]`, centro de partida en
-`/app/partidas` y bracket/tablas públicos en `/torneos/[slug]`). Antes: módulo 4
+**Módulo 6: Notificaciones** (el motor consume `outbox_events` y avisa por la
+bandeja de la plataforma y por correo según las reglas de la organización y las
+preferencias de cada usuario; campana en vivo y preferencias en `/app`,
+plantillas, reglas y monitor de entregas en `/admin/notificaciones`). Antes:
+módulo 5 (partidas y standings con bracket en vivo), módulo 4
 (torneos e inscripciones), módulo 3
 (navegación y vitrina pública), módulo 2 (perfiles, cuenta de Riot y
 equipos), módulo 1 (motor de torneos en `packages/core`) y módulo 0 (monorepo,
@@ -70,7 +70,8 @@ solo. Con `RIOT_PROVIDER=riot` y `RIOT_API_KEY` usa la API real.
 E2E: `pnpm test:e2e` lee `apps/api/.env` y corre los flujos de perfil, Riot,
 equipos, invitaciones, torneos (crear → publicar → inscribir → aprobar) y un
 torneo relámpago completo (fixtures → check-in → doble reporte → campeón) contra
-`penta-dev` con usuarios y torneos de prueba que crea y borra al terminar (sin
+`penta-dev`, más la notificación de la aprobación en la campana del capitán,
+con usuarios y torneos de prueba que crea y borra al terminar (sin
 esa variable esos flujos se omiten). La única excepción es la cuenta
 `e2e-staff@example.com`: publicar y aprobar quedan en `audit_logs`, que es
 append-only, así que esa cuenta se reutiliza entre corridas. En CI corren contra
@@ -78,7 +79,21 @@ un Supabase local (`supabase start`).
 
 Torneos: los cambios de estado y las inscripciones escriben eventos de dominio en
 `outbox_events` (`tournament.published`, `registration.approved`, …) en la misma
-transacción; todavía nadie los consume (los enganchan notificaciones y el bot).
+transacción.
+
+Notificaciones: cada `NOTIFICATIONS_POLL_SECONDS` (5 por defecto, `0` lo apaga)
+la API toma los eventos pendientes con un lease (`FOR UPDATE SKIP LOCKED`, varias
+instancias no chocan), resuelve destinatarios (capitán y roster, ambos equipos,
+staff, quienes activaron anuncios), aplica la regla de la organización y las
+preferencias (los avisos críticos no se apagan, solo cambian de canal), renderiza
+la plantilla es-419 y escribe una notificación in-app más una entrega por canal,
+todo idempotente (`source_event_id + user_id + channel`). Los correos salen por
+`EmailPort`: con `EMAIL_PROVIDER=fake` (por defecto) se quedan en memoria; con
+`resend` necesita `RESEND_API_KEY` y `EMAIL_FROM` (producción no acepta el fake).
+Los fallos se reintentan con backoff (30 s, 1 min, 2 min…) y quedan en el monitor
+de `/admin/notificaciones/entregas`. Los eventos con más de
+`NOTIFICATIONS_MAX_EVENT_AGE_HOURS` (48) se consumen sin avisar. Discord y push
+tienen su adaptador registrado pero no disponible.
 
 Partidas: la API abre y cierra el check-in sola cada `CHECKIN_SWEEP_SECONDS`
 (60 por defecto, `0` lo apaga): al cerrar, quien no hizo check-in pierde por
@@ -107,7 +122,9 @@ cuentas (`*@demo.penta.local`, contraseña `SEED_DEMO_PASSWORD` o la de
 sea `penta-dev` o con la API encendida (su barrido de check-in chocaría con las
 jornadas pasadas que reproduce). `seed:reset` anonimiza en vez de borrar la
 cuenta de staff demo, porque aparece en `audit_logs` (append-only). El código
-vive en `apps/api/src/dev` y no entra al build de la API.
+vive en `apps/api/src/dev` y no entra al build de la API. Al encender la API, el
+worker de notificaciones convierte los eventos sembrados en las campanas de las
+cuentas demo.
 
 Autollenar: con `NEXT_PUBLIC_DEV_TOOLS=true` en `apps/web/.env.local` (y
 apuntando a `penta-dev`) el asistente de torneo, el perfil y crear equipo
