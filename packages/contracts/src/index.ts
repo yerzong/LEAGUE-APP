@@ -10,3 +10,4 @@ export * from './tournaments/config.js';
 export * from './tournaments/tournaments.js';
 export * from './tournaments/registrations.js';
 export * from './competition/competition.js';
+export * from './notifications/notifications.js';
