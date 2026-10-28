@@ -31,6 +31,8 @@ export default defineConfig({
         SUPABASE_PUBLISHABLE_KEY: process.env.SUPABASE_PUBLISHABLE_KEY ?? 'sb_publishable_e2e',
         SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY ?? 'sb_secret_e2e',
         RIOT_PROVIDER: 'stub',
+        // The bell flow waits for the worker: a short interval keeps it quick.
+        NOTIFICATIONS_POLL_SECONDS: '1',
       },
     },
     {

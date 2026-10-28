@@ -17,6 +17,8 @@ import { signIn } from './support/sign-in';
 // draft, publishes it (empty phases), opens registration; a captain checks
 // eligibility in the portal and registers; anti-chapulineo blocks a player in
 // two rosters; staff approves and it is audited; the public page lists it.
+// docs/specs/m06: the approval reaches the captain's bell and the roster, and
+// the staff sees the email delivery and previews a template.
 test.describe.configure({ mode: 'serial' });
 test.skip(!hasDatabase, 'Needs SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY and SUPABASE_SECRET_KEY');
 
@@ -194,6 +196,52 @@ test('staff approves the registration and it is audited', async ({ page }) => {
   await page.getByRole('tab', { name: 'Auditoría' }).click();
   await expect(page.getByText('Aprobó una inscripción')).toBeVisible();
   await expect(page.getByText('Publicó el torneo')).toBeVisible();
+});
+
+test('the captain sees the approval in the bell and the roster gets it too', async ({ page }) => {
+  await signIn(page, ana, '/app');
+  // The API worker turns the outbox event into notifications within seconds;
+  // Realtime updates the bell live, a reload covers environments without it.
+  const bell = page.getByRole('button', { name: /^Notificaciones, \d+ sin leer$/ });
+  await expect(async () => {
+    await page.reload();
+    await expect(bell).toBeVisible({ timeout: 2_000 });
+  }).toPass({ timeout: 45_000 });
+
+  await bell.click();
+  const popover = page.getByRole('dialog');
+  const approved = popover.getByRole('link', { name: /Inscripción aprobada/ });
+  await expect(approved).toContainText(`${auroraName} ya está dentro de ${name}.`);
+  await expect(popover.getByText('Inscripción recibida')).toBeVisible();
+  await approved.click();
+  await expect(page).toHaveURL(`/app/torneos/${slugPrefix}`);
+  await expect(page.getByRole('button', { name: 'Notificaciones, 1 sin leer' })).toBeVisible();
+
+  // Beto plays in the roster: same notification, once, even if the event is retried.
+  const inbox = (await api(beto, 'GET', '/notifications')) as {
+    items: { typeKey: string; title: string }[];
+  };
+  expect(inbox.items.filter((i) => i.typeKey === 'registration.approved')).toHaveLength(1);
+});
+
+test('staff sees the email deliveries and previews a template', async ({ page }) => {
+  const history = (await api(staff, 'GET', '/admin/notifications/deliveries?channel=email')) as {
+    items: { typeKey: string; recipient: { username: string | null } }[];
+  };
+  const approvals = history.items.filter((d) => d.typeKey === 'registration.approved');
+  expect(approvals.map((d) => d.recipient.username)).toEqual(
+    expect.arrayContaining([`tana_${runId}`, `tbeto_${runId}`]),
+  );
+
+  await signIn(page, staff, '/admin/notificaciones/entregas');
+  await expect(page.getByRole('heading', { name: 'Monitor de entregas' })).toBeVisible();
+  await expect(page.getByRole('cell', { name: 'Ana' }).first()).toBeVisible();
+
+  await page.goto('/admin/notificaciones/registration.approved');
+  const editor = page.locator('[data-slot="card"]').filter({ hasText: 'Plantilla: Correo' });
+  await editor.getByLabel('Asunto').fill('¡{{entrant.name}} juega {{tournament.name}}!');
+  await editor.getByRole('button', { name: 'Vista previa' }).click();
+  await expect(editor.getByText('¡Jaguares juega Liga Apertura!')).toBeVisible();
 });
 
 test('the public site lists the tournament with its participants', async ({ page }) => {

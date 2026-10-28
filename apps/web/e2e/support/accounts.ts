@@ -124,7 +124,15 @@ export async function deleteTournaments(slugPrefix: string): Promise<void> {
   const R = (rulebooks ?? []).map((r: { id: string }) => r.id);
   const { data: matches } = await db.from('matches').select('id').in('tournament_id', T);
   const M = (matches ?? []).map((m: { id: string }) => m.id);
+  // Notifications of these tournaments (the persistent staff account gets some too).
+  const { data: notifications } = await db
+    .from('notifications')
+    .select('id')
+    .in('data->>tournamentId', T);
+  const N = (notifications ?? []).map((n: { id: string }) => n.id);
   const competition = [
+    () => db.from('notification_deliveries').delete().in('notification_id', N),
+    () => db.from('notifications').delete().in('id', N),
     () => db.from('outbox_events').delete().in('aggregate_id', M),
     () => db.from('standings').delete().in('tournament_id', T),
     // Games, check-ins, reports, disputes and reschedules go with their match.
@@ -197,6 +205,9 @@ export async function deleteAccounts(accounts: readonly TestAccount[]): Promise<
   const { data: riot } = await db.from('riot_accounts').select('id').in('user_id', ids);
   const riotIds = (riot ?? []).map((r: { id: string }) => r.id);
   const steps = [
+    db.from('notification_deliveries').delete().in('user_id', ids),
+    db.from('notifications').delete().in('user_id', ids),
+    db.from('user_notification_preferences').delete().in('user_id', ids),
     db.from('team_captaincy_transfers').delete().in('team_id', teamIds),
     db.from('team_join_requests').delete().in('team_id', teamIds),
     db.from('team_join_requests').delete().in('user_id', ids),
