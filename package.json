@@ -15,7 +15,9 @@
     "test:e2e": "turbo run test:e2e",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "db:types": "pnpm --filter @league/db gen:types"
+    "db:types": "pnpm --filter @league/db gen:types",
+    "seed:demo": "pnpm --filter @league/api seed:demo",
+    "seed:reset": "pnpm --filter @league/api seed:reset"
   },
   "prettier": "@league/config/prettier",
   "devDependencies": {

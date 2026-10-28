@@ -5,6 +5,22 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 ## [Unreleased]
 
+### Added (m0dev — herramientas de desarrollo)
+- `pnpm seed:demo` / `pnpm seed:reset` (`apps/api/src/dev/seed`, fuera del build):
+  escenario demo creado con los casos de uso reales de la API en proceso (Nest
+  application context; solo el stub de Riot con rangos variados y el reloj, para
+  reproducir las jornadas pasadas de la liga, se sustituyen): 54 jugadores con
+  perfil y Riot verificado (6 agentes libres), 8 equipos de 5 + 1 con logo
+  placeholder, temporada y circuito, Copa Relámpago (8 equipos, bracket
+  programado), Liga Apertura (round robin de 6, 3 jornadas jugadas por doble
+  reporte) y Torneo Abierto (inscripciones abiertas, regla de rango máximo).
+  Idempotente; el reset borra lo marcado `demo` y anonimiza las cuentas que
+  aparecen en la auditoría. Guard testeado: solo `penta-dev`, con
+  `SEED_ENABLED=true`, nunca con `NODE_ENV=production` ni con la API encendida.
+- Web: botón "Rellenar con datos de ejemplo" en el asistente de torneo, el perfil
+  y crear equipo, solo con `NEXT_PUBLIC_DEV_TOOLS=true` y `penta-dev`; con la
+  bandera apagada el código no entra al bundle (import dinámico eliminado).
+
 ### Added (m05 — partidas, resultados y standings)
 - Migraciones `matches_results_standings` y `competition_keep_phase_seeds`
   (aplicadas en `penta-dev`): `matches` (con `version` para bloqueo optimista),

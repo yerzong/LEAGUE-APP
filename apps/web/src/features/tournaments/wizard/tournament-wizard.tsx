@@ -22,6 +22,7 @@ import { useMemo, useState } from 'react';
 import { FormProvider, useForm, useWatch, type FieldErrors } from 'react-hook-form';
 
 import { messages } from '@/config/i18n';
+import { TournamentAutofill } from '@/features/dev-tools/autofill';
 
 import { createTournament, updateTournament, uploadTournamentCover } from '../actions';
 import { isWizardStep, WIZARD_STEPS, type WizardStepId } from './steps';
@@ -258,6 +259,13 @@ export function TournamentWizard({
                 {w.back}
               </Button>
               <div className="flex flex-wrap gap-2">
+                {TournamentAutofill && (!detail || detail.status === 'draft') && (
+                  <TournamentAutofill
+                    onFill={(config) => {
+                      form.reset(config, { keepDefaultValues: true });
+                    }}
+                  />
+                )}
                 {saveButton}
                 {index < WIZARD_STEPS.length - 1 && (
                   <Button

@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 
 import { messages } from '@/config/i18n';
+import { ProfileAutofill } from '@/features/dev-tools/autofill';
 import { regionOptions, roleOptions } from '@/features/forms/options';
 import { SelectField } from '@/features/forms/select-field';
 import { fieldErrorMessage } from '@/lib/ui/forms';
@@ -146,10 +147,17 @@ export function ProfileForm({ profile }: { profile: ProfileResponse }) {
       >
         {(control) => <Textarea {...control} maxLength={280} {...form.register('bio')} />}
       </Field>
-      <div className="md:col-span-2">
+      <div className="flex flex-wrap items-center gap-2 md:col-span-2">
         <Button type="submit" disabled={isSubmitting}>
           {messages.common.save}
         </Button>
+        {ProfileAutofill && (
+          <ProfileAutofill
+            onFill={(values) => {
+              form.reset(values, { keepDefaultValues: true });
+            }}
+          />
+        )}
       </div>
     </form>
   );
