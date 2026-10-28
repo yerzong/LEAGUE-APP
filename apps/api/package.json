@@ -17,6 +17,7 @@
     "@league/contracts": "workspace:*",
     "@league/core": "workspace:*",
     "@league/db": "workspace:*",
+    "@league/i18n": "workspace:*",
     "@league/integrations": "workspace:*",
     "@nestjs/common": "12.2.0",
     "@nestjs/core": "12.2.0",
