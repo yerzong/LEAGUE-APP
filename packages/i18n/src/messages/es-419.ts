@@ -2343,9 +2343,9 @@ export const es419 = {
         rules: {
           game: 'En un game: {conditions}',
           total: '{stat} en total ≥ {value}',
-          games: '{value} games jugados',
-          gamesWon: '{value} games ganados',
-          winStreak: '{value} victorias seguidas',
+          games: { one: '{count} game jugado', other: '{count} games jugados' },
+          gamesWon: { one: '{count} game ganado', other: '{count} games ganados' },
+          winStreak: { one: '{count} victoria', other: '{count} victorias seguidas' },
           mvp: '{value} × {scope}',
           gte: '{stat} ≥ {value}',
           lte: '{stat} ≤ {value}',

@@ -5,7 +5,7 @@ import type {
   AchievementIcon as Icon,
   AdminAchievement,
 } from '@league/contracts';
-import { format } from '@league/i18n';
+import { format, plural } from '@league/i18n';
 import {
   Badge,
   Button,
@@ -30,7 +30,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import { messages } from '@/config/i18n';
+import { locale, messages } from '@/config/i18n';
 import { SelectField } from '@/features/forms/select-field';
 
 import { saveAchievement } from '../../actions';
@@ -60,9 +60,9 @@ export function describeRule(c: AchievementCriteria): string {
     case 'total':
       return format(t.rules.total, { stat: s.statNames[c.stat], value: value(c.gte) });
     case 'games':
-      return format(c.wins ? t.rules.gamesWon : t.rules.games, { value: value(c.gte) });
+      return plural(c.wins ? t.rules.gamesWon : t.rules.games, c.gte, locale);
     case 'win_streak':
-      return format(t.rules.winStreak, { value: value(c.gte) });
+      return plural(t.rules.winStreak, c.gte, locale);
     case 'mvp':
       return format(t.rules.mvp, { value: value(c.gte), scope: s.mvpScopes[c.scope] });
   }

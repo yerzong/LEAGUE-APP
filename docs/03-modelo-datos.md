@@ -481,6 +481,15 @@ follows
   followable_id, created_at
 ```
 
+> Implementación (m09): las líneas por game y los agregados guardan también las
+> tasas por minuto y la puntuación de desempeño (`score`) con que se elige el MVP;
+> `player_game_stats` y `team_game_stats` llevan `match_id`, `tournament_id` y
+> `played_at` para consultar sin unir. `mvp_awards.scope_id` es texto: el id del
+> game, partida, fase o torneo, o `<phase_id>:<ronda>` para una jornada.
+> `achievements` suma `icon`, `is_active` y `position`. `stats_jobs` es la cola de
+> recálculo (una fila por partida, con lease y reintentos), alimentada por
+> triggers.
+
 ---
 
 ## 9. Notificaciones

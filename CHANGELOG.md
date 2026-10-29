@@ -5,6 +5,45 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 ## [Unreleased]
 
+### Added (m09 — estadísticas y perfiles pro)
+- Migraciones `stats_achievements_follows` y `stats_attach_sides` (aplicadas en
+  `penta-dev`): `player_game_stats`, `team_game_stats`, `game_timeline_events`,
+  `player_aggregate_stats` (por torneo, temporada, circuito e histórico, con el
+  radar), `player_champion_stats`, `team_aggregate_stats`,
+  `champion_meta_stats`, `achievements` (9 logros base), `user_achievements`,
+  `mvp_awards`, `follows` y la cola `stats_jobs` (un trigger la llena al cerrarse
+  una partida o al llegar los datos de un game). RLS: agregados y meta públicos
+  (y en Realtime); las líneas por game (llevan el PUUID), la cola, logros y MVP
+  solo por la API; cada usuario ve solo sus follows. `svc_*` para reclamar
+  trabajo, guardar un recálculo completo de forma atómica e idempotente, cargar
+  datos de partida (con los lados reales) y editar logros, auditados. Tipo de
+  notificación `follow.match_scheduled` para seguidores. Tests pgTAP.
+- `packages/core`: stats por game (KDA, CS/oro/daño/visión por minuto,
+  participación en kills, % de daño, puntuación de desempeño, MVP, momentos
+  notables), agregados con el radar de 0–100 contra rangos fijos, campeones,
+  equipo, meta, evolución semanal, forma, head-to-head, MVP por ámbito y motor
+  de logros por reglas.
+- `packages/integrations`: normalizador Match-V5 y catálogo de campeones de Data
+  Dragon (es_MX, en caché; uno estático para tests y CI).
+- `packages/contracts`: datos Match-V5, perfiles con stats, head-to-head, equipo,
+  torneo, box score, follows y reglas de logros.
+- `packages/ui`: `StatRadar`, `BarList`, `TrendBars`, `FormGuide` y `Stat`.
+- API: módulo `stats` (worker de la cola, recálculo, `PUT /admin/games/:id/match-data`,
+  `GET /admin/matches/:id/match-data`, `POST /admin/tournaments/:id/stats/recalculate`,
+  `GET|PUT /admin/achievements`, `/public/players/:username/stats`,
+  `/public/players/:a/vs/:b`, `/public/teams/:slug/stats`,
+  `/public/tournaments/:slug/stats`, `/public/matches/:id/stats` y
+  `GET|POST|DELETE /me/follows`). Audiencia `followers` en el motor de
+  notificaciones.
+- Web: pro-stats en `/jugadores/[username]`, head-to-head en
+  `/jugadores/[username]/vs/[other]`, stats y roster con mini-stats en
+  `/equipos/[slug]`, líderes, meta de campeones y MVP en `/torneos/[slug]` (en
+  vivo), box score en la página de partida, botón Seguir, `/app/siguiendo`,
+  carga de datos de partida y recálculo en el admin, y `/admin/logros`.
+- Seed demo: datos Match-V5 ficticios para los games de la Liga.
+- E2E: el staff carga los datos de la final y aparecen las stats; seguir y dejar
+  de seguir un equipo.
+
 ### Added (m06 — notificaciones in-app y correo)
 - Migración `notifications` (aplicada en `penta-dev`): `notification_types`
   (catálogo de 18 tipos de docs/15 §3), `notification_templates` (plantillas
