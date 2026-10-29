@@ -6,6 +6,7 @@ import type { ReactNode } from 'react';
 
 import { messages } from '@/config/i18n';
 import { LoadError } from '@/features/shell/load-error';
+import { RecalculateStatsButton } from '@/features/stats/components/admin/recalculate-button';
 import {
   CompetitionCalendarPanel,
   CompetitionMatchesPanel,
@@ -100,6 +101,9 @@ export default async function TournamentTrackingPage({
               <Button asChild variant="secondary">
                 <Link href={`/admin/torneos/${data.id}/editar`}>{tr.edit}</Link>
               </Button>
+              {['in_progress', 'completed'].includes(data.status) && (
+                <RecalculateStatsButton tournamentId={data.id} />
+              )}
               {data.status !== 'draft' && data.visibility !== 'private' && (
                 <Button asChild variant="ghost">
                   <Link href={`/torneos/${data.slug}`}>{tr.publicPage}</Link>

@@ -7,7 +7,7 @@ import { messages } from '@/config/i18n';
 import { browserSupabase } from '@/lib/supabase/browser';
 
 /**
- * Supabase Realtime: when a match or the standings of the tournament change,
+ * Supabase Realtime: when a match, the standings or the stats of the tournament change,
  * the page re-renders from the server (a single refresh per burst of changes).
  */
 export function LiveRefresh({ tournamentId }: { tournamentId: string }) {
@@ -26,6 +26,12 @@ export function LiveRefresh({ tournamentId }: { tournamentId: string }) {
       .channel(`tournament-${tournamentId}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'matches', filter }, refresh)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'standings', filter }, refresh)
+      // m09: the stats of a closed match land a few seconds after it.
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'champion_meta_stats', filter },
+        refresh,
+      )
       .subscribe();
     return () => {
       if (timer) clearTimeout(timer);

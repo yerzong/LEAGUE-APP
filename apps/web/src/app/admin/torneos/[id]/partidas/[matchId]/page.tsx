@@ -9,6 +9,8 @@ import { LiveRefresh } from '@/features/competition/components/live-refresh';
 import { MatchHeader, MatchRecords } from '@/features/competition/components/match-header';
 import { StaffMatchPanel } from '@/features/competition/components/staff-match-panel';
 import { LoadError } from '@/features/shell/load-error';
+import { getMatchDataStatus } from '@/features/stats/api';
+import { MatchDataPanel } from '@/features/stats/components/admin/match-data-panel';
 import { renderRouterLink } from '@/lib/ui/router-link';
 
 const c = messages.competition;
@@ -19,7 +21,7 @@ export default async function AdminMatchPage({
   params,
 }: PageProps<'/admin/torneos/[id]/partidas/[matchId]'>) {
   const { id, matchId } = await params;
-  const result = await getMatch(matchId);
+  const [result, dataStatus] = await Promise.all([getMatch(matchId), getMatchDataStatus(matchId)]);
   if (!result.ok) {
     if (result.code === 'match_not_found' || result.code === 'validation_failed') notFound();
     return <LoadError code={result.code} />;
@@ -49,6 +51,7 @@ export default async function AdminMatchPage({
       />
       <MatchHeader match={match} />
       <StaffMatchPanel match={match} />
+      {dataStatus.ok && <MatchDataPanel status={dataStatus.data} />}
       <MatchRecords match={match} />
     </div>
   );
