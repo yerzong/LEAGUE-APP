@@ -2,6 +2,7 @@ import {
   GamepadIcon,
   HouseIcon,
   SearchIcon,
+  SettingsIcon,
   ShieldIcon,
   SwordsIcon,
   TrophyIcon,
@@ -13,13 +14,16 @@ import { messages } from '@/config/i18n';
 import { SignOutButton } from '@/features/auth/components/sign-out-button';
 import { BackToSiteLink } from '@/features/shell/back-to-site-link';
 import { requireUser } from '@/features/auth/session';
+import { getInbox } from '@/features/notifications/api';
+import { NotificationBell } from '@/features/notifications/components/notification-bell';
 import { BrandMark } from '@/features/shell/brand-mark';
 import { ZoneShell } from '@/features/shell/zone-shell';
 
 const nav = messages.shell.nav;
 
 export default async function PortalLayout({ children }: { children: ReactNode }) {
-  await requireUser('/app');
+  const user = await requireUser('/app');
+  const inbox = await getInbox({ limit: 8 });
 
   return (
     <ZoneShell
@@ -33,9 +37,11 @@ export default async function PortalLayout({ children }: { children: ReactNode }
         { href: '/app/torneos', label: nav.portalTournaments, icon: <TrophyIcon /> },
         { href: '/app/partidas', label: nav.portalMatches, icon: <SwordsIcon /> },
         { href: '/app/agente-libre', label: nav.freeAgent, icon: <SearchIcon /> },
+        { href: '/app/ajustes/notificaciones', label: nav.settings, icon: <SettingsIcon /> },
       ]}
       actions={
         <>
+          <NotificationBell userId={user.id} initial={inbox.ok ? inbox.data : null} />
           <BackToSiteLink />
           <SignOutButton />
         </>

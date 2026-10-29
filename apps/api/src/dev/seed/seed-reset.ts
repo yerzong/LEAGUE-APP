@@ -27,6 +27,26 @@ const ids = (rows: { id: string }[] | null) => (rows ?? []).map((r) => r.id);
 /** Accounts already anonymized by a previous reset. */
 const ANONYMIZED = 'removed-';
 
+/** Notifications of the demo tournaments (staff accounts outside the demo got some too). */
+async function deleteNotifications(ctx: SeedContext, tournamentIds: readonly string[]) {
+  const db = ctx.db;
+  const N = ids(
+    (
+      await db
+        .from('notifications')
+        .select('id')
+        .in('data->>tournamentId', [...tournamentIds])
+    ).data,
+  );
+  for (let i = 0; i < N.length; i += 100) {
+    const chunk = N.slice(i, i + 100);
+    await run('notification', [
+      () => db.from('notification_deliveries').delete().in('notification_id', chunk),
+      () => db.from('notifications').delete().in('id', chunk),
+    ]);
+  }
+}
+
 async function deleteTournaments(ctx: SeedContext): Promise<number> {
   const db = ctx.db;
   const T = ids(
@@ -37,6 +57,7 @@ async function deleteTournaments(ctx: SeedContext): Promise<number> {
   const P = ids((await db.from('phases').select('id').in('tournament_id', T)).data);
   const R = ids((await db.from('rulebooks').select('id').in('tournament_id', T)).data);
   const M = ids((await db.from('matches').select('id').in('tournament_id', T)).data);
+  await deleteNotifications(ctx, T);
   await run('match', [
     () => db.from('outbox_events').delete().in('aggregate_id', M),
     () => db.from('standings').delete().in('tournament_id', T),
@@ -124,6 +145,10 @@ async function deleteUserData(ctx: SeedContext, users: readonly string[]): Promi
   const list = [...users];
   const riot = ids((await db.from('riot_accounts').select('id').in('user_id', list)).data);
   await run('account', [
+    () => db.from('notification_deliveries').delete().in('user_id', list),
+    () => db.from('notifications').delete().in('user_id', list),
+    () => db.from('user_notification_preferences').delete().in('user_id', list),
+    () => db.from('push_subscriptions').delete().in('user_id', list),
     () => db.from('team_join_requests').delete().in('user_id', list),
     () => db.from('team_invitations').delete().in('invited_user_id', list),
     () => db.from('team_members').delete().in('user_id', list),

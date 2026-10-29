@@ -1234,6 +1234,314 @@ export type Database = {
           },
         ]
       }
+      notification_deliveries: {
+        Row: {
+          attempts: number
+          body: string
+          channel: Database["public"]["Enums"]["notification_channel"]
+          created_at: string
+          id: string
+          last_error: string | null
+          locked_until: string | null
+          next_attempt_at: string
+          notification_id: string
+          provider_message_id: string | null
+          sent_at: string | null
+          source_event_id: string
+          status: Database["public"]["Enums"]["notification_delivery_status"]
+          subject: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          body: string
+          channel: Database["public"]["Enums"]["notification_channel"]
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          locked_until?: string | null
+          next_attempt_at?: string
+          notification_id: string
+          provider_message_id?: string | null
+          sent_at?: string | null
+          source_event_id: string
+          status?: Database["public"]["Enums"]["notification_delivery_status"]
+          subject?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          body?: string
+          channel?: Database["public"]["Enums"]["notification_channel"]
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          locked_until?: string | null
+          next_attempt_at?: string
+          notification_id?: string
+          provider_message_id?: string | null
+          sent_at?: string | null
+          source_event_id?: string
+          status?: Database["public"]["Enums"]["notification_delivery_status"]
+          subject?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_deliveries_notification_id_fkey"
+            columns: ["notification_id"]
+            isOneToOne: false
+            referencedRelation: "notifications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_deliveries_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_rules: {
+        Row: {
+          channels: Database["public"]["Enums"]["notification_channel"][] | null
+          conditions: Json
+          created_at: string
+          enabled: boolean
+          id: string
+          offsets: string[]
+          organization_id: string
+          tournament_id: string | null
+          type_key: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          channels?:
+            | Database["public"]["Enums"]["notification_channel"][]
+            | null
+          conditions?: Json
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          offsets?: string[]
+          organization_id: string
+          tournament_id?: string | null
+          type_key: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          channels?:
+            | Database["public"]["Enums"]["notification_channel"][]
+            | null
+          conditions?: Json
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          offsets?: string[]
+          organization_id?: string
+          tournament_id?: string | null
+          type_key?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_rules_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_rules_type_key_fkey"
+            columns: ["type_key"]
+            isOneToOne: false
+            referencedRelation: "notification_types"
+            referencedColumns: ["key"]
+          },
+          {
+            foreignKeyName: "notification_rules_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_templates: {
+        Row: {
+          body: string
+          channel: Database["public"]["Enums"]["notification_channel"]
+          created_at: string
+          id: string
+          locale: string
+          organization_id: string | null
+          subject: string | null
+          type_key: string
+          updated_at: string
+          updated_by: string | null
+          variables: string[]
+          version: number
+        }
+        Insert: {
+          body: string
+          channel: Database["public"]["Enums"]["notification_channel"]
+          created_at?: string
+          id?: string
+          locale?: string
+          organization_id?: string | null
+          subject?: string | null
+          type_key: string
+          updated_at?: string
+          updated_by?: string | null
+          variables?: string[]
+          version?: number
+        }
+        Update: {
+          body?: string
+          channel?: Database["public"]["Enums"]["notification_channel"]
+          created_at?: string
+          id?: string
+          locale?: string
+          organization_id?: string | null
+          subject?: string | null
+          type_key?: string
+          updated_at?: string
+          updated_by?: string | null
+          variables?: string[]
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_templates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_templates_type_key_fkey"
+            columns: ["type_key"]
+            isOneToOne: false
+            referencedRelation: "notification_types"
+            referencedColumns: ["key"]
+          },
+          {
+            foreignKeyName: "notification_templates_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_types: {
+        Row: {
+          audience: string
+          category: Database["public"]["Enums"]["notification_category"]
+          created_at: string
+          default_channels: Database["public"]["Enums"]["notification_channel"][]
+          is_critical: boolean
+          key: string
+          position: number
+        }
+        Insert: {
+          audience: string
+          category: Database["public"]["Enums"]["notification_category"]
+          created_at?: string
+          default_channels: Database["public"]["Enums"]["notification_channel"][]
+          is_critical?: boolean
+          key: string
+          position?: number
+        }
+        Update: {
+          audience?: string
+          category?: Database["public"]["Enums"]["notification_category"]
+          created_at?: string
+          default_channels?: Database["public"]["Enums"]["notification_channel"][]
+          is_critical?: boolean
+          key?: string
+          position?: number
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          body: string
+          created_at: string
+          data: Json
+          id: string
+          link: string | null
+          organization_id: string | null
+          read_at: string | null
+          source_event_id: string
+          title: string
+          type_key: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          data?: Json
+          id?: string
+          link?: string | null
+          organization_id?: string | null
+          read_at?: string | null
+          source_event_id: string
+          title: string
+          type_key: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          data?: Json
+          id?: string
+          link?: string | null
+          organization_id?: string | null
+          read_at?: string | null
+          source_event_id?: string
+          title?: string
+          type_key?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_type_key_fkey"
+            columns: ["type_key"]
+            isOneToOne: false
+            referencedRelation: "notification_types"
+            referencedColumns: ["key"]
+          },
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organization_members: {
         Row: {
           created_at: string
@@ -1371,8 +1679,12 @@ export type Database = {
           aggregate_id: string
           aggregate_type: string
           attempts: number
+          dead_at: string | null
           event_type: string
           id: string
+          last_error: string | null
+          locked_until: string | null
+          next_attempt_at: string | null
           occurred_at: string
           organization_id: string | null
           payload: Json
@@ -1382,8 +1694,12 @@ export type Database = {
           aggregate_id: string
           aggregate_type: string
           attempts?: number
+          dead_at?: string | null
           event_type: string
           id?: string
+          last_error?: string | null
+          locked_until?: string | null
+          next_attempt_at?: string | null
           occurred_at?: string
           organization_id?: string | null
           payload?: Json
@@ -1393,8 +1709,12 @@ export type Database = {
           aggregate_id?: string
           aggregate_type?: string
           attempts?: number
+          dead_at?: string | null
           event_type?: string
           id?: string
+          last_error?: string | null
+          locked_until?: string | null
+          next_attempt_at?: string | null
           occurred_at?: string
           organization_id?: string | null
           payload?: Json
@@ -1593,6 +1913,44 @@ export type Database = {
             columns: ["tournament_prize_id"]
             isOneToOne: false
             referencedRelation: "tournament_prizes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      push_subscriptions: {
+        Row: {
+          created_at: string
+          endpoint: string
+          id: string
+          keys: Json
+          last_used_at: string | null
+          platform: Database["public"]["Enums"]["push_platform"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          endpoint: string
+          id?: string
+          keys?: Json
+          last_used_at?: string | null
+          platform: Database["public"]["Enums"]["push_platform"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          endpoint?: string
+          id?: string
+          keys?: Json
+          last_used_at?: string | null
+          platform?: Database["public"]["Enums"]["push_platform"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -3293,6 +3651,41 @@ export type Database = {
           },
         ]
       }
+      user_notification_preferences: {
+        Row: {
+          category: Database["public"]["Enums"]["notification_category"]
+          channel: Database["public"]["Enums"]["notification_channel"]
+          enabled: boolean
+          quiet_hours: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["notification_category"]
+          channel: Database["public"]["Enums"]["notification_channel"]
+          enabled: boolean
+          quiet_hours?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["notification_category"]
+          channel?: Database["public"]["Enums"]["notification_channel"]
+          enabled?: boolean
+          quiet_hours?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_notification_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_privacy_settings: {
         Row: {
           field_key: string
@@ -3541,6 +3934,57 @@ export type Database = {
         }
         Returns: string
       }
+      svc_claim_deliveries: {
+        Args: { p_lease_seconds: number; p_limit: number }
+        Returns: {
+          attempts: number
+          body: string
+          channel: Database["public"]["Enums"]["notification_channel"]
+          created_at: string
+          id: string
+          last_error: string | null
+          locked_until: string | null
+          next_attempt_at: string
+          notification_id: string
+          provider_message_id: string | null
+          sent_at: string | null
+          source_event_id: string
+          status: Database["public"]["Enums"]["notification_delivery_status"]
+          subject: string | null
+          updated_at: string
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "notification_deliveries"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      svc_claim_outbox_events: {
+        Args: { p_lease_seconds: number; p_limit: number }
+        Returns: {
+          aggregate_id: string
+          aggregate_type: string
+          attempts: number
+          dead_at: string | null
+          event_type: string
+          id: string
+          last_error: string | null
+          locked_until: string | null
+          next_attempt_at: string | null
+          occurred_at: string
+          organization_id: string | null
+          payload: Json
+          published_at: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "outbox_events"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       svc_commit_competition: {
         Args: { p_actor: string; p_change: Json; p_tournament_id: string }
         Returns: undefined
@@ -3583,6 +4027,19 @@ export type Database = {
         Args: { p_actor: string; p_reason: string; p_team_id: string }
         Returns: undefined
       }
+      svc_enqueue_notifications: {
+        Args: { p_event_id: string; p_items: Json }
+        Returns: number
+      }
+      svc_fail_outbox_event: {
+        Args: {
+          p_dead: boolean
+          p_error: string
+          p_event_id: string
+          p_next_attempt_at: string
+        }
+        Returns: undefined
+      }
       svc_link_riot_account: {
         Args: {
           p_attempt_id: string
@@ -3611,6 +4068,39 @@ export type Database = {
       }
       svc_replace_social_links: {
         Args: { p_links: Json; p_user_id: string }
+        Returns: undefined
+      }
+      svc_reset_notification_template: {
+        Args: {
+          p_actor: string
+          p_channel: Database["public"]["Enums"]["notification_channel"]
+          p_locale: string
+          p_organization_id: string
+          p_type_key: string
+        }
+        Returns: undefined
+      }
+      svc_save_notification_rule: {
+        Args: {
+          p_actor: string
+          p_channels: Database["public"]["Enums"]["notification_channel"][]
+          p_enabled: boolean
+          p_organization_id: string
+          p_type_key: string
+        }
+        Returns: undefined
+      }
+      svc_save_notification_template: {
+        Args: {
+          p_actor: string
+          p_body: string
+          p_channel: Database["public"]["Enums"]["notification_channel"]
+          p_locale: string
+          p_organization_id: string
+          p_subject: string
+          p_type_key: string
+          p_variables: string[]
+        }
         Returns: undefined
       }
       svc_save_rulebook_draft: {
@@ -3726,6 +4216,15 @@ export type Database = {
         | "forfeit"
         | "canceled"
       member_status: "invited" | "active" | "removed"
+      notification_category:
+        | "tournaments"
+        | "matches"
+        | "team"
+        | "staff"
+        | "announcements"
+        | "marketing"
+      notification_channel: "in_app" | "email" | "discord" | "push"
+      notification_delivery_status: "queued" | "sent" | "delivered" | "failed"
       organization_status: "active" | "suspended"
       participant_policy: "independent_only" | "clubs_only" | "mixed"
       phase_entrant_status: "active" | "eliminated" | "advanced"
@@ -3753,6 +4252,7 @@ export type Database = {
         | "voucher"
         | "prestige"
         | "custom"
+      push_platform: "web" | "ios" | "android"
       rank_queue: "solo" | "flex"
       reschedule_status:
         | "pending"
@@ -4013,6 +4513,16 @@ export const Constants = {
         "canceled",
       ],
       member_status: ["invited", "active", "removed"],
+      notification_category: [
+        "tournaments",
+        "matches",
+        "team",
+        "staff",
+        "announcements",
+        "marketing",
+      ],
+      notification_channel: ["in_app", "email", "discord", "push"],
+      notification_delivery_status: ["queued", "sent", "delivered", "failed"],
       organization_status: ["active", "suspended"],
       participant_policy: ["independent_only", "clubs_only", "mixed"],
       phase_entrant_status: ["active", "eliminated", "advanced"],
@@ -4042,6 +4552,7 @@ export const Constants = {
         "prestige",
         "custom",
       ],
+      push_platform: ["web", "ios", "android"],
       rank_queue: ["solo", "flex"],
       reschedule_status: [
         "pending",

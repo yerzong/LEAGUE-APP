@@ -223,3 +223,19 @@ export {
   type PhaseEntrantStatus,
   type PhaseProgress,
 } from './competition/progress.js';
+// Notifications: channels after rules and preferences, templates, retries
+export {
+  DEFAULT_MAX_ATTEMPTS,
+  decideChannels,
+  isOptInCategory,
+  nextAttemptAt,
+  preferenceMatrix,
+  renderTemplate,
+  templateVariables,
+  type ChannelPreference,
+  type NotificationCategory,
+  type NotificationChannel,
+  type NotificationRuleDef,
+  type NotificationTypeDef,
+  type PreferenceRow,
+} from './notifications/notifications.js';

@@ -61,8 +61,14 @@ export interface SeedContext {
 }
 
 export async function openSeedContext(source: NodeJS.ProcessEnv): Promise<SeedContext> {
-  // The stub never calls Riot, and the check-in sweeper stays off in this process.
-  const env = loadEnv({ ...source, RIOT_PROVIDER: 'stub', CHECKIN_SWEEP_SECONDS: '0' });
+  // The stub never calls Riot; the check-in sweeper and the notification worker
+  // stay off in this process (the API notifies the seeded events when it starts).
+  const env = loadEnv({
+    ...source,
+    RIOT_PROVIDER: 'stub',
+    CHECKIN_SWEEP_SECONDS: '0',
+    NOTIFICATIONS_POLL_SECONDS: '0',
+  });
   const clock = new SeedClock();
   const moduleRef: TestingModule = await Test.createTestingModule({
     imports: [AppModule.register(env)],

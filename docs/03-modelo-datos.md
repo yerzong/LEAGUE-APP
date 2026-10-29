@@ -503,6 +503,9 @@ notification_deliveries
   id, notification_id, channel, status (queued|sent|delivered|failed),
   provider_message_id, attempts, last_error, sent_at
   UNIQUE (source_event_id, user_id, channel)   ← idempotencia
+  (m06: también es la cola por canal: source_event_id, user_id, subject/body
+  ya renderizados, next_attempt_at, locked_until; la dirección de correo se
+  busca al enviar, nunca se guarda)
 push_subscriptions
   id, user_id, platform (web|ios|android), endpoint/token, keys (jsonb),
   last_used_at
@@ -607,6 +610,8 @@ inbound_webhooks           (todo lo que llega: Riot callbacks, Twitch, Stripe)
 outbox_events              (eventos de dominio: patrón outbox transaccional)
   id, organization_id, aggregate_type, aggregate_id, event_type, payload,
   occurred_at, published_at null, attempts
+  (m06: next_attempt_at, locked_until, last_error, dead_at para el consumidor:
+  backoff, lease entre instancias y dead letter)
 
 jobs                       (gestionada por pg-boss en su propio schema; aquí
                             solo como referencia de lo que se monitorea)

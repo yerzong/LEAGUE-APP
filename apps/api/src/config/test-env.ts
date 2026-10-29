@@ -7,6 +7,7 @@ export function testEnv(overrides: NodeJS.ProcessEnv = {}): Env {
     SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_test',
     SUPABASE_SECRET_KEY: 'sb_secret_test',
     CHECKIN_SWEEP_SECONDS: '0',
+    NOTIFICATIONS_POLL_SECONDS: '0',
     ...overrides,
   });
 }

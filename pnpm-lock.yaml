@@ -212,6 +212,9 @@ importers:
       '@league/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@league/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@league/integrations':
         specifier: workspace:*
         version: link:../../packages/integrations
