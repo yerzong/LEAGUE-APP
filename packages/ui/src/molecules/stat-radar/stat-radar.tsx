@@ -19,6 +19,7 @@ const SIZE = 240;
 const CENTER = SIZE / 2;
 const RADIUS = 80;
 const RINGS = [25, 50, 75, 100];
+const PAD = 56;
 
 const clamp = (v: number) => Math.min(100, Math.max(0, v));
 
@@ -49,9 +50,9 @@ function StatRadar({ axes, label, compare, className, ...props }: StatRadarProps
     return { x: CENTER + r * Math.cos(angle), y: CENTER + r * Math.sin(angle) };
   };
   return (
-    <figure data-slot="stat-radar" className={cn('w-full max-w-xs', className)} {...props}>
+    <figure data-slot="stat-radar" className={cn('w-full max-w-sm', className)} {...props}>
       <svg
-        viewBox={`0 0 ${String(SIZE)} ${String(SIZE)}`}
+        viewBox={`${String(-PAD)} 0 ${String(SIZE + PAD * 2)} ${String(SIZE)}`}
         role="img"
         aria-label={label}
         className="w-full"
@@ -93,7 +94,7 @@ function StatRadar({ axes, label, compare, className, ...props }: StatRadarProps
           strokeWidth={2}
         />
         {axes.map((axis, i) => {
-          const p = at(i, RADIUS + 22);
+          const p = at(i, RADIUS + 16);
           const anchor = Math.abs(p.x - CENTER) < 4 ? 'middle' : p.x > CENTER ? 'start' : 'end';
           return (
             <text

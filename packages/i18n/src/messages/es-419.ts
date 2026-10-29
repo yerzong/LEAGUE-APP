@@ -1844,7 +1844,7 @@ export const es419 = {
       checkedIn: 'Hizo check-in',
       notCheckedIn: 'Sin check-in',
       series: 'Serie {format}',
-      draftSoon: 'El draft y las estadísticas por jugador llegan con la integración de Riot.',
+      draftSoon: 'Las estadísticas por jugador aparecen cuando el game tiene datos de partida.',
       source: 'Resultado: {source}',
     },
     portal: {
@@ -2027,6 +2027,7 @@ export const es419 = {
       tournament_entrants: 'Inscritos del torneo',
       tournament_staff: 'Staff del torneo',
       opted_in: 'Quienes lo activaron',
+      followers: 'Seguidores del equipo o del torneo',
     },
     types: {
       'registration.received': 'Inscripción recibida',
@@ -2047,6 +2048,7 @@ export const es419 = {
       'tournament.published': 'Nuevo torneo publicado',
       'staff.registration_submitted': 'Nueva inscripción (staff)',
       'staff.dispute_opened': 'Disputa por revisar (staff)',
+      'follow.match_scheduled': 'Tu equipo juega (seguidores)',
     } as Record<string, string>,
     admin: {
       title: 'Notificaciones',
