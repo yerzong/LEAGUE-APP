@@ -16,3 +16,19 @@ export {
   ResendEmailAdapter,
   type ResendEmailAdapterOptions,
 } from './email/resend-email-adapter.js';
+export {
+  normalizeMatchV5,
+  type MatchV5Payload,
+  type NormalizedMatch,
+  type NormalizedParticipant,
+  type NormalizedRole,
+  type NormalizedSide,
+  type NormalizedTeam,
+} from './riot/match-v5.js';
+export {
+  DataDragonChampionCatalog,
+  StaticChampionCatalog,
+  type ChampionCatalogPort,
+  type ChampionInfo,
+  type DataDragonOptions,
+} from './riot/data-dragon.js';
