@@ -102,6 +102,20 @@ export const MatchDataSchema = z.looseObject({
 });
 export type MatchData = z.infer<typeof MatchDataSchema>;
 
+/** The games of a match and whether each has match data (staff). */
+export const MatchDataStatusSchema = z.object({
+  games: z.array(
+    z.object({
+      id: z.uuid(),
+      number: z.number().int().positive(),
+      completed: z.boolean(),
+      hasData: z.boolean(),
+      riotMatchId: z.string().nullable(),
+    }),
+  ),
+});
+export type MatchDataStatus = z.infer<typeof MatchDataStatusSchema>;
+
 export const AttachMatchDataRequestSchema = z.object({ data: MatchDataSchema });
 export type AttachMatchDataRequest = z.infer<typeof AttachMatchDataRequestSchema>;
 

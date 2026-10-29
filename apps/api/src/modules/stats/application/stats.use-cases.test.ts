@@ -15,6 +15,7 @@ import {
   AttachGameDataUseCase,
   FollowUseCase,
   GetHeadToHeadUseCase,
+  GetMatchDataStatusUseCase,
   GetMatchStatsUseCase,
   GetPlayerStatsUseCase,
   GetTeamStatsUseCase,
@@ -215,6 +216,23 @@ describe('match data uploaded by staff', () => {
     expect(draft.slice(0, 10).every((d) => d.action === 'ban')).toBe(true);
     expect(draft.map((d) => d.sequence)).toEqual(Array.from({ length: 20 }, (_, i) => i + 1));
     expect(f.stats.jobs.has('m1')).toBe(true);
+  });
+
+  it('shows staff which games have data', async () => {
+    const f = setup();
+    await new AttachGameDataUseCase(f.deps).execute(
+      STAFF,
+      'm1-g1',
+      data(PLAYERS.a, PLAYERS.b, true),
+    );
+    const status = await new GetMatchDataStatusUseCase(f.deps).execute(STAFF, 'm1');
+    expect(status.games.map((g) => [g.number, g.hasData])).toEqual([
+      [1, true],
+      [2, false],
+    ]);
+    expect(await code(new GetMatchDataStatusUseCase(f.deps).execute('a1', 'm1'))).toBe(
+      'staff_only',
+    );
   });
 
   it('takes the real sides from the rosters (Riot may swap them)', async () => {

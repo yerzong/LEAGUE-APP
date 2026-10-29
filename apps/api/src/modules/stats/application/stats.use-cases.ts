@@ -13,6 +13,7 @@ import {
   type FollowState,
   type HeadToHead,
   type LeaderStat,
+  type MatchDataStatus,
   type MatchStats,
   type PlayerMatch,
   type PlayerRef,
@@ -130,6 +131,30 @@ export class RecalculateTournamentStatsUseCase {
     await requireStaff(this.deps, actorId);
     if (!(await this.deps.stats.tournament(tournamentId))) throw notFound('tournament_not_found');
     return { matches: await this.deps.stats.requestTournament(tournamentId, actorId) };
+  }
+}
+
+export class GetMatchDataStatusUseCase {
+  constructor(private readonly deps: StatsDeps) {}
+
+  async execute(actorId: string, matchId: string): Promise<MatchDataStatus> {
+    await requireStaff(this.deps, actorId);
+    if (!(await this.deps.stats.match(matchId))) throw notFound('match_not_found');
+    const games = await this.deps.stats.games([matchId]);
+    return {
+      games: games
+        .sort((a, b) => a.number - b.number)
+        .map((g) => {
+          const data = readMatchData(g.payload);
+          return {
+            id: g.id,
+            number: g.number,
+            completed: g.status === 'completed',
+            hasData: data !== null,
+            riotMatchId: data?.matchId ?? null,
+          };
+        }),
+    };
   }
 }
 

@@ -5,6 +5,7 @@ import {
   FollowRequestSchema,
   FollowStateSchema,
   HeadToHeadSchema,
+  MatchDataStatusSchema,
   MatchStatsSchema,
   PlayerStatsSchema,
   RecalculateStatsResponseSchema,
@@ -15,6 +16,7 @@ import {
   type FollowList,
   type FollowState,
   type HeadToHead,
+  type MatchDataStatus,
   type MatchStats,
   type PlayerStats,
   type RecalculateStatsResponse,
@@ -47,6 +49,7 @@ import {
   AttachGameDataUseCase,
   FollowUseCase,
   GetHeadToHeadUseCase,
+  GetMatchDataStatusUseCase,
   GetMatchStatsUseCase,
   GetPlayerStatsUseCase,
   GetTeamStatsUseCase,
@@ -170,11 +173,20 @@ export class FollowsController {
 export class AdminStatsController {
   constructor(
     @Inject(AttachGameDataUseCase) private readonly attach: AttachGameDataUseCase,
+    @Inject(GetMatchDataStatusUseCase) private readonly dataStatus: GetMatchDataStatusUseCase,
     @Inject(RecalculateTournamentStatsUseCase)
     private readonly recalculate: RecalculateTournamentStatsUseCase,
     @Inject(ListAchievementsUseCase) private readonly achievements: ListAchievementsUseCase,
     @Inject(SaveAchievementUseCase) private readonly saveAchievement: SaveAchievementUseCase,
   ) {}
+
+  @Get('matches/:id/match-data')
+  async matchDataStatus(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id', uuid) id: string,
+  ): Promise<MatchDataStatus> {
+    return MatchDataStatusSchema.parse(await this.dataStatus.execute(user.id, id));
+  }
 
   @Put('games/:gameId/match-data')
   @HttpCode(204)
