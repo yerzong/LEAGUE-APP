@@ -188,7 +188,8 @@ export class SupabaseRecipientDirectory implements RecipientDirectory {
         .eq('followable_type', t.type)
         .eq('followable_id', t.id);
       assertNoError(followsError);
-      for (const f of data ?? []) found.push({ userId: f.follower_user_id, entrantId: t.entrantId });
+      for (const f of data ?? [])
+        found.push({ userId: f.follower_user_id, entrantId: t.entrantId });
     }
     const active = await this.activeUsers(found.map((f) => f.userId));
     return found.filter((f) => active.has(f.userId));

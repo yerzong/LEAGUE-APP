@@ -2309,7 +2309,10 @@ export const es419 = {
         title: '¿Recalcular las estadísticas del torneo?',
         description:
           'Se vuelven a derivar las estadísticas, MVP y logros de todas las partidas cerradas. Es seguro repetirlo.',
-        done: { one: 'Se recalculará {count} partida.', other: 'Se recalcularán {count} partidas.' },
+        done: {
+          one: 'Se recalculará {count} partida.',
+          other: 'Se recalcularán {count} partidas.',
+        },
       },
       achievements: {
         title: 'Logros',
