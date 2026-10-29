@@ -81,14 +81,14 @@ export type AchievementCriteria =
       readonly type: 'game';
       readonly conditions: readonly {
         readonly stat: GameStatKey;
-        readonly gte?: number;
-        readonly lte?: number;
+        readonly gte?: number | undefined;
+        readonly lte?: number | undefined;
       }[];
     }
   /** A career total (100 kills…). */
   | { readonly type: 'total'; readonly stat: TotalStatKey; readonly gte: number }
   /** Games played, or won. */
-  | { readonly type: 'games'; readonly gte: number; readonly wins?: boolean }
+  | { readonly type: 'games'; readonly gte: number; readonly wins?: boolean | undefined }
   /** Consecutive games won. */
   | { readonly type: 'win_streak'; readonly gte: number }
   /** MVP awards of a scope. */

@@ -22,6 +22,10 @@ export const EnvSchema = z
     NOTIFICATIONS_POLL_SECONDS: z.coerce.number().int().min(0).max(3600).default(5),
     // Events older than this are consumed without notifying (a stale check-in is noise).
     NOTIFICATIONS_MAX_EVENT_AGE_HOURS: z.coerce.number().int().min(1).max(720).default(48),
+    // Seconds between stats passes (closed matches → stats, MVPs, achievements); 0 turns it off.
+    STATS_POLL_SECONDS: z.coerce.number().int().min(0).max(3600).default(5),
+    // Champion names and icons: Data Dragon (static Riot assets) or a built-in list (tests, offline).
+    CHAMPIONS_PROVIDER: z.enum(['ddragon', 'static']).default('ddragon'),
     // `fake` keeps emails in memory (tests, CI, local without a key); `resend` sends them.
     EMAIL_PROVIDER: z.enum(['resend', 'fake']).default('fake'),
     RESEND_API_KEY: z.string().min(1).optional(),

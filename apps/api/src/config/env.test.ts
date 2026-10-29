@@ -20,6 +20,8 @@ describe('loadEnv', () => {
       CHECKIN_SWEEP_SECONDS: 60,
       NOTIFICATIONS_POLL_SECONDS: 5,
       NOTIFICATIONS_MAX_EVENT_AGE_HOURS: 48,
+      STATS_POLL_SECONDS: 5,
+      CHAMPIONS_PROVIDER: 'ddragon',
       EMAIL_PROVIDER: 'fake',
       ...required,
     });
