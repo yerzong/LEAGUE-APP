@@ -13,9 +13,12 @@ export const EnvSchema = z
     SUPABASE_SECRET_KEY: z.string().min(1),
     // Tenant used until requests carry their organization.
     DEFAULT_ORGANIZATION_SLUG: z.string().min(1).default('penta-league'),
-    // `stub` never calls Riot (tests, E2E, local without a key).
-    RIOT_PROVIDER: z.enum(['riot', 'stub']).default('stub'),
+    // `stub` never calls Riot (tests, E2E, local without a key); `manual` runs the
+    // league with no Riot at all (results entered by hand — the golden rule).
+    RIOT_PROVIDER: z.enum(['riot', 'stub', 'manual']).default('stub'),
     RIOT_API_KEY: z.string().min(1).optional(),
+    // Shared secret Riot presents on the result callback (header x-riot-secret).
+    RIOT_CALLBACK_SECRET: z.string().min(16).optional(),
     // Seconds between check-in sweeps (open and close windows, forfeits); 0 turns it off.
     CHECKIN_SWEEP_SECONDS: z.coerce.number().int().min(0).max(3600).default(60),
     // Seconds between notification passes (outbox → notifications, queued deliveries); 0 turns it off.

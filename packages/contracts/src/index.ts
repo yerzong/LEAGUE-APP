@@ -4,6 +4,7 @@ export * from './auth/credentials.js';
 export * from './common/fields.js';
 export * from './profile/profile.js';
 export * from './riot/riot.js';
+export * from './riot/tournament.js';
 export * from './teams/teams.js';
 export * from './public/public.js';
 export * from './tournaments/config.js';
