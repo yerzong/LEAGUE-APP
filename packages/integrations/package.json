@@ -20,6 +20,10 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
+  "dependencies": {
+    "@discordjs/rest": "2.6.3",
+    "discord-api-types": "0.38.57"
+  },
   "devDependencies": {
     "@league/config": "workspace:*",
     "@types/node": "24.19.2",
