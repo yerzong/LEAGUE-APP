@@ -1279,6 +1279,119 @@ export type Database = {
           },
         ]
       }
+      inbound_webhooks: {
+        Row: {
+          error: string | null
+          event_type: string
+          id: string
+          idempotency_key: string
+          organization_id: string | null
+          payload: Json
+          processed_at: string | null
+          received_at: string
+          signature_valid: boolean
+          source: string
+          status: Database["public"]["Enums"]["inbound_webhook_status"]
+        }
+        Insert: {
+          error?: string | null
+          event_type: string
+          id?: string
+          idempotency_key: string
+          organization_id?: string | null
+          payload?: Json
+          processed_at?: string | null
+          received_at?: string
+          signature_valid?: boolean
+          source: string
+          status?: Database["public"]["Enums"]["inbound_webhook_status"]
+        }
+        Update: {
+          error?: string | null
+          event_type?: string
+          id?: string
+          idempotency_key?: string
+          organization_id?: string | null
+          payload?: Json
+          processed_at?: string | null
+          received_at?: string
+          signature_valid?: boolean
+          source?: string
+          status?: Database["public"]["Enums"]["inbound_webhook_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inbound_webhooks_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      integrity_alerts: {
+        Row: {
+          created_at: string
+          evidence: Json
+          id: string
+          notes: string | null
+          organization_id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          risk_score: number | null
+          severity: number
+          status: Database["public"]["Enums"]["integrity_alert_status"]
+          subject_id: string
+          subject_type: Database["public"]["Enums"]["subject_type"]
+          type: Database["public"]["Enums"]["integrity_alert_type"]
+        }
+        Insert: {
+          created_at?: string
+          evidence?: Json
+          id?: string
+          notes?: string | null
+          organization_id: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          risk_score?: number | null
+          severity?: number
+          status?: Database["public"]["Enums"]["integrity_alert_status"]
+          subject_id: string
+          subject_type: Database["public"]["Enums"]["subject_type"]
+          type: Database["public"]["Enums"]["integrity_alert_type"]
+        }
+        Update: {
+          created_at?: string
+          evidence?: Json
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          risk_score?: number | null
+          severity?: number
+          status?: Database["public"]["Enums"]["integrity_alert_status"]
+          subject_id?: string
+          subject_type?: Database["public"]["Enums"]["subject_type"]
+          type?: Database["public"]["Enums"]["integrity_alert_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integrity_alerts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "integrity_alerts_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       match_checkins: {
         Row: {
           checked_in_at: string
@@ -2881,6 +2994,54 @@ export type Database = {
           },
         ]
       }
+      riot_providers: {
+        Row: {
+          callback_url: string
+          created_at: string
+          created_by: string | null
+          id: string
+          organization_id: string
+          region: Database["public"]["Enums"]["game_region"]
+          riot_provider_id: number
+          status: Database["public"]["Enums"]["riot_setup_status"]
+        }
+        Insert: {
+          callback_url: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          organization_id: string
+          region: Database["public"]["Enums"]["game_region"]
+          riot_provider_id: number
+          status?: Database["public"]["Enums"]["riot_setup_status"]
+        }
+        Update: {
+          callback_url?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          organization_id?: string
+          region?: Database["public"]["Enums"]["game_region"]
+          riot_provider_id?: number
+          status?: Database["public"]["Enums"]["riot_setup_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "riot_providers_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "riot_providers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       riot_rank_snapshots: {
         Row: {
           captured_at: string
@@ -2921,6 +3082,107 @@ export type Database = {
             columns: ["riot_account_id"]
             isOneToOne: false
             referencedRelation: "riot_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      riot_tournament_codes: {
+        Row: {
+          allowed_puuids: string[]
+          code: string
+          game_id: string
+          generated_at: string
+          id: string
+          map: string
+          metadata: string
+          pick_type: string
+          riot_tournament_id: number
+          spectator_type: string
+          status: Database["public"]["Enums"]["tournament_code_status"]
+          team_size: number
+          used_at: string | null
+        }
+        Insert: {
+          allowed_puuids?: string[]
+          code: string
+          game_id: string
+          generated_at?: string
+          id?: string
+          map: string
+          metadata: string
+          pick_type: string
+          riot_tournament_id: number
+          spectator_type: string
+          status?: Database["public"]["Enums"]["tournament_code_status"]
+          team_size: number
+          used_at?: string | null
+        }
+        Update: {
+          allowed_puuids?: string[]
+          code?: string
+          game_id?: string
+          generated_at?: string
+          id?: string
+          map?: string
+          metadata?: string
+          pick_type?: string
+          riot_tournament_id?: number
+          spectator_type?: string
+          status?: Database["public"]["Enums"]["tournament_code_status"]
+          team_size?: number
+          used_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "riot_tournament_codes_game_id_fkey"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "games"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      riot_tournaments: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          riot_provider_id: string
+          riot_tournament_id: number
+          status: Database["public"]["Enums"]["riot_setup_status"]
+          tournament_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          riot_provider_id: string
+          riot_tournament_id: number
+          status?: Database["public"]["Enums"]["riot_setup_status"]
+          tournament_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          riot_provider_id?: string
+          riot_tournament_id?: number
+          status?: Database["public"]["Enums"]["riot_setup_status"]
+          tournament_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "riot_tournaments_riot_provider_id_fkey"
+            columns: ["riot_provider_id"]
+            isOneToOne: false
+            referencedRelation: "riot_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "riot_tournaments_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: true
+            referencedRelation: "tournaments"
             referencedColumns: ["id"]
           },
         ]
@@ -5063,12 +5325,65 @@ export type Database = {
         }
         Returns: string
       }
+      svc_log_inbound_webhook: {
+        Args: {
+          p_event_type: string
+          p_idempotency_key: string
+          p_organization_id: string
+          p_payload: Json
+          p_signature_valid: boolean
+          p_source: string
+        }
+        Returns: boolean
+      }
+      svc_mark_webhook: {
+        Args: {
+          p_error: string
+          p_idempotency_key: string
+          p_source: string
+          p_status: Database["public"]["Enums"]["inbound_webhook_status"]
+        }
+        Returns: undefined
+      }
+      svc_open_riot_game: {
+        Args: {
+          p_blue: string
+          p_game_number: number
+          p_match_id: string
+          p_red: string
+        }
+        Returns: string
+      }
       svc_publish_rulebook_version: {
         Args: { p_actor: string; p_tournament_id: string }
         Returns: string
       }
       svc_publish_tournament: {
         Args: { p_actor: string; p_phases: Json; p_tournament_id: string }
+        Returns: undefined
+      }
+      svc_raise_integrity_alert: {
+        Args: {
+          p_evidence: Json
+          p_organization_id: string
+          p_severity: number
+          p_subject_id: string
+          p_subject_type: Database["public"]["Enums"]["subject_type"]
+          p_type: Database["public"]["Enums"]["integrity_alert_type"]
+        }
+        Returns: string
+      }
+      svc_record_riot_game: {
+        Args: {
+          p_draft: Json
+          p_duration: number
+          p_game_id: string
+          p_participants: Json
+          p_patch: string
+          p_payload: Json
+          p_riot_match_id: string
+          p_winner: string
+        }
         Returns: undefined
       }
       svc_record_temp_channel: {
@@ -5157,6 +5472,25 @@ export type Database = {
         }
         Returns: undefined
       }
+      svc_save_riot_provider: {
+        Args: {
+          p_actor: string
+          p_callback_url: string
+          p_organization_id: string
+          p_provider_id: number
+          p_region: Database["public"]["Enums"]["game_region"]
+        }
+        Returns: string
+      }
+      svc_save_riot_tournament: {
+        Args: {
+          p_name: string
+          p_provider: string
+          p_riot_tournament_id: number
+          p_tournament_id: string
+        }
+        Returns: undefined
+      }
       svc_save_rulebook_draft: {
         Args: {
           p_actor: string
@@ -5166,6 +5500,20 @@ export type Database = {
           p_tournament_id: string
         }
         Returns: string
+      }
+      svc_save_tournament_code: {
+        Args: {
+          p_allowed_puuids: string[]
+          p_code: string
+          p_game_id: string
+          p_map: string
+          p_metadata: string
+          p_pick_type: string
+          p_riot_tournament_id: number
+          p_spectator_type: string
+          p_team_size: number
+        }
+        Returns: undefined
       }
       svc_set_discord_channel: {
         Args: {
@@ -5265,6 +5613,15 @@ export type Database = {
         | "remade"
         | "forfeit"
       gender: "woman" | "man" | "non_binary" | "prefer_not_to_say"
+      inbound_webhook_status: "received" | "processed" | "failed" | "skipped"
+      integrity_alert_status: "open" | "dismissed" | "actioned"
+      integrity_alert_type:
+        | "roster_mismatch"
+        | "smurf_suspected"
+        | "rank_violation"
+        | "riot_id_changed"
+        | "duplicate_identity"
+        | "other"
       invitation_status:
         | "pending"
         | "accepted"
@@ -5339,6 +5696,7 @@ export type Database = {
         | "admin_override"
         | "checkin_forfeit"
         | "bye"
+      riot_setup_status: "active" | "disabled"
       riot_verification_method: "rso" | "icon"
       riot_verification_status: "pending" | "verified" | "expired" | "failed"
       roster_change_action: "add" | "remove" | "swap"
@@ -5357,6 +5715,7 @@ export type Database = {
       spectator_type: "none" | "lobbyonly" | "all"
       standing_status: "qualified" | "eliminated" | "in_contention"
       stats_scope: "tournament" | "circuit" | "season" | "all_time"
+      subject_type: "user" | "team" | "entrant" | "game"
       supervision_level: "automatic" | "dual_report" | "referee" | "broadcast"
       team_kind: "permanent" | "ad_hoc"
       team_role:
@@ -5368,6 +5727,7 @@ export type Database = {
         | "manager"
       team_source: "permanent_only" | "ad_hoc_allowed" | "ad_hoc_only"
       team_status: "active" | "inactive" | "disbanded" | "banned"
+      tournament_code_status: "active" | "used" | "revoked"
       tournament_modality: "online" | "onsite" | "hybrid"
       tournament_staff_role: "manager" | "referee" | "producer" | "caster"
       tournament_status:
@@ -5569,6 +5929,16 @@ export const Constants = {
         "forfeit",
       ],
       gender: ["woman", "man", "non_binary", "prefer_not_to_say"],
+      inbound_webhook_status: ["received", "processed", "failed", "skipped"],
+      integrity_alert_status: ["open", "dismissed", "actioned"],
+      integrity_alert_type: [
+        "roster_mismatch",
+        "smurf_suspected",
+        "rank_violation",
+        "riot_id_changed",
+        "duplicate_identity",
+        "other",
+      ],
       invitation_status: [
         "pending",
         "accepted",
@@ -5650,6 +6020,7 @@ export const Constants = {
         "checkin_forfeit",
         "bye",
       ],
+      riot_setup_status: ["active", "disabled"],
       riot_verification_method: ["rso", "icon"],
       riot_verification_status: ["pending", "verified", "expired", "failed"],
       roster_change_action: ["add", "remove", "swap"],
@@ -5669,6 +6040,7 @@ export const Constants = {
       spectator_type: ["none", "lobbyonly", "all"],
       standing_status: ["qualified", "eliminated", "in_contention"],
       stats_scope: ["tournament", "circuit", "season", "all_time"],
+      subject_type: ["user", "team", "entrant", "game"],
       supervision_level: ["automatic", "dual_report", "referee", "broadcast"],
       team_kind: ["permanent", "ad_hoc"],
       team_role: [
@@ -5681,6 +6053,7 @@ export const Constants = {
       ],
       team_source: ["permanent_only", "ad_hoc_allowed", "ad_hoc_only"],
       team_status: ["active", "inactive", "disbanded", "banned"],
+      tournament_code_status: ["active", "used", "revoked"],
       tournament_modality: ["online", "onsite", "hybrid"],
       tournament_staff_role: ["manager", "referee", "producer", "caster"],
       tournament_status: [
