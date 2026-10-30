@@ -133,6 +133,28 @@ PC del observador (Windows, cliente LoL como espectador en el lobby)
   como referencia antes de construir el agente propio.
 - **Validar en prototipo** qué datos exactos expone el modo espectador.
 
+### Visión de producto del stream (el diferenciador vendible)
+
+El valor no es el overlay en sí, es el **cero configuración** para el caster:
+la plataforma YA sabe quién juega, con qué logo, qué stats y cómo va en la tabla.
+El caster solo elige el partido y pega **un enlace** en OBS; todo se llena solo.
+Esto resuelve el dolor real de las ligas amateur (logos a mano, nombres con
+errores, pelearse con puertos locales) y es la base del SaaS en marca blanca.
+
+Producción **descentralizada**: el que espectea la partida, el que transmite en
+OBS y el que controla las gráficas pueden ser tres personas en tres lugares,
+conectadas por el canal en tiempo real de la plataforma. Detalle y arquitectura
+en `docs/specs/m10a-overlays-estudio.md` y `docs/specs/m10b-agente-observador.md`.
+
+Funciones diferenciadoras (ninguna liga amateur las tiene juntas):
+1. **Lower-thirds automáticos con stats históricas** al hacer lock-in de un
+   campeón (sale de la DB de la liga, sin que el caster escriba nada).
+2. **Memoria de Fearless** automática entre games de una serie (el motor ya
+   calcula los bloqueos).
+3. **Cambio de escena en OBS** automático según el estado del juego (obs-websocket).
+4. **Votación de MVP por QR** en pantalla, en vivo.
+5. **Slots de patrocinadores dinámicos** (logo en el timer de barón, etc.).
+
 ### Overlays con diseño personalizado
 - Cada overlay es una página web con **temas** (tokens del design system):
   la organización cambia colores, logo y tipografías sin tocar código.
