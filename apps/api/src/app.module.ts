@@ -2,6 +2,7 @@ import { type DynamicModule, Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 
 import { ENV, type Env } from './config/env.js';
+import { DiscordModule } from './modules/discord/discord.module.js';
 import { HealthModule } from './modules/health/health.module.js';
 import { AuthModule } from './modules/identity/auth.module.js';
 import { IdentityModule } from './modules/identity/identity.module.js';
@@ -38,6 +39,7 @@ export class AppModule {
         StandingsModule,
         StatsModule,
         PublicSiteModule,
+        DiscordModule,
         NotificationsModule,
       ],
       providers: [
