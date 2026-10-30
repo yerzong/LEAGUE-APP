@@ -9,6 +9,7 @@ import { IdentityModule } from './modules/identity/identity.module.js';
 import { MatchesModule } from './modules/matches/matches.module.js';
 import { NotificationsModule } from './modules/notifications/notifications.module.js';
 import { PublicSiteModule } from './modules/public-site/public-site.module.js';
+import { RiotModule } from './modules/riot/riot.module.js';
 import { SchedulingModule } from './modules/scheduling/scheduling.module.js';
 import { StandingsModule } from './modules/standings/standings.module.js';
 import { StatsModule } from './modules/stats/stats.module.js';
@@ -41,6 +42,7 @@ export class AppModule {
         PublicSiteModule,
         DiscordModule,
         NotificationsModule,
+        RiotModule,
       ],
       providers: [
         { provide: ENV, useValue: env },

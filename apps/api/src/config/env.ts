@@ -19,6 +19,8 @@ export const EnvSchema = z
     RIOT_API_KEY: z.string().min(1).optional(),
     // Shared secret Riot presents on the result callback (header x-riot-secret).
     RIOT_CALLBACK_SECRET: z.string().min(16).optional(),
+    // Public URL Riot posts result callbacks to; defaults under WEB_ORIGIN.
+    RIOT_CALLBACK_URL: z.url().optional(),
     // Seconds between check-in sweeps (open and close windows, forfeits); 0 turns it off.
     CHECKIN_SWEEP_SECONDS: z.coerce.number().int().min(0).max(3600).default(60),
     // Seconds between notification passes (outbox → notifications, queued deliveries); 0 turns it off.
