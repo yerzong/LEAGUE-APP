@@ -257,7 +257,7 @@ test('staff uploads the match data of the final and the stats appear', async ({ 
   });
 
   await signIn(page, staff, `/admin/torneos/${tournamentId}/partidas/${final.id}`);
-  await expect(page.getByText('Datos de partida')).toBeVisible();
+  await expect(page.getByText('Datos de partida', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Cargar datos' }).click();
   await page.getByLabel('JSON de Match-V5').fill(JSON.stringify(data));
   await page.getByRole('button', { name: 'Guardar datos' }).click();
