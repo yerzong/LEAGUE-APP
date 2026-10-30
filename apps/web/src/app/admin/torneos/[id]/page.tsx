@@ -101,6 +101,9 @@ export default async function TournamentTrackingPage({
               <Button asChild variant="secondary">
                 <Link href={`/admin/torneos/${data.id}/editar`}>{tr.edit}</Link>
               </Button>
+              <Button asChild variant="secondary">
+                <Link href={`/admin/torneos/${data.id}/riot`}>{messages.riotTournament.title}</Link>
+              </Button>
               {['in_progress', 'completed'].includes(data.status) && (
                 <RecalculateStatsButton tournamentId={data.id} />
               )}

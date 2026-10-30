@@ -2174,6 +2174,56 @@ export const es419 = {
       list: '/proximo · /tabla · /perfil · /equipo · /checkin · /vincular',
     },
   },
+  riotTournament: {
+    title: 'Integración con Riot',
+    description:
+      'Códigos de torneo y resultados automáticos (Tournament-V5). La liga opera igual sin Riot.',
+    connect: 'Conectar con Riot',
+    connected: 'Torneo conectado con Riot.',
+    status: {
+      connected: 'Conectado',
+      disconnected: 'Sin conectar',
+      live: 'Riot en vivo',
+      stub: 'Modo stub (sin Riot real)',
+      manual: 'Modo manual (sin Riot)',
+      notAutomatic: 'El torneo no está en modo automático',
+      alerts: '{count} alertas de integridad',
+    },
+    stats: {
+      tournamentId: 'ID de torneo Riot',
+      region: 'Región',
+      generated: 'Códigos generados',
+      used: 'Códigos usados',
+    },
+    callbacks: {
+      title: 'Callbacks recientes',
+      statuses: {
+        received: 'Recibido',
+        processed: 'Procesado',
+        failed: 'Falló',
+        skipped: 'Ignorado',
+      },
+    },
+    codes: {
+      none: 'No hay partidas para generar códigos.',
+      noneYet: 'Sin código todavía.',
+      generate: 'Generar código',
+      regenerate: 'Regenerar',
+      generated: 'Código generado.',
+      statuses: {
+        active: 'Activo',
+        used: 'Usado',
+        revoked: 'Revocado',
+      },
+    },
+    captain: {
+      title: 'Código de torneo',
+      help: 'Pega este código en el cliente de League para crear la sala personalizada.',
+      game: 'Game {n}',
+      copy: 'Copiar',
+      copied: 'Código copiado.',
+    },
+  },
   stats: {
     server: {
       unknownChampion: 'Campeón {id}',

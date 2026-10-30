@@ -8,6 +8,8 @@ import { getMatch } from '@/features/competition/api';
 import { LiveRefresh } from '@/features/competition/components/live-refresh';
 import { MatchCenter } from '@/features/competition/components/match-center';
 import { MatchHeader, MatchRecords } from '@/features/competition/components/match-header';
+import { getMyMatchCodes } from '@/features/riot-tournament/api';
+import { CaptainCodeCard } from '@/features/riot-tournament/components/captain-code-card';
 import { LoadError } from '@/features/shell/load-error';
 import { renderRouterLink } from '@/lib/ui/router-link';
 
@@ -23,6 +25,7 @@ export default async function MatchCenterPage({ params }: PageProps<'/app/partid
     return <LoadError code={result.code} />;
   }
   const match = result.data;
+  const codes = await getMyMatchCodes(id);
   const title = format(c.detail.title, {
     a: match.entrantA?.displayName ?? c.slot.tbd,
     b: match.entrantB?.displayName ?? c.slot.tbd,
@@ -41,6 +44,7 @@ export default async function MatchCenterPage({ params }: PageProps<'/app/partid
         actions={<LiveRefresh tournamentId={match.tournament.id} />}
       />
       <MatchHeader match={match} />
+      {codes.ok && <CaptainCodeCard codes={codes.data} />}
       <MatchCenter match={match} />
       {match.permissions && <MatchRecords match={match} />}
     </div>
