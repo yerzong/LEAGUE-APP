@@ -63,3 +63,21 @@ export {
   type SentChannelMessage,
   type SentDirectMessage,
 } from './discord/fake-discord-adapter.js';
+export type {
+  GenerateCodesParams,
+  MatchDataPort,
+  TeamSize,
+  TournamentCallback,
+  TournamentMapType,
+  TournamentPickType,
+  TournamentProviderPort,
+  TournamentSpectatorType,
+} from './riot/tournament-ports.js';
+export {
+  RiotTournamentAdapter,
+  type RiotTournamentAdapterOptions,
+} from './riot/riot-tournament-adapter.js';
+export {
+  RiotStubTournamentAdapter,
+  type StubTournamentOptions,
+} from './riot/stub-tournament-adapter.js';
