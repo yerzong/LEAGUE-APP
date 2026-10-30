@@ -9,6 +9,7 @@ export function testEnv(overrides: NodeJS.ProcessEnv = {}): Env {
     CHECKIN_SWEEP_SECONDS: '0',
     NOTIFICATIONS_POLL_SECONDS: '0',
     STATS_POLL_SECONDS: '0',
+    DISCORD_POLL_SECONDS: '0',
     CHAMPIONS_PROVIDER: 'static',
     ...overrides,
   });

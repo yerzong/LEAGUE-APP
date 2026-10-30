@@ -93,5 +93,6 @@ import { PublicController } from './presentation/public.controller.js';
       useFactory: (d: PublicPagesDeps) => new ListPublicPlayersUseCase(d),
     },
   ],
+  exports: [GetPublicPlayerUseCase, GetPublicTeamUseCase],
 })
 export class PublicSiteModule {}

@@ -1,0 +1,8 @@
+rules:
+  - capability: shell
+    effect: allow
+    match:
+      - git *
+      - gh *
+      - pnpm *
+      - supabase *

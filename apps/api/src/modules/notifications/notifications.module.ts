@@ -10,11 +10,12 @@ import { IdentityModule } from '../identity/identity.module.js';
 import { NOTIFICATIONS_DEPS, type NotificationsDeps } from './application/deps.js';
 import * as UseCases from './application/notifications.use-cases.js';
 import {
-  DiscordChannelAdapter,
   EmailChannelAdapter,
   InAppChannelAdapter,
   PushChannelAdapter,
 } from './infrastructure/channels.js';
+import { DiscordModule, DISCORD_NOTIFICATION_CHANNEL } from '../discord/discord.module.js';
+import type { NotificationChannelPort } from './application/ports.js';
 import { NotificationWorker } from './infrastructure/notification-worker.js';
 import { SupabaseNotificationRepository } from './infrastructure/supabase-notification-repository.js';
 import { SupabaseRecipientDirectory } from './infrastructure/supabase-recipient-directory.js';
@@ -34,7 +35,7 @@ const useCaseProviders: Provider[] = Object.values(UseCases).map((UseCase) => ({
 }));
 
 @Module({
-  imports: [IdentityModule],
+  imports: [IdentityModule, DiscordModule],
   controllers: [NotificationsController, AdminNotificationsController],
   providers: [
     {
@@ -47,10 +48,19 @@ const useCaseProviders: Provider[] = Object.values(UseCases).map((UseCase) => ({
     },
     {
       provide: NOTIFICATIONS_DEPS,
-      inject: [SUPABASE_ADMIN, EMAIL_PORT, ProfileQueries, CURRENT_ORGANIZATION, CLOCK, ENV],
+      inject: [
+        SUPABASE_ADMIN,
+        EMAIL_PORT,
+        DISCORD_NOTIFICATION_CHANNEL,
+        ProfileQueries,
+        CURRENT_ORGANIZATION,
+        CLOCK,
+        ENV,
+      ],
       useFactory: (
         db: AdminClient,
         email: EmailPort,
+        discordChannel: NotificationChannelPort,
         profiles: ProfileQueries,
         organization: CurrentOrganization,
         clock: Clock,
@@ -68,7 +78,7 @@ const useCaseProviders: Provider[] = Object.values(UseCases).map((UseCase) => ({
               organizationName: (id) => directory.organizationName(id),
               webOrigin: env.WEB_ORIGIN,
             }),
-            new DiscordChannelAdapter(),
+            discordChannel,
             new PushChannelAdapter(),
           ],
           staff: profiles,

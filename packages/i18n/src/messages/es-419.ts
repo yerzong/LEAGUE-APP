@@ -403,6 +403,7 @@ export const es419 = {
       settings: 'Ajustes',
       following: 'Siguiendo',
       adminAchievements: 'Logros',
+      adminDiscord: 'Discord',
     },
   },
   common: {
@@ -2127,6 +2128,50 @@ export const es419 = {
         reason: 'El roster no cumple el rango máximo.',
         'user.name': 'Ana',
       } as Record<string, string>,
+    },
+  },
+  discord: {
+    title: 'Discord',
+    description:
+      'Conecta tu servidor de Discord: avisos, check-in, canales de voz por partida y comandos.',
+    status: {
+      connected: 'Conectado a {guild}.',
+      disconnected: 'Sin servidor conectado.',
+      botReady: 'El bot está activo y puede enviar mensajes.',
+      botMissing: 'Falta el token del bot: por ahora no se envía nada a Discord.',
+    },
+    guild: {
+      heading: 'Servidor',
+      guildId: 'ID del servidor (Guild)',
+      guildName: 'Nombre (opcional)',
+      verifiedRole: 'Rol de jugador verificado (ID)',
+      help: 'El ID del servidor y los canales se copian con el modo desarrollador de Discord activado.',
+    },
+    features: {
+      heading: 'Funciones del bot',
+      checkin: 'Check-in por comando',
+      voiceChannels: 'Canales de voz temporales por partida',
+      autoRoles: 'Roles automáticos (jugador verificado)',
+      staffAlerts: 'Avisos de staff a un canal',
+      results: 'Publicar resultados',
+    },
+    channels: {
+      heading: 'Canales',
+      announcements: 'Anuncios',
+      results: 'Resultados',
+      staff: 'Staff (privado)',
+      match_voice_category: 'Categoría de voz de partidas',
+      placeholder: 'ID del canal',
+      clear: 'Quitar',
+    },
+    actions: {
+      save: 'Guardar',
+      saved: 'Configuración guardada.',
+      saveChannel: 'Guardar canal',
+    },
+    commands: {
+      heading: 'Comandos disponibles',
+      list: '/proximo · /tabla · /perfil · /equipo · /checkin · /vincular',
     },
   },
   stats: {

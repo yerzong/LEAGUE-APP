@@ -3,6 +3,7 @@ import {
   BellIcon,
   LayersIcon,
   LayoutDashboardIcon,
+  MessageSquareIcon,
   SwatchBookIcon,
   TrophyIcon,
 } from 'lucide-react';
@@ -29,6 +30,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     { href: '/admin/torneos', label: nav.adminTournaments, icon: <TrophyIcon /> },
     { href: '/admin/plantillas', label: nav.adminTemplates, icon: <LayersIcon /> },
     { href: '/admin/notificaciones', label: nav.adminNotifications, icon: <BellIcon /> },
+    { href: '/admin/discord', label: nav.adminDiscord, icon: <MessageSquareIcon /> },
     { href: '/admin/logros', label: nav.adminAchievements, icon: <AwardIcon /> },
     ...(isKitchenSinkEnabled()
       ? [{ href: '/admin/kitchen-sink', label: nav.kitchenSink, icon: <SwatchBookIcon /> }]

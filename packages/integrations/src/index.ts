@@ -32,3 +32,34 @@ export {
   type ChampionInfo,
   type DataDragonOptions,
 } from './riot/data-dragon.js';
+export {
+  DiscordError,
+  type DiscordEmbed,
+  type DiscordMessage,
+  type DiscordPort,
+  type SlashCommand,
+  type SlashCommandOption,
+  type TempVoiceChannel,
+} from './discord/ports.js';
+export {
+  DEFAULT_BRAND_COLOR,
+  nextMatchEmbed,
+  notificationMessage,
+  playerEmbed,
+  standingsEmbed,
+  teamEmbed,
+  type EmbedTheme,
+  type MatchEmbedInput,
+  type PlayerEmbedInput,
+  type StandingRow,
+  type TeamEmbedInput,
+} from './discord/embeds.js';
+export { DISCORD_COMMANDS, SLASH_COMMANDS, type DiscordCommandName } from './discord/commands.js';
+export { DiscordRestAdapter, type DiscordRestOptions } from './discord/rest-adapter.js';
+export {
+  FakeDiscordAdapter,
+  type CreatedChannel,
+  type RoleChange,
+  type SentChannelMessage,
+  type SentDirectMessage,
+} from './discord/fake-discord-adapter.js';

@@ -23,6 +23,8 @@ describe('loadEnv', () => {
       STATS_POLL_SECONDS: 5,
       CHAMPIONS_PROVIDER: 'ddragon',
       EMAIL_PROVIDER: 'fake',
+      DISCORD_PROVIDER: 'stub',
+      DISCORD_POLL_SECONDS: 30,
       ...required,
     });
   });

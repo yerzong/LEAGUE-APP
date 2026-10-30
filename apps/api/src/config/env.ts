@@ -31,6 +31,14 @@ export const EnvSchema = z
     RESEND_API_KEY: z.string().min(1).optional(),
     // `Name <address>` of a domain verified in the provider.
     EMAIL_FROM: z.string().min(3).optional(),
+    // `bot` sends Discord DMs/messages and manages channels; `stub` records nothing (tests, CI, local).
+    DISCORD_PROVIDER: z.enum(['bot', 'stub']).default('stub'),
+    DISCORD_BOT_TOKEN: z.string().min(1).optional(),
+    DISCORD_CLIENT_ID: z.string().min(1).optional(),
+    // Shared secret the bot process presents to the API's /bot endpoints.
+    DISCORD_BOT_API_SECRET: z.string().min(16).optional(),
+    // Seconds between Discord voice-channel reconciliations; 0 turns it off.
+    DISCORD_POLL_SECONDS: z.coerce.number().int().min(0).max(3600).default(30),
   })
   .superRefine((env, ctx) => {
     if (env.RIOT_PROVIDER === 'riot' && !env.RIOT_API_KEY) {
@@ -62,6 +70,19 @@ export const EnvSchema = z
         path: ['RIOT_PROVIDER'],
         message: 'the stub is not allowed in production',
       });
+    }
+    if (env.DISCORD_PROVIDER === 'bot') {
+      for (const name of [
+        'DISCORD_BOT_TOKEN',
+        'DISCORD_CLIENT_ID',
+        'DISCORD_BOT_API_SECRET',
+      ] as const)
+        if (!env[name])
+          ctx.addIssue({
+            code: 'custom',
+            path: [name],
+            message: 'required when DISCORD_PROVIDER=bot',
+          });
     }
   });
 

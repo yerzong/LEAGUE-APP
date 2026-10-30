@@ -388,6 +388,151 @@ export type Database = {
           },
         ]
       }
+      discord_channel_links: {
+        Row: {
+          channel_id: string
+          created_at: string
+          guild_id: string
+          id: string
+          purpose: Database["public"]["Enums"]["discord_channel_purpose"]
+          tournament_id: string | null
+        }
+        Insert: {
+          channel_id: string
+          created_at?: string
+          guild_id: string
+          id?: string
+          purpose: Database["public"]["Enums"]["discord_channel_purpose"]
+          tournament_id?: string | null
+        }
+        Update: {
+          channel_id?: string
+          created_at?: string
+          guild_id?: string
+          id?: string
+          purpose?: Database["public"]["Enums"]["discord_channel_purpose"]
+          tournament_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discord_channel_links_guild_id_fkey"
+            columns: ["guild_id"]
+            isOneToOne: false
+            referencedRelation: "discord_guilds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discord_channel_links_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      discord_guilds: {
+        Row: {
+          created_at: string
+          guild_id: string
+          id: string
+          installed_by: string | null
+          is_active: boolean
+          name: string | null
+          organization_id: string
+          settings: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          guild_id: string
+          id?: string
+          installed_by?: string | null
+          is_active?: boolean
+          name?: string | null
+          organization_id: string
+          settings?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          guild_id?: string
+          id?: string
+          installed_by?: string | null
+          is_active?: boolean
+          name?: string | null
+          organization_id?: string
+          settings?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discord_guilds_installed_by_fkey"
+            columns: ["installed_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discord_guilds_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      discord_temp_channels: {
+        Row: {
+          channel_id: string
+          created_at: string
+          deleted_at: string | null
+          entrant_id: string | null
+          guild_id: string
+          id: string
+          match_id: string
+        }
+        Insert: {
+          channel_id: string
+          created_at?: string
+          deleted_at?: string | null
+          entrant_id?: string | null
+          guild_id: string
+          id?: string
+          match_id: string
+        }
+        Update: {
+          channel_id?: string
+          created_at?: string
+          deleted_at?: string | null
+          entrant_id?: string | null
+          guild_id?: string
+          id?: string
+          match_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discord_temp_channels_entrant_id_fkey"
+            columns: ["entrant_id"]
+            isOneToOne: false
+            referencedRelation: "entrants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discord_temp_channels_guild_id_fkey"
+            columns: ["guild_id"]
+            isOneToOne: false
+            referencedRelation: "discord_guilds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discord_temp_channels_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dispute_evidence: {
         Row: {
           added_by: string
@@ -4440,6 +4585,35 @@ export type Database = {
           },
         ]
       }
+      user_discord_links: {
+        Row: {
+          discord_user_id: string
+          discord_username: string | null
+          linked_at: string
+          user_id: string
+        }
+        Insert: {
+          discord_user_id: string
+          discord_username?: string | null
+          linked_at?: string
+          user_id: string
+        }
+        Update: {
+          discord_user_id?: string
+          discord_username?: string | null
+          linked_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_discord_links_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_notification_preferences: {
         Row: {
           category: Database["public"]["Enums"]["notification_category"]
@@ -4804,6 +4978,10 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      svc_close_temp_channels: {
+        Args: { p_match_id: string }
+        Returns: string[]
+      }
       svc_commit_competition: {
         Args: { p_actor: string; p_change: Json; p_tournament_id: string }
         Returns: undefined
@@ -4868,6 +5046,14 @@ export type Database = {
         }
         Returns: undefined
       }
+      svc_link_discord_user: {
+        Args: {
+          p_discord_user_id: string
+          p_discord_username: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
       svc_link_riot_account: {
         Args: {
           p_attempt_id: string
@@ -4883,6 +5069,15 @@ export type Database = {
       }
       svc_publish_tournament: {
         Args: { p_actor: string; p_phases: Json; p_tournament_id: string }
+        Returns: undefined
+      }
+      svc_record_temp_channel: {
+        Args: {
+          p_channel_id: string
+          p_entrant_id: string
+          p_guild_id: string
+          p_match_id: string
+        }
         Returns: undefined
       }
       svc_register_entrant: {
@@ -4925,6 +5120,16 @@ export type Database = {
         }
         Returns: undefined
       }
+      svc_save_discord_guild: {
+        Args: {
+          p_actor: string
+          p_guild_id: string
+          p_name: string
+          p_organization_id: string
+          p_settings: Json
+        }
+        Returns: string
+      }
       svc_save_match_stats: {
         Args: { p_data: Json; p_match_id: string; p_requested_at: string }
         Returns: number
@@ -4961,6 +5166,16 @@ export type Database = {
           p_tournament_id: string
         }
         Returns: string
+      }
+      svc_set_discord_channel: {
+        Args: {
+          p_actor: string
+          p_channel_id: string
+          p_organization_id: string
+          p_purpose: Database["public"]["Enums"]["discord_channel_purpose"]
+          p_tournament_id: string
+        }
+        Returns: undefined
       }
       svc_set_seeds: {
         Args: {
@@ -5014,6 +5229,11 @@ export type Database = {
       club_role: "owner" | "manager" | "coach" | "analyst"
       club_status: "pending" | "active" | "inactive" | "banned"
       costream_policy: "disabled" | "registered_creators" | "approval_required"
+      discord_channel_purpose:
+        | "announcements"
+        | "results"
+        | "staff"
+        | "match_voice_category"
       dispute_category:
         | "result"
         | "conduct"
@@ -5309,6 +5529,12 @@ export const Constants = {
       club_role: ["owner", "manager", "coach", "analyst"],
       club_status: ["pending", "active", "inactive", "banned"],
       costream_policy: ["disabled", "registered_creators", "approval_required"],
+      discord_channel_purpose: [
+        "announcements",
+        "results",
+        "staff",
+        "match_voice_category",
+      ],
       dispute_category: [
         "result",
         "conduct",
