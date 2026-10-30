@@ -22,6 +22,9 @@ import { getSessionUser } from '@/features/auth/session';
 import { LoadError } from '@/features/shell/load-error';
 import { PageContainer } from '@/features/site/components/page-container';
 import { pageMetadata } from '@/features/site/metadata';
+import { getTeamStats } from '@/features/stats/api';
+import { FollowButton } from '@/features/stats/components/follow-button';
+import { TeamStatsView } from '@/features/stats/components/team-stats';
 import { getPublicTeam } from '@/features/teams/api';
 import { JoinRequestButton } from '@/features/teams/components/join-request-button';
 import { formatDate, initials } from '@/lib/ui/dates';
@@ -51,7 +54,11 @@ export async function generateMetadata({
 
 export default async function PublicTeamPage({ params }: PageProps<'/equipos/[slug]'>) {
   const { slug } = await params;
-  const [team, viewer] = await Promise.all([loadTeam(slug), getSessionUser()]);
+  const [team, viewer, stats] = await Promise.all([
+    loadTeam(slug),
+    getSessionUser(),
+    getTeamStats(slug),
+  ]);
   if (!team.ok) {
     if (team.code === 'team_not_found' || team.code === 'validation_failed') notFound();
     return <LoadError code={team.code} />;
@@ -82,15 +89,26 @@ export default async function PublicTeamPage({ params }: PageProps<'/equipos/[sl
           description={data.description ?? undefined}
           actions={
             active ? (
-              viewer ? (
-                <JoinRequestButton teamId={data.id} teamName={data.name} />
-              ) : (
-                <Button asChild variant="secondary">
-                  <Link href={loginPath(`/equipos/${data.slug}`)}>
-                    {messages.joinRequest.loginToRequest}
-                  </Link>
-                </Button>
-              )
+              <div className="flex flex-wrap items-center gap-3">
+                {stats.ok && (
+                  <FollowButton
+                    type="team"
+                    targetKey={data.slug}
+                    name={data.name}
+                    initial={stats.data.follow}
+                    loginHref={viewer ? undefined : loginPath(`/equipos/${data.slug}`)}
+                  />
+                )}
+                {viewer ? (
+                  <JoinRequestButton teamId={data.id} teamName={data.name} />
+                ) : (
+                  <Button asChild variant="secondary">
+                    <Link href={loginPath(`/equipos/${data.slug}`)}>
+                      {messages.joinRequest.loginToRequest}
+                    </Link>
+                  </Button>
+                )}
+              </div>
             ) : undefined
           }
         />
@@ -102,6 +120,8 @@ export default async function PublicTeamPage({ params }: PageProps<'/equipos/[sl
         <Badge variant="blue">{format(t.since, { date: formatDate(data.createdAt) })}</Badge>
         {!active && <Badge variant="danger">{t.disbanded}</Badge>}
       </div>
+
+      {stats.ok && <TeamStatsView stats={stats.data} teamSlug={data.slug} />}
 
       <section className="flex flex-col gap-4">
         <h2 className="caps text-sm text-text-muted">{t.roster}</h2>

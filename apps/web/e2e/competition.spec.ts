@@ -6,10 +6,12 @@ import {
   deleteAccounts,
   deleteTournaments,
   hasDatabase,
+  puuidOf,
   runId,
   staffAccount,
   type TestAccount,
 } from './support/accounts';
+import { demoMatchData } from '../../api/src/dev/seed/match-data';
 import { signIn } from './support/sign-in';
 
 // docs/specs/m05: a flash tournament of four teams played to the champion.
@@ -22,6 +24,8 @@ test.skip(!hasDatabase, 'Needs SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY and SUPABA
 interface Captain extends TestAccount {
   team: string;
   teamId: string;
+  teamSlug: string;
+  username: string;
 }
 
 const accounts: TestAccount[] = [];
@@ -80,8 +84,14 @@ test.beforeAll(async () => {
       tag: `C${String(i)}${runId.slice(-2).toUpperCase()}`.replace(/[^A-Z0-9]/g, 'X'),
       region: 'la1',
       description: '',
-    })) as { id: string };
-    captains.push({ ...account, team: teamName(i), teamId: team.id });
+    })) as { id: string; slug: string };
+    captains.push({
+      ...account,
+      team: teamName(i),
+      teamId: team.id,
+      teamSlug: team.slug,
+      username: `capi${String(i)}_${runId}`,
+    });
   }
 
   const contracts = await import('@league/contracts');
@@ -230,4 +240,68 @@ test('the public page shows the bracket and the champion live', async ({ page })
   await expect(page.getByText('Campeón', { exact: true })).toBeVisible({ timeout: 20_000 });
   await expect(page.getByText(final.entrantA.displayName).first()).toBeVisible();
   await expect(page.getByText('Finalizado').first()).toBeVisible();
+});
+
+test('staff uploads the match data of the final and the stats appear', async ({ page }) => {
+  const final = (await board()).find((m) => m.round === 2);
+  if (!final?.entrantA || !final.entrantB) throw new Error('final not played');
+  const a = captainOf(final.entrantA.displayName);
+  const b = captainOf(final.entrantB.displayName);
+  // A fictional Match-V5 game: A (the champion) on blue, B on red.
+  const data = demoMatchData({
+    key: `e2e-${runId}`,
+    blue: [await puuidOf(a.id)],
+    red: [await puuidOf(b.id)],
+    blueWins: true,
+    endedAt: new Date(),
+  });
+
+  await signIn(page, staff, `/admin/torneos/${tournamentId}/partidas/${final.id}`);
+  await expect(page.getByText('Datos de partida', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Cargar datos' }).click();
+  await page.getByLabel('JSON de Match-V5').fill(JSON.stringify(data));
+  await page.getByRole('button', { name: 'Guardar datos' }).click();
+  await expect(page.getByText(/Datos guardados/)).toBeVisible();
+  await expect(page.getByText('Con datos')).toBeVisible();
+
+  // The worker derives the stats in a few seconds.
+  await expect
+    .poll(
+      async () => {
+        const stats = (await api(staff, 'GET', `/public/matches/${final.id}/stats`)) as {
+          games: { hasData: boolean }[];
+        };
+        return stats.games[0]?.hasData ?? false;
+      },
+      { timeout: 30_000 },
+    )
+    .toBe(true);
+  await page.goto(`/torneos/${slug}/partidas/${final.id}`);
+  await expect(page.getByRole('heading', { name: 'Estadísticas' })).toBeVisible();
+  await expect(page.getByText('MVP', { exact: true })).toBeVisible();
+
+  await page.goto(`/jugadores/${a.username}`);
+  await expect(page.getByRole('img', { name: /^Radar de/ })).toBeVisible();
+  await expect(page.getByText('Campeones más jugados')).toBeVisible();
+});
+
+test('a player follows a team, sees it in their list and unfollows it', async ({ page }) => {
+  const fan = captains[3] as Captain;
+  const followed = captains[0] as Captain;
+  const teamSlug = followed.teamSlug;
+  await signIn(page, fan, `/equipos/${teamSlug}`);
+  await expect(page.getByText('0 seguidores')).toBeVisible();
+  await page.getByRole('button', { name: 'Seguir' }).click();
+  await expect(page.getByText('1 seguidor', { exact: true })).toBeVisible();
+
+  await page.goto('/app/siguiendo');
+  await expect(page.getByRole('link', { name: followed.team })).toBeVisible();
+  await page.getByRole('button', { name: 'Dejar de seguir' }).click();
+  await expect(page.getByText(`Dejaste de seguir a ${followed.team}.`)).toBeVisible();
+  // Who follows whom is private: another user sees only the count.
+  const other = captains[1] as Captain;
+  const state = (await api(other, 'GET', `/public/teams/${teamSlug}/stats`)) as {
+    follow: { followers: number; following: boolean };
+  };
+  expect(state.follow).toEqual({ followers: 0, following: false });
 });

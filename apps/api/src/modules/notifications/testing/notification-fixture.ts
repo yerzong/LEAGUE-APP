@@ -13,10 +13,11 @@ import type { NotificationTypeRecord, TemplateRecord } from '../domain/notificat
 import type { EventContext, RecipientDirectory, RecipientProfile } from '../application/ports.js';
 import type { OutboxEvent } from '../domain/notification.js';
 
-const MIGRATION = new URL(
-  '../../../../../../supabase/migrations/20261028090000_notifications.sql',
-  import.meta.url,
-);
+const MIGRATIONS = [
+  '20261028090000_notifications.sql',
+  // m09 adds "your team plays" for followers.
+  '20261029090000_stats_achievements_follows.sql',
+].map((file) => new URL(`../../../../../../supabase/migrations/${file}`, import.meta.url));
 
 const unquote = (text: string, escaped: boolean) => {
   const plain = text.replace(/''/g, "'");
@@ -27,7 +28,12 @@ export function migrationCatalog(): {
   types: NotificationTypeRecord[];
   templates: TemplateRecord[];
 } {
-  const sql = readFileSync(MIGRATION, 'utf8');
+  const sql = MIGRATIONS.map((url) => readFileSync(url, 'utf8'))
+    .join('\n')
+    // Later migrations spell the rows out (organization and locale first).
+    .replace(/\(null, '([a-z_.]+)', '(in_app|email)', 'es-419', /g, "('$1', '$2', ")
+    // …and close with the variables, which the fixture derives itself.
+    .replace(/',\s*'\{[a-z_.,]*\}'\)/g, "')");
   const types = [
     ...sql.matchAll(
       /\('([a-z_.]+)', '([a-z_]+)', (true|false), '\{([a-z_,]+)\}', '([a-z_]+)', (\d+)\)/g,
@@ -68,6 +74,8 @@ export class FakeRecipientDirectory implements RecipientDirectory {
   readonly approved = new Map<string, { id: string; name: string }[]>();
   readonly staff = new Map<string, string[]>();
   readonly opted = new Map<NotificationCategory, string[]>();
+  /** Followers by followed registration id, or by tournament id. */
+  readonly followers = new Map<string, string[]>();
   readonly people = new Map<string, RecipientProfile & { email: string | null }>();
 
   /** Context by aggregate id (the entrant, match or tournament the event is about). */
@@ -85,6 +93,18 @@ export class FakeRecipientDirectory implements RecipientDirectory {
 
   staffOf(tournamentId: string): Promise<string[]> {
     return Promise.resolve(this.staff.get(tournamentId) ?? []);
+  }
+
+  followersOf(
+    entrantIds: readonly string[],
+    tournamentId: string,
+  ): Promise<{ userId: string; entrantId: string | null }[]> {
+    return Promise.resolve([
+      ...entrantIds.flatMap((entrantId) =>
+        (this.followers.get(entrantId) ?? []).map((userId) => ({ userId, entrantId })),
+      ),
+      ...(this.followers.get(tournamentId) ?? []).map((userId) => ({ userId, entrantId: null })),
+    ]);
   }
 
   optedIn(category: NotificationCategory): Promise<string[]> {

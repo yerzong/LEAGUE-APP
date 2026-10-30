@@ -14,11 +14,13 @@ motor de torneos como un **producto SaaS** vendible a otros organizadores.
 
 ## Estado actual
 
-**Módulo 6: Notificaciones** (el motor consume `outbox_events` y avisa por la
-bandeja de la plataforma y por correo según las reglas de la organización y las
-preferencias de cada usuario; campana en vivo y preferencias en `/app`,
-plantillas, reglas y monitor de entregas en `/admin/notificaciones`). Antes:
-módulo 5 (partidas y standings con bracket en vivo), módulo 4
+**Módulo 9: Estadísticas y perfiles pro** (de los datos Match-V5 de cada game
+salen las stats por jugador y equipo, los agregados por torneo, temporada,
+circuito e histórico con el radar de cinco ejes, el meta de campeones, los MVP
+y los logros; perfiles de jugador con radar, campeones, evolución, logros,
+historial y head-to-head, stats de equipo y de torneo, box score por partida, y
+seguir jugadores, equipos y torneos). Antes: módulo 6 (notificaciones in-app y
+por correo), módulo 5 (partidas y standings con bracket en vivo), módulo 4
 (torneos e inscripciones), módulo 3
 (navegación y vitrina pública), módulo 2 (perfiles, cuenta de Riot y
 equipos), módulo 1 (motor de torneos en `packages/core`) y módulo 0 (monorepo,
@@ -95,6 +97,22 @@ de `/admin/notificaciones/entregas`. Los eventos con más de
 `NOTIFICATIONS_MAX_EVENT_AGE_HOURS` (48) se consumen sin avisar. Discord y push
 tienen su adaptador registrado pero no disponible.
 
+Estadísticas: al cerrarse una partida (o al llegar los datos de un game) un
+trigger la pone en `stats_jobs`; cada `STATS_POLL_SECONDS` (5 por defecto, `0`
+lo apaga) la API la toma con lease, deriva las líneas de cada game con
+`packages/core` y reescribe en una transacción todo lo que alimenta: agregados
+del jugador y del equipo por ámbito, campeones, meta del torneo, MVP de game,
+serie, jornada y torneo (este al cerrarse todas sus partidas) y logros (reglas en
+`achievements.criteria`, editables en `/admin/logros`). Recalcular es idempotente
+(`/admin/torneos/:id` → «Recalcular estadísticas»). Hasta la integración con
+Riot (m08) los datos se cargan a mano: en `/admin/torneos/:id/partidas/:matchId`
+el staff pega el JSON de Match-V5 de cada game; el ganador debe coincidir con el
+resultado registrado y los lados se toman de los PUUID de los rosters. Sin datos,
+las páginas muestran solo victorias, derrotas y marcador. Nombres e íconos de
+campeones vienen de Data Dragon (`CHAMPIONS_PROVIDER=ddragon`, en caché 12 h;
+`static` usa una lista interna, sin red). Seguir a un equipo avisa en la bandeja
+cuando se programa su partida; quién sigue a quién solo lo ve cada usuario.
+
 Partidas: la API abre y cierra el check-in sola cada `CHECKIN_SWEEP_SECONDS`
 (60 por defecto, `0` lo apaga): al cerrar, quien no hizo check-in pierde por
 W.O.; si faltan los dos, la partida queda para el staff. Los resultados se
@@ -124,7 +142,10 @@ jornadas pasadas que reproduce). `seed:reset` anonimiza en vez de borrar la
 cuenta de staff demo, porque aparece en `audit_logs` (append-only). El código
 vive en `apps/api/src/dev` y no entra al build de la API. Al encender la API, el
 worker de notificaciones convierte los eventos sembrados en las campanas de las
-cuentas demo.
+cuentas demo. En la Liga, el seed también carga datos Match-V5 ficticios en cada
+game jugado (con un pentakill) y procesa la cola de estadísticas, así que los
+perfiles, la página del torneo y las partidas ya muestran radar, campeones,
+líderes, meta y MVP.
 
 Autollenar: con `NEXT_PUBLIC_DEV_TOOLS=true` en `apps/web/.env.local` (y
 apuntando a `penta-dev`) el asistente de torneo, el perfil y crear equipo

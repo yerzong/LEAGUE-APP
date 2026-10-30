@@ -33,6 +33,9 @@ export default defineConfig({
         RIOT_PROVIDER: 'stub',
         // The bell flow waits for the worker: a short interval keeps it quick.
         NOTIFICATIONS_POLL_SECONDS: '1',
+        // Same for the stats queue; champions from the built-in list (no Data Dragon in CI).
+        STATS_POLL_SECONDS: '1',
+        CHAMPIONS_PROVIDER: 'static',
       },
     },
     {

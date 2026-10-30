@@ -10,6 +10,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { PublicSiteModule } from './modules/public-site/public-site.module.js';
 import { SchedulingModule } from './modules/scheduling/scheduling.module.js';
 import { StandingsModule } from './modules/standings/standings.module.js';
+import { StatsModule } from './modules/stats/stats.module.js';
 import { RegistrationsModule } from './modules/registrations/registrations.module.js';
 import { RiotAccountsModule } from './modules/riot-accounts/riot-accounts.module.js';
 import { TeamsModule } from './modules/teams/teams.module.js';
@@ -35,6 +36,7 @@ export class AppModule {
         MatchesModule,
         SchedulingModule,
         StandingsModule,
+        StatsModule,
         PublicSiteModule,
         NotificationsModule,
       ],

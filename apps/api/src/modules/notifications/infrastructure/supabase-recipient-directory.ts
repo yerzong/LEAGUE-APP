@@ -163,6 +163,38 @@ export class SupabaseRecipientDirectory implements RecipientDirectory {
     return [...new Set(ids)].filter((id) => active.has(id));
   }
 
+  async followersOf(
+    entrantIds: readonly string[],
+    tournamentId: string,
+  ): Promise<{ userId: string; entrantId: string | null }[]> {
+    const { data: entrants, error } = await this.db
+      .from('entrants')
+      .select('id, team_id, user_id')
+      .in('id', [...entrantIds]);
+    assertNoError(error);
+    const targets = [
+      ...(entrants ?? []).map((e) =>
+        e.team_id
+          ? { type: 'team' as const, id: e.team_id, entrantId: e.id }
+          : { type: 'user' as const, id: e.user_id ?? '', entrantId: e.id },
+      ),
+      { type: 'tournament' as const, id: tournamentId, entrantId: null },
+    ].filter((t) => t.id !== '');
+    const found: { userId: string; entrantId: string | null }[] = [];
+    for (const t of targets) {
+      const { data, error: followsError } = await this.db
+        .from('follows')
+        .select('follower_user_id')
+        .eq('followable_type', t.type)
+        .eq('followable_id', t.id);
+      assertNoError(followsError);
+      for (const f of data ?? [])
+        found.push({ userId: f.follower_user_id, entrantId: t.entrantId });
+    }
+    const active = await this.activeUsers(found.map((f) => f.userId));
+    return found.filter((f) => active.has(f.userId));
+  }
+
   async optedIn(category: NotificationCategory): Promise<string[]> {
     const { data, error } = await this.db
       .from('user_notification_preferences')

@@ -11,6 +11,8 @@ import { MatchHeader } from '@/features/competition/components/match-header';
 import { LoadError } from '@/features/shell/load-error';
 import { PageContainer } from '@/features/site/components/page-container';
 import { pageMetadata } from '@/features/site/metadata';
+import { getMatchStats } from '@/features/stats/api';
+import { MatchBoxScore } from '@/features/stats/components/match-box-score';
 import { renderRouterLink } from '@/lib/ui/router-link';
 
 const c = messages.competition;
@@ -44,7 +46,7 @@ export default async function PublicMatchPage({
   params,
 }: PageProps<'/torneos/[slug]/partidas/[id]'>) {
   const { slug, id } = await params;
-  const result = await loadMatch(id);
+  const [result, stats] = await Promise.all([loadMatch(id), getMatchStats(id)]);
   if (!result.ok) {
     if (result.code === 'match_not_found' || result.code === 'validation_failed') notFound();
     return <LoadError code={result.code} />;
@@ -70,6 +72,16 @@ export default async function PublicMatchPage({
         actions={<LiveRefresh tournamentId={match.tournament.id} />}
       />
       <MatchHeader match={match} />
+      {stats.ok && (
+        <MatchBoxScore
+          stats={stats.data}
+          names={
+            new Map(
+              [match.entrantA, match.entrantB].flatMap((e) => (e ? [[e.id, e.displayName]] : [])),
+            )
+          }
+        />
+      )}
     </PageContainer>
   );
 }

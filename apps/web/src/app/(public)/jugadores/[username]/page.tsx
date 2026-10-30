@@ -16,10 +16,15 @@ import { notFound } from 'next/navigation';
 import { cache } from 'react';
 
 import { messages } from '@/config/i18n';
+import { loginPath } from '@/features/auth/access';
+import { getSessionUser } from '@/features/auth/session';
 import { countryName } from '@/features/profile/options';
 import { LoadError } from '@/features/shell/load-error';
 import { PageContainer } from '@/features/site/components/page-container';
 import { pageMetadata } from '@/features/site/metadata';
+import { getPlayerStats } from '@/features/stats/api';
+import { FollowButton } from '@/features/stats/components/follow-button';
+import { PlayerStatsView } from '@/features/stats/components/player-stats';
 import { getPublicPlayer } from '@/features/teams/api';
 import { TeamCard } from '@/features/teams/components/team-card';
 import { initials } from '@/lib/ui/dates';
@@ -49,7 +54,11 @@ export default async function PublicPlayerPage({
 }: PageProps<'/jugadores/[username]'>) {
   const { username } = await params;
   const { equipo } = await searchParams;
-  const player = await loadPlayer(username);
+  const [player, stats, viewer] = await Promise.all([
+    loadPlayer(username),
+    getPlayerStats(username),
+    getSessionUser(),
+  ]);
   if (!player.ok) {
     if (player.code === 'player_not_found' || player.code === 'validation_failed') notFound();
     return <LoadError code={player.code} />;
@@ -86,6 +95,17 @@ export default async function PublicPlayerPage({
           eyebrow={`@${p.username}`}
           title={name}
           description={p.bio ?? undefined}
+          actions={
+            stats.ok ? (
+              <FollowButton
+                type="user"
+                targetKey={p.username}
+                name={name}
+                initial={stats.data.follow}
+                loginHref={viewer ? undefined : loginPath(`/jugadores/${p.username}`)}
+              />
+            ) : undefined
+          }
         />
       </div>
 
@@ -108,6 +128,12 @@ export default async function PublicPlayerPage({
         {p.countryCode && <Badge variant="blue">{countryName(p.countryCode)}</Badge>}
         {p.isAdult && <Badge variant="blue">{t.adult}</Badge>}
       </div>
+
+      {stats.ok ? (
+        <PlayerStatsView stats={stats.data} name={name} />
+      ) : (
+        <LoadError code={stats.code} />
+      )}
 
       <section className="flex flex-col gap-3">
         <h2 className="caps text-sm text-text-muted">{t.teams}</h2>

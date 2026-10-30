@@ -1,5 +1,6 @@
 import {
   GamepadIcon,
+  HeartIcon,
   HouseIcon,
   SearchIcon,
   SettingsIcon,
@@ -37,6 +38,7 @@ export default async function PortalLayout({ children }: { children: ReactNode }
         { href: '/app/torneos', label: nav.portalTournaments, icon: <TrophyIcon /> },
         { href: '/app/partidas', label: nav.portalMatches, icon: <SwordsIcon /> },
         { href: '/app/agente-libre', label: nav.freeAgent, icon: <SearchIcon /> },
+        { href: '/app/siguiendo', label: nav.following, icon: <HeartIcon /> },
         { href: '/app/ajustes/notificaciones', label: nav.settings, icon: <SettingsIcon /> },
       ]}
       actions={

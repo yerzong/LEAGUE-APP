@@ -26,7 +26,7 @@ export const EVENT_NOTIFICATIONS: Readonly<Record<string, readonly EventMapping[
   'tournament.published': [{ type: 'tournament.published' }],
   'tournament.rules_changed': [{ type: 'tournament.rules_changed' }],
   'tournament.scheduled': [{ type: 'tournament.schedule_published' }],
-  'match.scheduled': [{ type: 'match.scheduled' }],
+  'match.scheduled': [{ type: 'match.scheduled' }, { type: 'follow.match_scheduled' }],
   'match.rescheduled': [{ type: 'match.rescheduled' }],
   'match.checkin_opened': [{ type: 'match.checkin_open' }],
   'match.forfeited': [{ type: 'match.forfeit' }],
@@ -43,7 +43,7 @@ export function variablesOf(typeKey: string, audience: string): string[] {
   const extra =
     audience === 'entrant'
       ? ['entrant.name', 'reason']
-      : audience === 'match_parties'
+      : audience === 'match_parties' || audience === 'followers'
         ? MATCH
         : audience === 'tournament_entrants'
           ? ['entrant.name']
@@ -68,5 +68,8 @@ export function linkOf(
   if (typeKey === 'tournament.published') return `/torneos/${ids.tournamentSlug}`;
   if (typeKey === 'tournament.schedule_published') return '/app/partidas';
   if (audience === 'match_parties' && ids.matchId) return `/app/partidas/${ids.matchId}`;
+  // Followers are not parties: the public page of the match.
+  if (audience === 'followers' && ids.matchId)
+    return `/torneos/${ids.tournamentSlug}/partidas/${ids.matchId}`;
   return `/app/torneos/${ids.tournamentSlug}`;
 }

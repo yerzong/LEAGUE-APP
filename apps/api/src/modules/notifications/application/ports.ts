@@ -116,6 +116,14 @@ export interface RecipientDirectory {
   staffOf(tournamentId: string): Promise<string[]>;
   /** Users who turned on some channel of an opt-in category. */
   optedIn(category: NotificationCategory): Promise<string[]>;
+  /**
+   * Followers of the registrations (their team, or the solo player) and of the
+   * tournament (m09). `entrantId` is the followed registration, null for the tournament.
+   */
+  followersOf(
+    entrantIds: readonly string[],
+    tournamentId: string,
+  ): Promise<{ userId: string; entrantId: string | null }[]>;
   profiles(userIds: readonly string[]): Promise<Map<string, RecipientProfile>>;
   /** Where an email goes. Never logged. */
   emailOf(userId: string): Promise<string | null>;

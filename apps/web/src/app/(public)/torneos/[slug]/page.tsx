@@ -23,6 +23,9 @@ import { getSessionUser } from '@/features/auth/session';
 import { LoadError } from '@/features/shell/load-error';
 import { PageContainer } from '@/features/site/components/page-container';
 import { pageMetadata } from '@/features/site/metadata';
+import { getTournamentStats } from '@/features/stats/api';
+import { FollowButton } from '@/features/stats/components/follow-button';
+import { TournamentStatsView } from '@/features/stats/components/tournament-stats';
 import { getPublicBoard } from '@/features/competition/api';
 import { BoardView, MatchList } from '@/features/competition/components/board-view';
 import { LiveRefresh } from '@/features/competition/components/live-refresh';
@@ -63,10 +66,11 @@ export async function generateMetadata({
 
 export default async function PublicTournamentPage({ params }: PageProps<'/torneos/[slug]'>) {
   const { slug } = await params;
-  const [result, viewer, board] = await Promise.all([
+  const [result, viewer, board, stats] = await Promise.all([
     loadTournament(slug),
     getSessionUser(),
     getPublicBoard(slug),
+    getTournamentStats(slug),
   ]);
   if (!result.ok) {
     if (result.code === 'tournament_not_found' || result.code === 'validation_failed') notFound();
@@ -116,6 +120,15 @@ export default async function PublicTournamentPage({ params }: PageProps<'/torne
           actions={
             canRegister ? (
               <div className="flex flex-col items-start gap-1">
+                {stats.ok && (
+                  <FollowButton
+                    type="tournament"
+                    targetKey={tournament.slug}
+                    name={tournament.name}
+                    initial={stats.data.follow}
+                    loginHref={viewer ? undefined : loginPath(`/torneos/${tournament.slug}`)}
+                  />
+                )}
                 <Button asChild size="lg">
                   <Link href={viewer ? registerPath : loginPath(registerPath)}>
                     {t.public.register}
@@ -125,6 +138,14 @@ export default async function PublicTournamentPage({ params }: PageProps<'/torne
                   <span className="text-xs text-text-muted">{t.public.registerHint}</span>
                 )}
               </div>
+            ) : stats.ok ? (
+              <FollowButton
+                type="tournament"
+                targetKey={tournament.slug}
+                name={tournament.name}
+                initial={stats.data.follow}
+                loginHref={viewer ? undefined : loginPath(`/torneos/${tournament.slug}`)}
+              />
             ) : undefined
           }
         />
@@ -162,6 +183,7 @@ export default async function PublicTournamentPage({ params }: PageProps<'/torne
               timeZone={tournament.timezone}
             />
           </Section>
+          {stats.ok && <TournamentStatsView stats={stats.data} />}
         </>
       )}
 

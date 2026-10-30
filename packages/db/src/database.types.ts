@@ -14,6 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          created_at: string
+          criteria: Json
+          description: string
+          icon: string
+          icon_media_id: string | null
+          id: string
+          is_active: boolean
+          key: string
+          name: string
+          organization_id: string | null
+          position: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          criteria: Json
+          description: string
+          icon?: string
+          icon_media_id?: string | null
+          id?: string
+          is_active?: boolean
+          key: string
+          name: string
+          organization_id?: string | null
+          position?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          criteria?: Json
+          description?: string
+          icon?: string
+          icon_media_id?: string | null
+          id?: string
+          is_active?: boolean
+          key?: string
+          name?: string
+          organization_id?: string | null
+          position?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "achievements_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "achievements_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_logs: {
         Row: {
           action: string
@@ -76,6 +139,41 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      champion_meta_stats: {
+        Row: {
+          bans: number
+          champion_id: number
+          picks: number
+          tournament_id: string
+          updated_at: string
+          wins: number
+        }
+        Insert: {
+          bans?: number
+          champion_id: number
+          picks?: number
+          tournament_id: string
+          updated_at?: string
+          wins?: number
+        }
+        Update: {
+          bans?: number
+          champion_id?: number
+          picks?: number
+          tournament_id?: string
+          updated_at?: string
+          wins?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "champion_meta_stats_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
             referencedColumns: ["id"]
           },
         ]
@@ -697,6 +795,35 @@ export type Database = {
           },
         ]
       }
+      follows: {
+        Row: {
+          created_at: string
+          followable_id: string
+          followable_type: Database["public"]["Enums"]["followable_type"]
+          follower_user_id: string
+        }
+        Insert: {
+          created_at?: string
+          followable_id: string
+          followable_type: Database["public"]["Enums"]["followable_type"]
+          follower_user_id: string
+        }
+        Update: {
+          created_at?: string
+          followable_id?: string
+          followable_type?: Database["public"]["Enums"]["followable_type"]
+          follower_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "follows_follower_user_id_fkey"
+            columns: ["follower_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       free_agent_listings: {
         Row: {
           active_until: string
@@ -825,6 +952,57 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      game_timeline_events: {
+        Row: {
+          actor_puuid: string | null
+          created_at: string
+          game_id: string
+          id: string
+          payload: Json
+          side: Database["public"]["Enums"]["game_side"] | null
+          timestamp_ms: number | null
+          tournament_id: string
+          type: string
+        }
+        Insert: {
+          actor_puuid?: string | null
+          created_at?: string
+          game_id: string
+          id?: string
+          payload?: Json
+          side?: Database["public"]["Enums"]["game_side"] | null
+          timestamp_ms?: number | null
+          tournament_id: string
+          type: string
+        }
+        Update: {
+          actor_puuid?: string | null
+          created_at?: string
+          game_id?: string
+          id?: string
+          payload?: Json
+          side?: Database["public"]["Enums"]["game_side"] | null
+          timestamp_ms?: number | null
+          tournament_id?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_timeline_events_game_id_fkey"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "games"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_timeline_events_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
             referencedColumns: ["id"]
           },
         ]
@@ -1230,6 +1408,67 @@ export type Database = {
             columns: ["winner_entrant_id"]
             isOneToOne: false
             referencedRelation: "entrants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mvp_awards: {
+        Row: {
+          awarded_at: string
+          entrant_id: string | null
+          games: number
+          id: string
+          scope_id: string
+          scope_type: Database["public"]["Enums"]["mvp_scope"]
+          score: number
+          sponsor_placement_id: string | null
+          tournament_id: string
+          user_id: string
+        }
+        Insert: {
+          awarded_at?: string
+          entrant_id?: string | null
+          games?: number
+          id?: string
+          scope_id: string
+          scope_type: Database["public"]["Enums"]["mvp_scope"]
+          score: number
+          sponsor_placement_id?: string | null
+          tournament_id: string
+          user_id: string
+        }
+        Update: {
+          awarded_at?: string
+          entrant_id?: string | null
+          games?: number
+          id?: string
+          scope_id?: string
+          scope_type?: Database["public"]["Enums"]["mvp_scope"]
+          score?: number
+          sponsor_placement_id?: string | null
+          tournament_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mvp_awards_entrant_id_fkey"
+            columns: ["entrant_id"]
+            isOneToOne: false
+            referencedRelation: "entrants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mvp_awards_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mvp_awards_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -1852,6 +2091,292 @@ export type Database = {
             columns: ["tournament_id"]
             isOneToOne: false
             referencedRelation: "tournaments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      player_aggregate_stats: {
+        Row: {
+          assists: number
+          avg_cs_per_min: number
+          avg_damage_per_min: number
+          avg_damage_share: number
+          avg_gold_per_min: number
+          avg_kp: number
+          avg_score: number
+          avg_vision: number
+          deaths: number
+          games: number
+          id: string
+          kda: number
+          kills: number
+          mvps: number
+          radar: Json
+          scope_id: string | null
+          scope_type: Database["public"]["Enums"]["stats_scope"]
+          updated_at: string
+          user_id: string
+          wins: number
+        }
+        Insert: {
+          assists?: number
+          avg_cs_per_min: number
+          avg_damage_per_min: number
+          avg_damage_share: number
+          avg_gold_per_min: number
+          avg_kp: number
+          avg_score: number
+          avg_vision: number
+          deaths?: number
+          games: number
+          id?: string
+          kda: number
+          kills?: number
+          mvps?: number
+          radar: Json
+          scope_id?: string | null
+          scope_type: Database["public"]["Enums"]["stats_scope"]
+          updated_at?: string
+          user_id: string
+          wins: number
+        }
+        Update: {
+          assists?: number
+          avg_cs_per_min?: number
+          avg_damage_per_min?: number
+          avg_damage_share?: number
+          avg_gold_per_min?: number
+          avg_kp?: number
+          avg_score?: number
+          avg_vision?: number
+          deaths?: number
+          games?: number
+          id?: string
+          kda?: number
+          kills?: number
+          mvps?: number
+          radar?: Json
+          scope_id?: string | null
+          scope_type?: Database["public"]["Enums"]["stats_scope"]
+          updated_at?: string
+          user_id?: string
+          wins?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_aggregate_stats_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      player_champion_stats: {
+        Row: {
+          assists: number
+          champion_id: number
+          deaths: number
+          games: number
+          id: string
+          kda: number
+          kills: number
+          scope_id: string | null
+          scope_type: Database["public"]["Enums"]["stats_scope"]
+          updated_at: string
+          user_id: string
+          wins: number
+        }
+        Insert: {
+          assists?: number
+          champion_id: number
+          deaths?: number
+          games: number
+          id?: string
+          kda: number
+          kills?: number
+          scope_id?: string | null
+          scope_type: Database["public"]["Enums"]["stats_scope"]
+          updated_at?: string
+          user_id: string
+          wins: number
+        }
+        Update: {
+          assists?: number
+          champion_id?: number
+          deaths?: number
+          games?: number
+          id?: string
+          kda?: number
+          kills?: number
+          scope_id?: string | null
+          scope_type?: Database["public"]["Enums"]["stats_scope"]
+          updated_at?: string
+          user_id?: string
+          wins?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_champion_stats_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      player_game_stats: {
+        Row: {
+          assists: number
+          champion_id: number
+          created_at: string
+          cs: number
+          cs_per_min: number
+          damage_per_min: number
+          damage_share: number
+          damage_taken: number
+          damage_to_champions: number
+          deaths: number
+          duration_seconds: number
+          entrant_id: string
+          first_blood: boolean
+          game_id: string
+          game_role: Database["public"]["Enums"]["player_role"] | null
+          gold: number
+          gold_per_min: number
+          id: string
+          is_mvp: boolean
+          items: Json
+          kda: number
+          kill_participation: number
+          kills: number
+          match_id: string
+          objectives: Json
+          played_at: string
+          puuid: string
+          runes: Json
+          score: number
+          side: Database["public"]["Enums"]["game_side"]
+          tournament_id: string
+          user_id: string | null
+          vision_per_min: number
+          vision_score: number
+          wards_killed: number
+          wards_placed: number
+          win: boolean
+        }
+        Insert: {
+          assists: number
+          champion_id: number
+          created_at?: string
+          cs: number
+          cs_per_min: number
+          damage_per_min: number
+          damage_share: number
+          damage_taken: number
+          damage_to_champions: number
+          deaths: number
+          duration_seconds: number
+          entrant_id: string
+          first_blood?: boolean
+          game_id: string
+          game_role?: Database["public"]["Enums"]["player_role"] | null
+          gold: number
+          gold_per_min: number
+          id?: string
+          is_mvp?: boolean
+          items?: Json
+          kda: number
+          kill_participation: number
+          kills: number
+          match_id: string
+          objectives?: Json
+          played_at: string
+          puuid: string
+          runes?: Json
+          score: number
+          side: Database["public"]["Enums"]["game_side"]
+          tournament_id: string
+          user_id?: string | null
+          vision_per_min: number
+          vision_score: number
+          wards_killed: number
+          wards_placed: number
+          win: boolean
+        }
+        Update: {
+          assists?: number
+          champion_id?: number
+          created_at?: string
+          cs?: number
+          cs_per_min?: number
+          damage_per_min?: number
+          damage_share?: number
+          damage_taken?: number
+          damage_to_champions?: number
+          deaths?: number
+          duration_seconds?: number
+          entrant_id?: string
+          first_blood?: boolean
+          game_id?: string
+          game_role?: Database["public"]["Enums"]["player_role"] | null
+          gold?: number
+          gold_per_min?: number
+          id?: string
+          is_mvp?: boolean
+          items?: Json
+          kda?: number
+          kill_participation?: number
+          kills?: number
+          match_id?: string
+          objectives?: Json
+          played_at?: string
+          puuid?: string
+          runes?: Json
+          score?: number
+          side?: Database["public"]["Enums"]["game_side"]
+          tournament_id?: string
+          user_id?: string | null
+          vision_per_min?: number
+          vision_score?: number
+          wards_killed?: number
+          wards_placed?: number
+          win?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_game_stats_entrant_id_fkey"
+            columns: ["entrant_id"]
+            isOneToOne: false
+            referencedRelation: "entrants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "player_game_stats_game_id_fkey"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "games"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "player_game_stats_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "player_game_stats_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "player_game_stats_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -2788,6 +3313,116 @@ export type Database = {
           },
         ]
       }
+      stats_jobs: {
+        Row: {
+          attempts: number
+          dead_at: string | null
+          last_error: string | null
+          locked_until: string | null
+          match_id: string
+          next_attempt_at: string | null
+          processed_at: string | null
+          requested_at: string
+          tournament_id: string
+        }
+        Insert: {
+          attempts?: number
+          dead_at?: string | null
+          last_error?: string | null
+          locked_until?: string | null
+          match_id: string
+          next_attempt_at?: string | null
+          processed_at?: string | null
+          requested_at?: string
+          tournament_id: string
+        }
+        Update: {
+          attempts?: number
+          dead_at?: string | null
+          last_error?: string | null
+          locked_until?: string | null
+          match_id?: string
+          next_attempt_at?: string | null
+          processed_at?: string | null
+          requested_at?: string
+          tournament_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stats_jobs_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: true
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stats_jobs_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      team_aggregate_stats: {
+        Row: {
+          avg_barons: number
+          avg_dragons: number
+          avg_game_duration: number
+          avg_kills: number
+          avg_towers: number
+          first_blood_rate: number
+          first_tower_rate: number
+          games: number
+          id: string
+          scope_id: string | null
+          scope_type: Database["public"]["Enums"]["stats_scope"]
+          team_id: string
+          updated_at: string
+          wins: number
+        }
+        Insert: {
+          avg_barons: number
+          avg_dragons: number
+          avg_game_duration: number
+          avg_kills: number
+          avg_towers: number
+          first_blood_rate: number
+          first_tower_rate: number
+          games: number
+          id?: string
+          scope_id?: string | null
+          scope_type: Database["public"]["Enums"]["stats_scope"]
+          team_id: string
+          updated_at?: string
+          wins: number
+        }
+        Update: {
+          avg_barons?: number
+          avg_dragons?: number
+          avg_game_duration?: number
+          avg_kills?: number
+          avg_towers?: number
+          first_blood_rate?: number
+          first_tower_rate?: number
+          games?: number
+          id?: string
+          scope_id?: string | null
+          scope_type?: Database["public"]["Enums"]["stats_scope"]
+          team_id?: string
+          updated_at?: string
+          wins?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_aggregate_stats_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       team_captaincy_transfers: {
         Row: {
           created_at: string
@@ -2839,6 +3474,114 @@ export type Database = {
             columns: ["to_user_id"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      team_game_stats: {
+        Row: {
+          bans: number[]
+          barons: number
+          created_at: string
+          dragons: number
+          duration_seconds: number
+          entrant_id: string
+          first_objectives: Json
+          game_id: string
+          gold: number
+          grubs: number
+          heralds: number
+          id: string
+          inhibitors: number
+          kills: number
+          match_id: string
+          played_at: string
+          side: Database["public"]["Enums"]["game_side"]
+          team_id: string | null
+          tournament_id: string
+          towers: number
+          win: boolean
+        }
+        Insert: {
+          bans?: number[]
+          barons: number
+          created_at?: string
+          dragons: number
+          duration_seconds: number
+          entrant_id: string
+          first_objectives?: Json
+          game_id: string
+          gold: number
+          grubs: number
+          heralds: number
+          id?: string
+          inhibitors: number
+          kills: number
+          match_id: string
+          played_at: string
+          side: Database["public"]["Enums"]["game_side"]
+          team_id?: string | null
+          tournament_id: string
+          towers: number
+          win: boolean
+        }
+        Update: {
+          bans?: number[]
+          barons?: number
+          created_at?: string
+          dragons?: number
+          duration_seconds?: number
+          entrant_id?: string
+          first_objectives?: Json
+          game_id?: string
+          gold?: number
+          grubs?: number
+          heralds?: number
+          id?: string
+          inhibitors?: number
+          kills?: number
+          match_id?: string
+          played_at?: string
+          side?: Database["public"]["Enums"]["game_side"]
+          team_id?: string | null
+          tournament_id?: string
+          towers?: number
+          win?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_game_stats_entrant_id_fkey"
+            columns: ["entrant_id"]
+            isOneToOne: false
+            referencedRelation: "entrants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_game_stats_game_id_fkey"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "games"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_game_stats_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_game_stats_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_game_stats_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
             referencedColumns: ["id"]
           },
         ]
@@ -3651,6 +4394,52 @@ export type Database = {
           },
         ]
       }
+      user_achievements: {
+        Row: {
+          achievement_id: string
+          awarded_at: string
+          context: Json
+          tournament_id: string | null
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          awarded_at?: string
+          context?: Json
+          tournament_id?: string | null
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          awarded_at?: string
+          context?: Json
+          tournament_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_achievements_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "tournaments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_achievements_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_notification_preferences: {
         Row: {
           category: Database["public"]["Enums"]["notification_category"]
@@ -3934,6 +4723,16 @@ export type Database = {
         }
         Returns: string
       }
+      svc_attach_game_data: {
+        Args: {
+          p_actor: string
+          p_draft: Json
+          p_game: Json
+          p_game_id: string
+          p_participants: Json
+        }
+        Returns: undefined
+      }
       svc_claim_deliveries: {
         Args: { p_lease_seconds: number; p_limit: number }
         Returns: {
@@ -3981,6 +4780,26 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "outbox_events"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      svc_claim_stats_jobs: {
+        Args: { p_lease_seconds: number; p_limit: number }
+        Returns: {
+          attempts: number
+          dead_at: string | null
+          last_error: string | null
+          locked_until: string | null
+          match_id: string
+          next_attempt_at: string | null
+          processed_at: string | null
+          requested_at: string
+          tournament_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "stats_jobs"
           isOneToOne: false
           isSetofReturn: true
         }
@@ -4040,6 +4859,15 @@ export type Database = {
         }
         Returns: undefined
       }
+      svc_fail_stats_job: {
+        Args: {
+          p_dead: boolean
+          p_error: string
+          p_match_id: string
+          p_next_attempt_at: string
+        }
+        Returns: undefined
+      }
       svc_link_riot_account: {
         Args: {
           p_attempt_id: string
@@ -4070,6 +4898,10 @@ export type Database = {
         Args: { p_links: Json; p_user_id: string }
         Returns: undefined
       }
+      svc_request_tournament_stats: {
+        Args: { p_actor: string; p_tournament_id: string }
+        Returns: number
+      }
       svc_reset_notification_template: {
         Args: {
           p_actor: string
@@ -4079,6 +4911,23 @@ export type Database = {
           p_type_key: string
         }
         Returns: undefined
+      }
+      svc_save_achievement: {
+        Args: {
+          p_active: boolean
+          p_actor: string
+          p_criteria: Json
+          p_description: string
+          p_icon: string
+          p_key: string
+          p_name: string
+          p_organization_id: string
+        }
+        Returns: undefined
+      }
+      svc_save_match_stats: {
+        Args: { p_data: Json; p_match_id: string; p_requested_at: string }
+        Returns: number
       }
       svc_save_notification_rule: {
         Args: {
@@ -4184,6 +5033,7 @@ export type Database = {
         | "withdrawn"
         | "disqualified"
       exclusivity_scope: "none" | "tournament" | "circuit" | "season"
+      followable_type: "team" | "user" | "tournament" | "organization"
       game_map: "summoners_rift" | "howling_abyss"
       game_region: "la1" | "la2" | "na1" | "br1"
       game_side: "blue" | "red"
@@ -4216,6 +5066,7 @@ export type Database = {
         | "forfeit"
         | "canceled"
       member_status: "invited" | "active" | "removed"
+      mvp_scope: "game" | "match" | "week" | "phase" | "tournament"
       notification_category:
         | "tournaments"
         | "matches"
@@ -4285,6 +5136,7 @@ export type Database = {
         | "other"
       spectator_type: "none" | "lobbyonly" | "all"
       standing_status: "qualified" | "eliminated" | "in_contention"
+      stats_scope: "tournament" | "circuit" | "season" | "all_time"
       supervision_level: "automatic" | "dual_report" | "referee" | "broadcast"
       team_kind: "permanent" | "ad_hoc"
       team_role:
@@ -4478,6 +5330,7 @@ export const Constants = {
         "disqualified",
       ],
       exclusivity_scope: ["none", "tournament", "circuit", "season"],
+      followable_type: ["team", "user", "tournament", "organization"],
       game_map: ["summoners_rift", "howling_abyss"],
       game_region: ["la1", "la2", "na1", "br1"],
       game_side: ["blue", "red"],
@@ -4513,6 +5366,7 @@ export const Constants = {
         "canceled",
       ],
       member_status: ["invited", "active", "removed"],
+      mvp_scope: ["game", "match", "week", "phase", "tournament"],
       notification_category: [
         "tournaments",
         "matches",
@@ -4588,6 +5442,7 @@ export const Constants = {
       ],
       spectator_type: ["none", "lobbyonly", "all"],
       standing_status: ["qualified", "eliminated", "in_contention"],
+      stats_scope: ["tournament", "circuit", "season", "all_time"],
       supervision_level: ["automatic", "dual_report", "referee", "broadcast"],
       team_kind: ["permanent", "ad_hoc"],
       team_role: [

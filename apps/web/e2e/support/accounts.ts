@@ -106,6 +106,19 @@ export async function staffAccount(): Promise<TestAccount> {
   return { id, email, password, token: session.session.access_token };
 }
 
+/** The PUUID of the user's linked Riot account (the stub generated it). */
+export async function puuidOf(userId: string): Promise<string> {
+  const { data, error } = await admin()
+    .from('riot_accounts')
+    .select('puuid')
+    .eq('user_id', userId)
+    .is('unlinked_at', null)
+    .single();
+  if (error) throw error;
+  const row: unknown = data;
+  return (row as { puuid: string }).puuid;
+}
+
 /** Deletes tournaments and everything hanging from them (audit entries stay: append-only). */
 export async function deleteTournaments(slugPrefix: string): Promise<void> {
   if (!hasDatabase) return;
@@ -131,6 +144,13 @@ export async function deleteTournaments(slugPrefix: string): Promise<void> {
     .in('data->>tournamentId', T);
   const N = (notifications ?? []).map((n: { id: string }) => n.id);
   const competition = [
+    // m09 rows that point at the tournament (game lines go with the matches).
+    () => db.from('mvp_awards').delete().in('tournament_id', T),
+    () => db.from('champion_meta_stats').delete().in('tournament_id', T),
+    () => db.from('user_achievements').delete().in('tournament_id', T),
+    () => db.from('player_aggregate_stats').delete().in('scope_id', T),
+    () => db.from('player_champion_stats').delete().in('scope_id', T),
+    () => db.from('team_aggregate_stats').delete().in('scope_id', T),
     () => db.from('notification_deliveries').delete().in('notification_id', N),
     () => db.from('notifications').delete().in('id', N),
     () => db.from('outbox_events').delete().in('aggregate_id', M),
@@ -208,6 +228,12 @@ export async function deleteAccounts(accounts: readonly TestAccount[]): Promise<
     db.from('notification_deliveries').delete().in('user_id', ids),
     db.from('notifications').delete().in('user_id', ids),
     db.from('user_notification_preferences').delete().in('user_id', ids),
+    db.from('player_aggregate_stats').delete().in('user_id', ids),
+    db.from('player_champion_stats').delete().in('user_id', ids),
+    db.from('user_achievements').delete().in('user_id', ids),
+    db.from('mvp_awards').delete().in('user_id', ids),
+    db.from('follows').delete().in('follower_user_id', ids),
+    db.from('team_aggregate_stats').delete().in('team_id', teamIds),
     db.from('team_captaincy_transfers').delete().in('team_id', teamIds),
     db.from('team_join_requests').delete().in('team_id', teamIds),
     db.from('team_join_requests').delete().in('user_id', ids),

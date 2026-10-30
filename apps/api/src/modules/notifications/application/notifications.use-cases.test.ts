@@ -263,6 +263,30 @@ describe('engine: rules, preferences and critical notifications', () => {
     );
   });
 
+  it('tells the followers of a team that it plays, and not the parties twice', async () => {
+    directory.followers.set(QUETZALES, ['user-fan', CARLA]);
+    directory.followers.set(TOURNAMENT, ['user-fan2']);
+    for (const id of ['user-fan', 'user-fan2'])
+      directory.people.set(id, {
+        username: id.replace('user-', ''),
+        displayName: null,
+        locale: 'es-419',
+        email: null,
+      });
+    matchEvent('match.scheduled');
+    await work();
+    const fan = (await inboxOf('user-fan')).items;
+    expect(fan).toHaveLength(1);
+    expect(fan[0]).toMatchObject({
+      typeKey: 'follow.match_scheduled',
+      title: 'Quetzales juega pronto',
+      link: `/torneos/liga-apertura/partidas/${MATCH}`,
+    });
+    expect((await inboxOf('user-fan2')).items[0]?.title).toBe('Jaguares juega pronto');
+    // Carla plays the match: she gets the party notification only.
+    expect((await inboxOf(CARLA)).items.map((i) => i.typeKey)).toEqual(['match.scheduled']);
+  });
+
   it('sends one notification per user and event: staff on a dispute', async () => {
     directory.staff.set(TOURNAMENT, [STAFF, ANA]);
     matchEvent('dispute.opened');
@@ -449,7 +473,7 @@ describe('admin', () => {
       channels: ['email'],
     });
     const types = await new ListNotificationTypesUseCase(deps).execute(STAFF);
-    expect(types).toHaveLength(18);
+    expect(types).toHaveLength(19);
     expect(types.find((t) => t.key === 'registration.received')).toMatchObject({
       enabled: true,
       channels: ['in_app', 'email'],

@@ -68,6 +68,8 @@ export async function openSeedContext(source: NodeJS.ProcessEnv): Promise<SeedCo
     RIOT_PROVIDER: 'stub',
     CHECKIN_SWEEP_SECONDS: '0',
     NOTIFICATIONS_POLL_SECONDS: '0',
+    // The seed drains the stats queue itself, right after attaching the match data.
+    STATS_POLL_SECONDS: '0',
   });
   const clock = new SeedClock();
   const moduleRef: TestingModule = await Test.createTestingModule({

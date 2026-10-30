@@ -58,6 +58,15 @@ async function deleteTournaments(ctx: SeedContext): Promise<number> {
   const R = ids((await db.from('rulebooks').select('id').in('tournament_id', T)).data);
   const M = ids((await db.from('matches').select('id').in('tournament_id', T)).data);
   await deleteNotifications(ctx, T);
+  await run('stats', [
+    () => db.from('mvp_awards').delete().in('tournament_id', T),
+    () => db.from('champion_meta_stats').delete().in('tournament_id', T),
+    () => db.from('user_achievements').delete().in('tournament_id', T),
+    () => db.from('player_aggregate_stats').delete().in('scope_id', T),
+    () => db.from('player_champion_stats').delete().in('scope_id', T),
+    () => db.from('team_aggregate_stats').delete().in('scope_id', T),
+    () => db.from('follows').delete().eq('followable_type', 'tournament').in('followable_id', T),
+  ]);
   await run('match', [
     () => db.from('outbox_events').delete().in('aggregate_id', M),
     () => db.from('standings').delete().in('tournament_id', T),
@@ -113,6 +122,8 @@ async function deleteTeams(ctx: SeedContext, users: readonly string[]): Promise<
     if (paths.length > 0) await db.storage.from('team-logos').remove(paths);
   }
   await run('team', [
+    () => db.from('team_aggregate_stats').delete().in('team_id', teamIds),
+    () => db.from('follows').delete().eq('followable_type', 'team').in('followable_id', teamIds),
     () => db.from('team_captaincy_transfers').delete().in('team_id', teamIds),
     () => db.from('team_join_requests').delete().in('team_id', teamIds),
     () => db.from('team_invitations').delete().in('team_id', teamIds),
@@ -149,6 +160,12 @@ async function deleteUserData(ctx: SeedContext, users: readonly string[]): Promi
     () => db.from('notifications').delete().in('user_id', list),
     () => db.from('user_notification_preferences').delete().in('user_id', list),
     () => db.from('push_subscriptions').delete().in('user_id', list),
+    () => db.from('player_aggregate_stats').delete().in('user_id', list),
+    () => db.from('player_champion_stats').delete().in('user_id', list),
+    () => db.from('user_achievements').delete().in('user_id', list),
+    () => db.from('mvp_awards').delete().in('user_id', list),
+    () => db.from('follows').delete().in('follower_user_id', list),
+    () => db.from('follows').delete().eq('followable_type', 'user').in('followable_id', list),
     () => db.from('team_join_requests').delete().in('user_id', list),
     () => db.from('team_invitations').delete().in('invited_user_id', list),
     () => db.from('team_members').delete().in('user_id', list),

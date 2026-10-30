@@ -112,6 +112,7 @@ export const NotificationAudienceSchema = z.enum([
   'tournament_entrants',
   'tournament_staff',
   'opted_in',
+  'followers',
 ]);
 export type NotificationAudience = z.infer<typeof NotificationAudienceSchema>;
 

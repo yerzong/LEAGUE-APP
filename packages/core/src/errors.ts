@@ -87,3 +87,7 @@ export class LockedSectionError extends DomainError {
 export class InvalidScheduleError extends DomainError {
   readonly code = 'invalid_schedule';
 }
+
+export class InvalidGameStatsError extends DomainError {
+  readonly code = 'invalid_game_stats';
+}

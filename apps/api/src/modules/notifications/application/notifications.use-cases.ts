@@ -186,6 +186,24 @@ async function recipientsOf(
         entrant: null,
         opponent: null,
       }));
+    case 'followers': {
+      const a = ctx.match?.entrantA ?? null;
+      const b = ctx.match?.entrantB ?? null;
+      const sides = [a, b].flatMap((s) => (s ? [s] : []));
+      const followers = await directory.followersOf(
+        sides.map((s) => s.id),
+        ctx.tournament.id,
+      );
+      const seen = new Set<string>();
+      return followers.flatMap(({ userId, entrantId }) => {
+        if (seen.has(userId)) return [];
+        seen.add(userId);
+        // A tournament follower hears about side A against side B.
+        const entrant = sides.find((s) => s.id === entrantId) ?? a;
+        const opponent = entrant === a ? b : a;
+        return [{ userId, entrant, opponent }];
+      });
+    }
   }
 }
 
