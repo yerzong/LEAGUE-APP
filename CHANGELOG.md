@@ -5,6 +5,33 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 ## [Unreleased]
 
+### Added (m08 — integración Riot Tournament API)
+- `packages/integrations`: puertos `TournamentProviderPort` y `MatchDataPort`,
+  el `RiotTournamentAdapter` (Tournament-V5 y Match-V5 reales, detrás de la key)
+  y el `RiotStubTournamentAdapter` (Tournament-Stub: genera códigos y sintetiza
+  el callback + el payload Match-V5 para CI). Fetch/errores como el adaptador de
+  cuenta del m02.
+- Migración `riot_tournament` (aplicada en `penta-dev`): `riot_providers`,
+  `riot_tournaments`, `riot_tournament_codes` (un código activo por game, PUUIDs
+  permitidos), `inbound_webhooks` (idempotente por `source + idempotency_key`) e
+  `integrity_alerts` (docs/03 §7). Reusa `games`, `game_participants` y el trigger
+  de stats del m09. `svc_*` para el setup, abrir game, guardar/usar código, log
+  idempotente del webhook, registrar el resultado y alzar alertas. RLS + pgTAP.
+- `apps/api` módulo `riot`: conectar el torneo (provider + tournament), generar
+  el código con el roster congelado y el `teamSize` del modo, y procesar el
+  callback de forma **idempotente** — guarda el `raw_match_payload`, verifica el
+  roster (PUUID fuera → alerta de integridad) y **completa la partida por el motor
+  del m05** (standings y bracket). Endpoint de callback con secreto compartido;
+  admin con estado, códigos y regenerar. `RIOT_PROVIDER=stub|riot|manual`
+  (manual = la liga opera sin Riot); la key nunca se expone y prod rechaza `stub`.
+- `packages/contracts`: estado de integración, vista de código y callback (tolera
+  la forma real y la del stub).
+- `apps/web`: panel `/admin/torneos/[id]/riot` (estado, conectar, generar/regenerar
+  código por partida) y el código de torneo para el capitán en el centro de
+  partida. i18n es-419.
+- Flujo completo probado en CI con el stub: generar código → callback → completar
+  partida → standings; idempotencia y alerta de integridad incluidas.
+
 ### Added (m07 — bot de Discord)
 - `apps/bot`: proceso con discord.js que registra los slash commands por guild y
   enruta cada interacción a la API. Guard: sin token (o config incompleta) el bot

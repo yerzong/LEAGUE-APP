@@ -241,7 +241,7 @@ export class SupabaseRiotRepository implements RiotRepository {
     assertNoError(error);
     return (data ?? []).flatMap((g) => {
       if (!g.winner_entrant_id) return [];
-      const entrantA = (g.matches).entrant_a_id;
+      const entrantA = g.matches.entrant_a_id;
       return [{ number: g.game_number, winner: g.winner_entrant_id === entrantA ? 'a' : 'b' }];
     });
   }
