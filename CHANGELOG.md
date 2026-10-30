@@ -5,6 +5,30 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 ## [Unreleased]
 
+### Added (m07 — bot de Discord)
+- `apps/bot`: proceso con discord.js que registra los slash commands por guild y
+  enruta cada interacción a la API. Guard: sin token (o config incompleta) el bot
+  no arranca pero el resto del stack sigue corriendo. Comandos `/proximo`,
+  `/tabla`, `/perfil`, `/equipo`, `/checkin`, `/vincular`. Tests con discord.js y
+  `fetch` mockeados (nunca llama a Discord real en CI).
+- `packages/integrations`: `DiscordPort` con adaptador REST (`@discordjs/rest`),
+  un fake para tests/CI, builders de embeds con color de marca y las definiciones
+  de los slash commands.
+- Migraciones `discord` y `discord_identity_link` (aplicadas en `penta-dev`):
+  `discord_guilds`, `discord_channel_links`, `discord_temp_channels` y
+  `user_discord_links` (un trigger copia el Discord ID de `auth.identities` al
+  entrar con Discord; `/vincular` cubre a quienes entraron por correo). RLS:
+  config y canales solo para super admin; cada usuario ve solo su vínculo; la
+  contabilidad de canales de voz solo por la API. `svc_*` auditadas. Tests pgTAP.
+- `apps/api` módulo `discord`: el `DiscordChannelPort` que consume el motor del
+  m06 (DM al jugador, o canal de staff para avisos), endpoints `/bot/*` protegidos
+  por un secreto compartido, reconciliador de canales de voz por estado de
+  partida y rol automático de "jugador verificado". Disponible solo con token
+  (`DISCORD_PROVIDER=bot`); con `stub` el motor no encola Discord.
+- `packages/contracts`: config del admin de Discord y el contrato bot↔API.
+- `apps/web`: consola `/admin/discord` (conectar servidor, canales, funciones) e
+  i18n es-419.
+
 ### Added (m09 — estadísticas y perfiles pro)
 - Migraciones `stats_achievements_follows` y `stats_attach_sides` (aplicadas en
   `penta-dev`): `player_game_stats`, `team_game_stats`, `game_timeline_events`,
